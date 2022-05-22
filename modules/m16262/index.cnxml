@@ -1,0 +1,1251 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Applications of VC Bound</title>
+  <metadata>
+  <md:content-id>m16262</md:content-id><md:title>Applications of VC Bound</md:title>
+  <md:abstract/>
+  <md:uuid>4fc2d827-243e-4c39-975e-cfe1bd094ebb</md:uuid>
+</metadata>
+  <content>
+    <section id="uid1">
+      <title>Linear Classifiers</title>
+      <para id="id2255547">Suppose <m:math><m:mi mathvariant="script">F</m:mi></m:math>= {linear classifiers in <m:math><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>d</m:mi></m:msup></m:math>}, then we have</para>
+      <equation id="id2255582">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>V</m:mi>
+              <m:mi mathvariant="script">F</m:mi>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:mi>d</m:mi>
+            <m:mo>+</m:mo>
+            <m:mn>1</m:mn>
+            <m:mo>,</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>f</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <equation id="id2255683"><m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">inf</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:mn>4</m:mn>
+            <m:msqrt>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>d</m:mi>
+                  <m:mo>+</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>)</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>n</m:mi>
+                    <m:mo>+</m:mo>
+                    <m:mn>1</m:mn>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>+</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mn>2</m:mn>
+                </m:mrow>
+                <m:mi>n</m:mi>
+              </m:mfrac>
+            </m:msqrt>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      
+    </section>
+    <section id="uid2">
+      <title>Generalized Linear Classifiers</title>
+      <para id="id2254908">Normally, we have a feature vector <m:math><m:mrow><m:mi>X</m:mi><m:mo>∈</m:mo><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>d</m:mi></m:msup></m:mrow></m:math>. A hyperplane in
+<m:math><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>d</m:mi></m:msup></m:math> provides a linear classifier in <m:math><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>d</m:mi></m:msup></m:math>. Nonlinear
+classifiers can be obtained by a straightforward generalization.</para>
+      <para id="id2256115">Let <m:math><m:mrow><m:msub><m:mi>φ</m:mi><m:mn>1</m:mn></m:msub><m:mo>,</m:mo><m:mo>⋯</m:mo><m:mo>,</m:mo><m:msub><m:mi>φ</m:mi><m:msup><m:mi>d</m:mi><m:msup><m:mrow/><m:mo>'</m:mo></m:msup></m:msup></m:msub></m:mrow></m:math>, <m:math><m:mrow><m:msup><m:mi>d</m:mi><m:msup><m:mrow/><m:mo>'</m:mo></m:msup></m:msup><m:mo>≥</m:mo><m:mi>d</m:mi></m:mrow></m:math> be a
+collection of functions mapping <m:math><m:mrow><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>d</m:mi></m:msup><m:mo>→</m:mo><m:mi mathvariant="bold">R</m:mi></m:mrow></m:math>. These
+functions, applied to a feature <m:math><m:mrow><m:mi>X</m:mi><m:mo>∈</m:mo><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>d</m:mi></m:msup></m:mrow></m:math>, produce a
+generalized set of features, <m:math><m:mrow><m:mi>φ</m:mi><m:mo>=</m:mo><m:msup><m:mrow><m:mo>(</m:mo><m:msub><m:mi>φ</m:mi><m:mn>1</m:mn></m:msub><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow><m:mo>,</m:mo><m:msub><m:mi>φ</m:mi><m:mn>2</m:mn></m:msub><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow><m:mo>,</m:mo><m:mo>⋯</m:mo><m:mo>,</m:mo><m:msub><m:mi>φ</m:mi><m:msup><m:mi>d</m:mi><m:mo>'</m:mo></m:msup></m:msub><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow><m:mo>)</m:mo></m:mrow><m:mo>'</m:mo></m:msup></m:mrow></m:math>. For example, if <m:math><m:mrow><m:mi>X</m:mi><m:mo>=</m:mo><m:msup><m:mrow><m:mo>(</m:mo><m:msub><m:mi>x</m:mi><m:mn>1</m:mn></m:msub><m:mo>,</m:mo><m:msub><m:mi>x</m:mi><m:mn>2</m:mn></m:msub><m:mo>)</m:mo></m:mrow><m:mo>'</m:mo></m:msup></m:mrow></m:math>,
+then we could consider <m:math><m:mrow><m:msup><m:mi>d</m:mi><m:mo>'</m:mo></m:msup><m:mo>=</m:mo><m:mi>S</m:mi></m:mrow></m:math> and <m:math><m:mrow><m:mi>φ</m:mi><m:mo>=</m:mo><m:msup><m:mrow><m:mo>(</m:mo><m:msub><m:mi>x</m:mi><m:mn>1</m:mn></m:msub><m:mo>,</m:mo><m:msub><m:mi>x</m:mi><m:mn>2</m:mn></m:msub><m:mo>,</m:mo><m:msub><m:mi>x</m:mi><m:mn>1</m:mn></m:msub><m:msub><m:mi>x</m:mi><m:mn>2</m:mn></m:msub><m:mo>,</m:mo><m:msubsup><m:mi>x</m:mi><m:mn>1</m:mn><m:mn>2</m:mn></m:msubsup><m:mo>,</m:mo><m:msubsup><m:mi>x</m:mi><m:mn>2</m:mn><m:mn>2</m:mn></m:msubsup><m:mo>)</m:mo></m:mrow><m:mo>'</m:mo></m:msup><m:mo>∈</m:mo><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mn>5</m:mn></m:msup></m:mrow></m:math>. We can then construct a linear
+classifier in the higher dimensional generalized feature space
+<m:math><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:msup><m:mi>d</m:mi><m:mo>'</m:mo></m:msup></m:msup></m:math>.</para>
+      <para id="id2256491">The VC bounds immediately extend to this case, and we have for <m:math><m:mi mathvariant="script">F</m:mi></m:math>'
+= { generalized linear classifiers based on maps <m:math><m:mrow><m:mi>φ</m:mi><m:mo>:</m:mo><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>d</m:mi></m:msup><m:mo>→</m:mo><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:msup><m:mi>d</m:mi><m:mo>'</m:mo></m:msup></m:msup></m:mrow></m:math> },</para>
+      <equation id="id2256547"><m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">inf</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:msup>
+                  <m:mrow>
+                    <m:mi mathvariant="script">F</m:mi>
+                  </m:mrow>
+                  <m:mo>'</m:mo>
+                </m:msup>
+              </m:mrow>
+            </m:munder>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:mn>4</m:mn>
+            <m:msqrt>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msup>
+                    <m:mi>d</m:mi>
+                    <m:mo>'</m:mo>
+                  </m:msup>
+                  <m:mo>+</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>)</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>n</m:mi>
+                    <m:mo>+</m:mo>
+                    <m:mn>1</m:mn>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>+</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mn>2</m:mn>
+                </m:mrow>
+                <m:mi>n</m:mi>
+              </m:mfrac>
+            </m:msqrt>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      
+    </section>
+    <section id="uid3"><title>Half-Space Classifiers</title><rule id="steelndud" type="Theorem"><label>Theorem</label>
+<title>Steele '75, Dudley '78</title>
+      <statement id="id21415623">
+      <para id="id2256686"> 
+
+Let <m:math><m:mi mathvariant="script">G</m:mi></m:math>be a finite-dimensional vector space of real-valued
+functions on <m:math><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>d</m:mi></m:msup></m:math>. The class of sets <m:math><m:mrow><m:mi mathvariant="script">A</m:mi><m:mo>=</m:mo><m:mo>{</m:mo><m:mo>{</m:mo><m:mi>x</m:mi><m:mo>:</m:mo><m:mi>g</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo><m:mo>≥</m:mo><m:mn>0</m:mn><m:mo>}</m:mo><m:mo>:</m:mo><m:mi>g</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">G</m:mi><m:mo>}</m:mo></m:mrow></m:math> has VC dimension <m:math><m:mo>≥</m:mo></m:math> dim(<m:math><m:mi mathvariant="script">G</m:mi></m:math>).</para>
+</statement>
+<proof id="id24718092">
+      <para id="id2256800">
+
+It is sufficient to show that no set of <m:math><m:mrow><m:mi>n</m:mi><m:mo>=</m:mo><m:mi>d</m:mi><m:mi>i</m:mi><m:mi>m</m:mi><m:mo>(</m:mo><m:mi mathvariant="script">G</m:mi><m:mo>)</m:mo><m:mo>+</m:mo><m:mn>1</m:mn></m:mrow></m:math> points
+can be shattered by <m:math><m:mi mathvariant="script">A</m:mi></m:math>. Take any <m:math><m:mi>n</m:mi></m:math> points and for each <m:math><m:mrow><m:mi>g</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">G</m:mi></m:mrow></m:math>, define the vector <m:math><m:mrow><m:msub><m:mi>V</m:mi><m:mi>g</m:mi></m:msub><m:mo>=</m:mo><m:mrow><m:mo>(</m:mo><m:mi>g</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>x</m:mi><m:mn>1</m:mn></m:msub><m:mo>)</m:mo></m:mrow><m:mo>,</m:mo><m:mo>⋯</m:mo><m:mo>,</m:mo><m:mi>g</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>x</m:mi><m:mi>n</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>)</m:mo></m:mrow></m:mrow></m:math>.</para>
+      <para id="id2256933">The set <m:math><m:mrow><m:mo>{</m:mo><m:msub><m:mi>V</m:mi><m:mi>g</m:mi></m:msub><m:mo>:</m:mo><m:mi>g</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">G</m:mi><m:mo>}</m:mo></m:mrow></m:math> is a linear subspace of <m:math><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>n</m:mi></m:msup></m:math> of
+dimension <m:math><m:mo>≤</m:mo></m:math> dim (<m:math><m:mi mathvariant="script">G</m:mi></m:math>) = <m:math><m:mrow><m:mi>n</m:mi><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:math>. Therefore, there exists a
+non-zero vector <m:math><m:mrow><m:mi>α</m:mi><m:mo>=</m:mo><m:mrow><m:mo>(</m:mo><m:msub><m:mi>α</m:mi><m:mn>1</m:mn></m:msub><m:mo>,</m:mo><m:mo>⋯</m:mo><m:mo>,</m:mo><m:msub><m:mi>α</m:mi><m:mi>n</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>∈</m:mo><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>n</m:mi></m:msup></m:mrow></m:math>
+such that <m:math><m:mrow><m:msubsup><m:mo>∑</m:mo><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup><m:msub><m:mi>α</m:mi><m:mi>i</m:mi></m:msub><m:mi>g</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>x</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mn>0</m:mn></m:mrow></m:math>. We can assume that
+at least one of these <m:math><m:msubsup><m:mi>α</m:mi><m:mi>i</m:mi><m:mi>S</m:mi></m:msubsup></m:math> is negative (if all are
+positive, just negate the sum). We can then re-arrange this
+expression as <m:math><m:mrow><m:msub><m:mo>∑</m:mo><m:mrow><m:mi>i</m:mi><m:mo>:</m:mo><m:msub><m:mi>α</m:mi><m:mi>i</m:mi></m:msub><m:mo>≥</m:mo><m:mn>0</m:mn></m:mrow></m:msub><m:msub><m:mi>α</m:mi><m:mi>i</m:mi></m:msub><m:mi>g</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>x</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:msub><m:mo>∑</m:mo><m:mrow><m:mi>i</m:mi><m:mo>:</m:mo><m:msub><m:mi>α</m:mi><m:mi>i</m:mi></m:msub><m:mo>&lt;</m:mo><m:mn>0</m:mn></m:mrow></m:msub><m:mo>-</m:mo><m:msub><m:mi>α</m:mi><m:mi>i</m:mi></m:msub><m:mi>g</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>x</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math>.</para>
+      <para id="id2257239">Now suppose that there exists a <m:math><m:mrow><m:mi>g</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">G</m:mi></m:mrow></m:math> such that the set <m:math><m:mrow><m:mo>{</m:mo><m:mi>x</m:mi><m:mo>:</m:mo><m:mi>g</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo><m:mo>≥</m:mo><m:mn>0</m:mn><m:mo>}</m:mo></m:mrow></m:math> selects precisely the <m:math><m:msubsup><m:mi>x</m:mi><m:mi>i</m:mi><m:mi>S</m:mi></m:msubsup></m:math> on the left-hand
+side above. Then all terms on the left are non-negative and all
+the terms on the right are non-positive. Since <m:math><m:mi>α</m:mi></m:math> is
+non-zero, this is a contradiction. Therefore, <m:math><m:mrow><m:msub><m:mi>x</m:mi><m:mn>1</m:mn></m:msub><m:mo>,</m:mo><m:mo>⋯</m:mo><m:mo>,</m:mo><m:msub><m:mi>x</m:mi><m:mi>n</m:mi></m:msub></m:mrow></m:math>
+cannot be shattered by sets in <m:math><m:mrow><m:mo>{</m:mo><m:mi>x</m:mi><m:mo>:</m:mo><m:mi>g</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo><m:mo>≥</m:mo><m:mn>0</m:mn><m:mo>}</m:mo></m:mrow></m:math>, <m:math><m:mrow><m:mi>g</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">G</m:mi></m:mrow></m:math>.
+ 6.375pt0.0pt6.375pt</para>
+</proof>
+<example id="id22381652">
+      <para id="id2257411"> 
+Consider half-spaces in <m:math><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>d</m:mi></m:msup></m:math> of the form <m:math><m:mrow><m:mi mathvariant="script">A</m:mi><m:mo>=</m:mo><m:mo>{</m:mo><m:mi>x</m:mi><m:mo>∈</m:mo><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>d</m:mi></m:msup><m:mo>:</m:mo><m:msub><m:mi>x</m:mi><m:mi>i</m:mi></m:msub><m:mo>≥</m:mo><m:mi>b</m:mi><m:mo>,</m:mo><m:mi>i</m:mi><m:mo>∈</m:mo><m:mrow><m:mo>{</m:mo><m:mn>1</m:mn><m:mo>,</m:mo><m:mo>⋯</m:mo><m:mo>,</m:mo><m:mi>d</m:mi><m:mo>}</m:mo></m:mrow><m:mo>,</m:mo><m:mi>b</m:mi><m:mo>∈</m:mo><m:mi>R</m:mi><m:mo>}</m:mo></m:mrow></m:math>. Each half-space
+can be described by</para>
+      <equation id="id2257518">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>g</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mfenced separators="" open="[" close="]">
+              <m:mn>0</m:mn>
+              <m:mo>,</m:mo>
+              <m:mo>⋯</m:mo>
+              <m:mo>,</m:mo>
+              <m:mn>0</m:mn>
+              <m:mo>,</m:mo>
+              <m:mn>1</m:mn>
+              <m:mo>,</m:mo>
+              <m:mn>0</m:mn>
+              <m:mo>,</m:mo>
+              <m:mo>⋯</m:mo>
+              <m:mo>,</m:mo>
+              <m:mn>0</m:mn>
+            </m:mfenced>
+            <m:mfenced separators="" open="[" close="]">
+              <m:mtable>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:msub>
+                      <m:mi>x</m:mi>
+                      <m:mn>1</m:mn>
+                    </m:msub>
+                  </m:mtd>
+                </m:mtr>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:mo>⋮</m:mo>
+                  </m:mtd>
+                </m:mtr>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:msub>
+                      <m:mi>x</m:mi>
+                      <m:mi>d</m:mi>
+                    </m:msub>
+                  </m:mtd>
+                </m:mtr>
+              </m:mtable>
+            </m:mfenced>
+            <m:mo>-</m:mo>
+            <m:mi>b</m:mi>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <equation id="id2257619"><m:math mode="display">
+          <m:mrow>
+            <m:mo>⇒</m:mo>
+            <m:mi>d</m:mi>
+            <m:mi>i</m:mi>
+            <m:mi>m</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi mathvariant="script">G</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mi>d</m:mi>
+            <m:mo>+</m:mo>
+            <m:mn>1</m:mn>
+            <m:mo>,</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:msub>
+              <m:mi>V</m:mi>
+              <m:mi mathvariant="script">A</m:mi>
+            </m:msub>
+            <m:mo>≤</m:mo>
+            <m:mi>d</m:mi>
+            <m:mo>+</m:mo>
+            <m:mn>1</m:mn>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+
+      </equation>
+</example>
+</rule></section>
+    <section id="uid6"><title>Tree Classifiers</title>
+      
+      <para id="id2257696">Let</para>
+      <equation id="id2257700">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi mathvariant="script">T</m:mi>
+              <m:mi>k</m:mi>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:mfenced separators="" open="{" close="}">
+              <m:mi>r</m:mi>
+              <m:mi>e</m:mi>
+              <m:mi>c</m:mi>
+              <m:mi>u</m:mi>
+              <m:mi>r</m:mi>
+              <m:mi>s</m:mi>
+              <m:mi>i</m:mi>
+              <m:mi>v</m:mi>
+              <m:mi>e</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>r</m:mi>
+              <m:mi>e</m:mi>
+              <m:mi>c</m:mi>
+              <m:mi>t</m:mi>
+              <m:mi>a</m:mi>
+              <m:mi>n</m:mi>
+              <m:mi>g</m:mi>
+              <m:mi>u</m:mi>
+              <m:mi>l</m:mi>
+              <m:mi>a</m:mi>
+              <m:mi>r</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>p</m:mi>
+              <m:mi>a</m:mi>
+              <m:mi>r</m:mi>
+              <m:mi>t</m:mi>
+              <m:mi>i</m:mi>
+              <m:mi>t</m:mi>
+              <m:mi>i</m:mi>
+              <m:mi>o</m:mi>
+              <m:mi>n</m:mi>
+              <m:mi>s</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>o</m:mi>
+              <m:mi>f</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:msup>
+                <m:mrow>
+                  <m:mi mathvariant="bold">R</m:mi>
+                </m:mrow>
+                <m:mi>d</m:mi>
+              </m:msup>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>w</m:mi>
+              <m:mi>i</m:mi>
+              <m:mi>t</m:mi>
+              <m:mi>h</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>k</m:mi>
+              <m:mo>+</m:mo>
+              <m:mn>1</m:mn>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>c</m:mi>
+              <m:mi>e</m:mi>
+              <m:mi>l</m:mi>
+              <m:mi>l</m:mi>
+              <m:mi>s</m:mi>
+            </m:mfenced>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257880">Let <m:math><m:mrow><m:mi>T</m:mi><m:mo>∈</m:mo><m:msub><m:mi mathvariant="script">T</m:mi><m:mi>k</m:mi></m:msub></m:mrow></m:math>. Each cell of <m:math><m:mi>T</m:mi></m:math> results from splitting a
+rectangular region into two smaller rectangles parallel to one of
+the coordinate axes.</para>
+<example id="ex2">
+      <para id="id2257921"> 
+<m:math><m:mrow><m:mi>T</m:mi><m:mo>∈</m:mo><m:msub><m:mi mathvariant="script">T</m:mi><m:mn>3</m:mn></m:msub></m:mrow></m:math>, <m:math><m:mrow><m:mi>d</m:mi><m:mo>=</m:mo><m:mn>2</m:mn></m:mrow></m:math>.</para>
+      <para id="id2258046">Each additional split is analogous to a half-space set. Therefore,
+each additional split can potentially shatter <m:math><m:mrow><m:mi>d</m:mi><m:mo>+</m:mo><m:mn>1</m:mn></m:mrow></m:math> points. This
+implies that</para>
+      <equation id="id2258067">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>V</m:mi>
+              <m:msub>
+                <m:mi mathvariant="script">T</m:mi>
+                <m:mi>k</m:mi>
+              </m:msub>
+            </m:msub>
+            <m:mo>≤</m:mo>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>d</m:mi>
+              <m:mo>+</m:mo>
+              <m:mn>1</m:mn>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mi>k</m:mi>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      </example>
+<example id="ex3">
+      <para id="id2258113"> 
+<m:math><m:mrow><m:mi>d</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow></m:math>.</para>
+      <para id="id2258134"><m:math><m:mrow><m:mi>k</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow></m:math> split shatters two points.</para>
+      <para id="id2258151"><m:math><m:mrow><m:mi>k</m:mi><m:mo>=</m:mo><m:mn>2</m:mn></m:mrow></m:math> splits shatters three points <m:math><m:mrow><m:mo>&lt;</m:mo><m:mn>4</m:mn></m:mrow></m:math>.</para>
+    </example></section>
+    <section id="uid9"><title>VC Bound for Tree Classifiers</title>
+      
+      <equation id="id2258188">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi mathvariant="script">F</m:mi>
+              <m:mi>k</m:mi>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:mrow>
+              <m:mo>{</m:mo>
+              <m:mi>t</m:mi>
+              <m:mi>r</m:mi>
+              <m:mi>e</m:mi>
+              <m:mi>e</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>c</m:mi>
+              <m:mi>l</m:mi>
+              <m:mi>a</m:mi>
+              <m:mi>s</m:mi>
+              <m:mi>s</m:mi>
+              <m:mi>i</m:mi>
+              <m:mi>f</m:mi>
+              <m:mi>i</m:mi>
+              <m:mi>e</m:mi>
+              <m:mi>r</m:mi>
+              <m:mi>s</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>w</m:mi>
+              <m:mi>i</m:mi>
+              <m:mi>t</m:mi>
+              <m:mi>h</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>k</m:mi>
+              <m:mo>+</m:mo>
+              <m:mn>1</m:mn>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>l</m:mi>
+              <m:mi>e</m:mi>
+              <m:mi>a</m:mi>
+              <m:mi>f</m:mi>
+              <m:mi>s</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>o</m:mi>
+              <m:mi>n</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:msup>
+                <m:mrow>
+                  <m:mi mathvariant="bold">R</m:mi>
+                </m:mrow>
+                <m:mi>d</m:mi>
+              </m:msup>
+              <m:mo>}</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <equation id="id2258325"><m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">inf</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:msub>
+                  <m:mi mathvariant="script">F</m:mi>
+                  <m:mi>k</m:mi>
+                </m:msub>
+              </m:mrow>
+            </m:munder>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:mn>4</m:mn>
+            <m:msqrt>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>d</m:mi>
+                  <m:mo>+</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>)</m:mo>
+                  <m:mi>k</m:mi>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mi>n</m:mi>
+                  <m:mo>+</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mn>2</m:mn>
+                </m:mrow>
+                <m:mi>n</m:mi>
+              </m:mfrac>
+            </m:msqrt>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <exercise id="exer1">
+<problem id="id13530404">
+      <para id="id2258446">How can we decide what dimension to choose for a generalized
+linear classifier?</para>
+      <para id="id2258451">How many leafs should be used for a classification tree?</para>
+</problem>
+<solution id="id25684729">
+      <para id="id2258455">Complexity Regularization using VC bounds!</para>
+    </solution>
+</exercise></section>
+    <section id="uid10">
+      <title>Structural Risk Minimization (SRM)</title>
+      <para id="id2258467">SRM is simply complexity regularization using VC type bounds in
+place of Chernoff's bound or other concentration inequalities.</para>
+      <para id="id2258473">The basic idea is to consider a sequence of sets of classifiers
+<m:math><m:mrow><m:msub><m:mi mathvariant="script">F</m:mi><m:mn>1</m:mn></m:msub><m:mo>,</m:mo><m:msub><m:mi mathvariant="script">F</m:mi><m:mn>2</m:mn></m:msub><m:mo>,</m:mo><m:mo>...</m:mo><m:mo>,</m:mo></m:mrow></m:math> of increasing VC dimensions <m:math><m:mrow><m:msub><m:mi>V</m:mi><m:msub><m:mi mathvariant="script">F</m:mi><m:mn>1</m:mn></m:msub></m:msub><m:mo>≤</m:mo><m:msub><m:mi>V</m:mi><m:msub><m:mi mathvariant="script">F</m:mi><m:mn>2</m:mn></m:msub></m:msub><m:mo>≤</m:mo><m:mo>...</m:mo></m:mrow></m:math>. Then for each <m:math><m:mrow><m:mi>k</m:mi><m:mo>=</m:mo><m:mn>1</m:mn><m:mo>,</m:mo><m:mn>2</m:mn><m:mo>,</m:mo><m:mo>...</m:mo></m:mrow></m:math> we find
+the minimum empirical risk classifier</para>
+      <equation id="id2258583">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msubsup>
+              <m:mover accent="true">
+                <m:mi>f</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>k</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:msubsup>
+            <m:mo>=</m:mo>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:msub>
+                  <m:mi mathvariant="script">F</m:mi>
+                  <m:mi>k</m:mi>
+                </m:msub>
+              </m:mrow>
+            </m:munder>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2258669">and then select the final classifier according to</para>
+      <equation id="id2258675">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mover accent="true">
+              <m:mi>k</m:mi>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mo>=</m:mo>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:mo>≥</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:munder>
+            <m:mfenced separators="" open="{" close="}">
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>R</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msubsup>
+                  <m:mover accent="true">
+                    <m:mi>t</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>k</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:msubsup>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mn>32</m:mn>
+                    <m:msub>
+                      <m:mi>V</m:mi>
+                      <m:msub>
+                        <m:mi mathvariant="script">F</m:mi>
+                        <m:mi>k</m:mi>
+                      </m:msub>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mi>n</m:mi>
+                      <m:mo>+</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                  </m:mrow>
+                  <m:mi>n</m:mi>
+                </m:mfrac>
+              </m:msqrt>
+            </m:mfenced>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2258810">and <m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mo>≡</m:mo><m:msubsup><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mrow><m:mi>n</m:mi></m:mrow><m:mrow><m:mo>(</m:mo><m:mover accent="true"><m:mi>k</m:mi><m:mo>^</m:mo></m:mover><m:mo>)</m:mo></m:mrow></m:msubsup></m:mrow></m:math> is the
+final choice.</para>
+      <para id="id2258871">The basic rational is that we know</para>
+      <equation id="id2258875">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>R</m:mi>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msubsup>
+                <m:mover accent="true">
+                  <m:mi>f</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>k</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:msubsup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">inf</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:msub>
+                  <m:mi mathvariant="script">F</m:mi>
+                  <m:mi>k</m:mi>
+                </m:msub>
+              </m:mrow>
+            </m:munder>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:msup>
+              <m:mi>C</m:mi>
+              <m:mo>'</m:mo>
+            </m:msup>
+            <m:msqrt>
+              <m:mfrac>
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>V</m:mi>
+                    <m:msub>
+                      <m:mi mathvariant="script">F</m:mi>
+                      <m:mi>k</m:mi>
+                    </m:msub>
+                  </m:msub>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mi>n</m:mi>
+                </m:mrow>
+                <m:mi>n</m:mi>
+              </m:mfrac>
+            </m:msqrt>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2258996">where <m:math><m:msup><m:mi>C</m:mi><m:mo>'</m:mo></m:msup></m:math> is a constant.</para>
+      <para id="id2259017">The end result is that</para>
+      <equation id="id2259020">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:mo>≥</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:munder>
+            <m:mfenced separators="" open="{" close="}">
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:msub>
+                    <m:mi mathvariant="script">F</m:mi>
+                    <m:mi>k</m:mi>
+                  </m:msub>
+                </m:mrow>
+              </m:munder>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:mn>16</m:mn>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>V</m:mi>
+                      <m:msub>
+                        <m:mi mathvariant="script">F</m:mi>
+                        <m:mi>k</m:mi>
+                      </m:msub>
+                    </m:msub>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                    <m:mo>+</m:mo>
+                    <m:mn>4</m:mn>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+            </m:mfenced>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259162">analogous
+to our pervious complexity regularization results, except that
+codelengths are replaced by VC dimensions.</para>
+      <para id="id2259170">In order to prove the result we use the VC probability
+concentration bound and assume that <m:math><m:mrow><m:mo>△</m:mo><m:mo>=</m:mo><m:msub><m:mo>∑</m:mo><m:mrow><m:mi>k</m:mi><m:mo>≥</m:mo><m:mn>1</m:mn></m:mrow></m:msub><m:msub><m:mi>V</m:mi><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi></m:msub></m:msub><m:mo>&lt;</m:mo><m:mi>∞</m:mi></m:mrow></m:math>. This enables a union bounding argument and
+leads to a risk bound of the form given above.</para>
+    </section>
+    <section id="uid11">
+      <title>Key Point of VC Theory</title>
+      <para id="id2259231">Complexity of classes depends on richness (shattering capability)
+relative to a set of <m:math><m:mi>n</m:mi></m:math> arbitrary points. This allows us to
+effectively “quantize" collections of functions in a slightly
+data-dependent manner.</para>
+    </section>
+    <section id="uid12">
+      <title>Application to Trees</title>
+      <para id="id2259257">Let</para>
+      <equation id="id2259260">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi mathvariant="script">F</m:mi>
+              <m:mi>k</m:mi>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:mfenced separators="" open="{" close="}">
+              <m:mi>k</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>l</m:mi>
+              <m:mi>e</m:mi>
+              <m:mi>a</m:mi>
+              <m:mi>f</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>d</m:mi>
+              <m:mi>e</m:mi>
+              <m:mi>c</m:mi>
+              <m:mi>i</m:mi>
+              <m:mi>s</m:mi>
+              <m:mi>i</m:mi>
+              <m:mi>o</m:mi>
+              <m:mi>n</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>t</m:mi>
+              <m:mi>r</m:mi>
+              <m:mi>e</m:mi>
+              <m:mi>e</m:mi>
+              <m:mi>s</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>i</m:mi>
+              <m:mi>n</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:msup>
+                <m:mrow>
+                  <m:mi mathvariant="bold">R</m:mi>
+                </m:mrow>
+                <m:mi>d</m:mi>
+              </m:msup>
+            </m:mfenced>
+            <m:mo>,</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:msub>
+              <m:mi>V</m:mi>
+              <m:msub>
+                <m:mi mathvariant="script">F</m:mi>
+                <m:mi>k</m:mi>
+              </m:msub>
+            </m:msub>
+            <m:mo>≤</m:mo>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>d</m:mi>
+              <m:mo>+</m:mo>
+              <m:mn>1</m:mn>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>k</m:mi>
+              <m:mo>+</m:mo>
+              <m:mn>1</m:mn>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <equation id="id2259423">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msubsup>
+              <m:mover accent="true">
+                <m:mi>f</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>k</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:msubsup>
+            <m:mo>=</m:mo>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:msub>
+                  <m:mi mathvariant="script">F</m:mi>
+                  <m:mi>k</m:mi>
+                </m:msub>
+              </m:mrow>
+            </m:munder>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <equation id="id2259509">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mover accent="true">
+              <m:mi>k</m:mi>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mo>=</m:mo>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:mo>≥</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:munder>
+            <m:mfenced separators="" open="(" close=")">
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:msub>
+                    <m:mi mathvariant="script">F</m:mi>
+                    <m:mi>k</m:mi>
+                  </m:msub>
+                </m:mrow>
+              </m:munder>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mn>32</m:mn>
+                    <m:mo>(</m:mo>
+                    <m:mi>d</m:mi>
+                    <m:mo>+</m:mo>
+                    <m:mn>1</m:mn>
+                    <m:mo>)</m:mo>
+                    <m:mo>(</m:mo>
+                    <m:mi>k</m:mi>
+                    <m:mo>-</m:mo>
+                    <m:mn>1</m:mn>
+                    <m:mo>)</m:mo>
+                    <m:mo>(</m:mo>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                    <m:mo>+</m:mo>
+                    <m:mn>1</m:mn>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mi>n</m:mi>
+                </m:mfrac>
+              </m:msqrt>
+            </m:mfenced>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259641">Then</para>
+      <equation id="id2259647">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>f</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:msubsup>
+              <m:mover accent="true">
+                <m:mi>f</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mover accent="true">
+                  <m:mi>k</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:msubsup>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259703">satisfies</para>
+      <equation id="id2259708">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:mo>≥</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:munder>
+            <m:mfenced separators="" open="(" close=")">
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:msub>
+                    <m:mi mathvariant="script">F</m:mi>
+                    <m:mi>k</m:mi>
+                  </m:msub>
+                </m:mrow>
+              </m:munder>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:mn>16</m:mn>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>d</m:mi>
+                    <m:mo>+</m:mo>
+                    <m:mn>1</m:mn>
+                    <m:mo>)</m:mo>
+                    <m:mo>(</m:mo>
+                    <m:mi>k</m:mi>
+                    <m:mo>-</m:mo>
+                    <m:mn>1</m:mn>
+                    <m:mo>)</m:mo>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                    <m:mo>+</m:mo>
+                    <m:mn>4</m:mn>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+            </m:mfenced>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259855">compare with</para>
+      <equation id="id2259861">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:mo>≥</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:munder>
+            <m:mfenced separators="" open="(" close=")">
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:mi>d</m:mi>
+                  <m:mi>y</m:mi>
+                  <m:mi>a</m:mi>
+                  <m:mi>d</m:mi>
+                  <m:mi>i</m:mi>
+                  <m:mi>c</m:mi>
+                  <m:mspace width="4pt"/>
+                  <m:mi>k</m:mi>
+                  <m:mspace width="4pt"/>
+                  <m:mi>l</m:mi>
+                  <m:mi>e</m:mi>
+                  <m:mi>a</m:mi>
+                  <m:mi>f</m:mi>
+                  <m:mspace width="4pt"/>
+                  <m:mi>t</m:mi>
+                  <m:mi>r</m:mi>
+                  <m:mi>e</m:mi>
+                  <m:mi>e</m:mi>
+                  <m:mi>s</m:mi>
+                </m:mrow>
+              </m:munder>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mn>3</m:mn>
+                      <m:mi>k</m:mi>
+                      <m:mo>-</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo>+</m:mo>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+            </m:mfenced>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2260043">from <link document="m16287" class="cnxn">Lecture 11</link>.</para>
+    </section>
+  </content>
+</document>

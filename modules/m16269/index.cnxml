@@ -1,0 +1,511 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Elements of Statistical Learning Theory</title>
+  <metadata>
+  <md:content-id>m16269</md:content-id><md:title>Elements of Statistical Learning Theory</md:title>
+  <md:abstract/>
+  <md:uuid>383f850f-c884-4177-8a87-cbe60c726ee2</md:uuid>
+</metadata>
+  <content>
+    <section id="uid1">
+      <title>Three Elements of Statistical Data Analysis</title>
+      <list id="id2255548" list-type="labeled-item">
+        <item id="uid2"><label>1. Probabilistic Formulation</label>of learning from data and prediction
+problems.
+</item>
+        <item id="uid3"><label>2. Performance Characterization:</label>
+          
+          <list id="id2255572" list-type="bulleted">
+            <item id="uid4">concentration inequalities
+</item>
+            <item id="uid5">uniform deviation bounds
+</item>
+            <item id="uid6">approximation theory
+</item>
+            <item id="uid7">rates of convergence
+</item>
+          </list>
+        </item>
+        <item id="uid8"><label>3. Practical Algorithms</label>that run in polynomial time (e.g., decision
+trees, wavelet methods, support vector machines).
+</item>
+      </list>
+    </section>
+    <section id="uid9">
+      <title>Learning from Data</title>
+      <para id="id2255638">To formulate the basic learning from data problem, we must specify several
+basic elements: data spaces, probability measures, loss functions, and
+statistical risk.</para>
+      <section id="uid10"><title>Data Spaces</title>
+        
+        <para id="id2255650">Learning from data begins with a specification of two spaces:</para>
+        <equation id="id2255655">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi mathvariant="script">X</m:mi>
+              <m:mo>≡</m:mo>
+              <m:mtext>Input</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>Space</m:mtext>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <equation id="id2255680"><m:math mode="display">
+            <m:mrow>
+              <m:mi mathvariant="script">Y</m:mi>
+              <m:mo>≡</m:mo>
+              <m:mtext>Output</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>Space</m:mtext>
+            </m:mrow>
+<m:mo>.</m:mo>        
+  </m:math>
+        </equation>
+        <para id="id2255704">The input space is also sometimes called the “feature space” or “signal
+domain.” The output space is also called the “class label space,”
+“outcome space,” “response space,” or “signal range.”</para>
+        <example id="example1">
+        <equation id="id2255725">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi mathvariant="script">X</m:mi>
+              <m:mo>=</m:mo>
+              <m:msup>
+                <m:mrow>
+                  <m:mi mathvariant="bold">R</m:mi>
+                </m:mrow>
+                <m:mi>d</m:mi>
+              </m:msup>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mi>d</m:mi>
+              <m:mtext>-dimensional</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>Euclidean</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>space</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>of</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>``feature</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>vectors''</m:mtext>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <equation id="id2255793">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi mathvariant="script">Y</m:mi>
+              <m:mo>=</m:mo>
+              <m:mo>{</m:mo>
+              <m:mn>0</m:mn>
+              <m:mo>,</m:mo>
+              <m:mn>1</m:mn>
+              <m:mo>}</m:mo>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mtext>two</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>classes</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>or</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>``class</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>labels''</m:mtext>
+            </m:mrow>
+          </m:math>
+        </equation>
+</example>
+<example id="example2">
+        <equation id="id2255860">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi mathvariant="script">X</m:mi>
+              <m:mo>=</m:mo>
+              <m:mi mathvariant="bold">R</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mtext>one-dimensional</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>signal</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>domain</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>(e.g.,</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>time-domain)</m:mtext>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <equation id="id2255912">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi mathvariant="script">Y</m:mi>
+              <m:mo>=</m:mo>
+              <m:mi mathvariant="bold">R</m:mi>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4pt"/>
+              <m:mtext>real-valued</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>signal</m:mtext>
+            </m:mrow>
+          </m:math>
+        </equation>
+</example>
+        <para id="id2255949">A classic example is estimating a signal <m:math><m:mi>f</m:mi></m:math> in noise:</para>
+        <equation id="id2255964">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>Y</m:mi>
+              <m:mo>=</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>(</m:mo>
+              <m:mi>X</m:mi>
+              <m:mo>)</m:mo>
+              <m:mo>+</m:mo>
+              <m:mi>W</m:mi>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2254900">where <m:math><m:mi>X</m:mi></m:math> is a random sample point on the real line and <m:math><m:mi>W</m:mi></m:math> is
+a noise independent of <m:math><m:mi>X</m:mi></m:math>.</para>
+      </section>
+      <section id="uid13">
+        <title>Probability Measure and Expectation</title>
+        <para id="id2256270">Define a joint probability distribution on <m:math><m:mrow><m:mi mathvariant="script">X</m:mi><m:mo>×</m:mo><m:mi mathvariant="script">Y</m:mi></m:mrow></m:math> denoted
+<m:math><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi></m:mrow></m:msub></m:math>. Let <m:math><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow></m:math> denote a pair of random variables distributed
+according to <m:math><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi></m:mrow></m:msub></m:math>. We will also have use for marginal and
+conditional distributions. Let <m:math><m:msub><m:mi>P</m:mi><m:mi>X</m:mi></m:msub></m:math> denote the marginal
+distribution on <m:math><m:mi>X</m:mi></m:math>, and let <m:math><m:msub><m:mi>P</m:mi><m:mrow><m:mi>Y</m:mi><m:mo>|</m:mo><m:mi>X</m:mi></m:mrow></m:msub></m:math> denote the conditional
+distribution of <m:math><m:mi>Y</m:mi></m:math> given <m:math><m:mi>X</m:mi></m:math>. For any distribution <m:math><m:mi>P</m:mi></m:math>, let <m:math><m:mi>p</m:mi></m:math>
+denote its density function with respect to the corresponding
+dominating measure; e.g., <emphasis>Lebesgue measure</emphasis> for continuous random
+variables or <emphasis>counting measure</emphasis> for discrete random variables.</para>
+        <para id="id2256441">Define the expectation operator:</para>
+        <equation id="id2256445">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msub>
+                <m:mi>E</m:mi>
+                <m:mrow>
+                  <m:mi>X</m:mi>
+                  <m:mo>,</m:mo>
+                  <m:mi>Y</m:mi>
+                </m:mrow>
+              </m:msub>
+              <m:mrow>
+                <m:mo>[</m:mo>
+                <m:mi>f</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>X</m:mi>
+                  <m:mo>,</m:mo>
+                  <m:mi>Y</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>]</m:mo>
+              </m:mrow>
+              <m:mo>≡</m:mo>
+              <m:mo>∫</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>x</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>y</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mi>d</m:mi>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:mrow>
+                  <m:mi>X</m:mi>
+                  <m:mo>,</m:mo>
+                  <m:mi>Y</m:mi>
+                </m:mrow>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>x</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>y</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>=</m:mo>
+              <m:mo>∫</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>x</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>y</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:msub>
+                <m:mi>p</m:mi>
+                <m:mrow>
+                  <m:mi>X</m:mi>
+                  <m:mo>,</m:mo>
+                  <m:mi>Y</m:mi>
+                </m:mrow>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>x</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>y</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mi>d</m:mi>
+              <m:mi>x</m:mi>
+              <m:mi>d</m:mi>
+              <m:mi>y</m:mi>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2256586">We will also make use of corresponding marginal and
+conditional expectations such as <m:math><m:msub><m:mi>E</m:mi><m:mi>X</m:mi></m:msub></m:math> and <m:math><m:msub><m:mi>E</m:mi><m:mrow><m:mi>Y</m:mi><m:mo>|</m:mo><m:mi>X</m:mi></m:mrow></m:msub></m:math>.</para>
+        <para id="id2256626">Wherever convenient and obvious based on context, we may drop the
+subscripts (e.g., <m:math><m:mi>E</m:mi></m:math> instead of <m:math><m:msub><m:mi>E</m:mi><m:mrow><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi></m:mrow></m:msub></m:math>) for notational ease.</para>
+      </section>
+      <section id="uid14"><title>Loss Functions</title>
+        
+        <para id="id2256666">A loss function is a mapping</para>
+        <equation id="id2256670"><m:math mode="display">
+            <m:mrow>
+              <m:mi>ℓ</m:mi>
+              <m:mo>:</m:mo>
+              <m:mi mathvariant="script">Y</m:mi>
+              <m:mo>×</m:mo>
+              <m:mi mathvariant="script">Y</m:mi>
+              <m:mo>↦</m:mo>
+              <m:mi mathvariant="bold">R</m:mi>
+            </m:mrow>
+<m:mo>.</m:mo>        
+  </m:math>
+        </equation>
+<example id="example3">
+        <para id="id2256700"> 
+In binary classification problems, <m:math><m:mrow><m:mi mathvariant="script">Y</m:mi><m:mo>=</m:mo><m:mo>{</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>}</m:mo></m:mrow></m:math>. The <m:math><m:mrow><m:mn>0</m:mn><m:mo>/</m:mo><m:mn>1</m:mn></m:mrow></m:math>
+loss function is usually used:
+<m:math><m:mrow><m:mi>ℓ</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub><m:mo>,</m:mo><m:msub><m:mi>y</m:mi><m:mn>2</m:mn></m:msub><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:msub><m:mn>1</m:mn><m:mrow><m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub><m:mo>≠</m:mo><m:msub><m:mi>y</m:mi><m:mn>2</m:mn></m:msub></m:mrow></m:msub><m:mo>,</m:mo></m:mrow></m:math>
+where <m:math><m:msub><m:mn>1</m:mn><m:mi>A</m:mi></m:msub></m:math> is the indicator function which takes a value of 1 if
+condition <m:math><m:mi>A</m:mi></m:math> is true and zero otherwise. We typically will compare a
+true label <m:math><m:mi>y</m:mi></m:math> with a prediction <m:math><m:mover accent="true"><m:mi>y</m:mi><m:mo>^</m:mo></m:mover></m:math>, in which case the <m:math><m:mrow><m:mn>0</m:mn><m:mo>/</m:mo><m:mn>1</m:mn></m:mrow></m:math> loss
+simply counts misclassifications.</para></example>
+
+<example id="example4">
+        <para id="id2256874"> 
+In regression or estimation problems, <m:math><m:mrow><m:mi mathvariant="script">Y</m:mi><m:mo>=</m:mo><m:mi>R</m:mi></m:mrow></m:math>. The squared
+error loss function is often employed:
+<m:math><m:mrow><m:mi>ℓ</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub><m:mo>,</m:mo><m:msub><m:mi>y</m:mi><m:mn>2</m:mn></m:msub><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mrow><m:mo>(</m:mo><m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub><m:mo>-</m:mo><m:msub><m:mi>y</m:mi><m:mn>2</m:mn></m:msub><m:mo>)</m:mo></m:mrow><m:mn>2</m:mn><m:mo>,</m:mo></m:mrow></m:math> the square of the difference between
+<m:math><m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub></m:math> and <m:math><m:msub><m:mi>y</m:mi><m:mn>2</m:mn></m:msub></m:math>. In application, we are interested in a true value <m:math><m:mi>y</m:mi></m:math>
+in comparison to an estimate <m:math><m:mover accent="true"><m:mi>y</m:mi><m:mo>^</m:mo></m:mover></m:math>.</para></example>
+      </section>
+      <section id="uid17">
+        <title>Statistical Risk</title>
+        <para id="id2257019">The basic problem in learning is to determine a mapping <m:math><m:mrow><m:mi>f</m:mi><m:mo>:</m:mo><m:mi mathvariant="script">X</m:mi><m:mo>↦</m:mo><m:mi mathvariant="script">Y</m:mi></m:mrow></m:math> that takes an input <m:math><m:mrow><m:mi>x</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">X</m:mi></m:mrow></m:math> and predicts the corresponding output
+<m:math><m:mrow><m:mi>y</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">Y</m:mi></m:mrow></m:math>. The performance of a given map <m:math><m:mi>f</m:mi></m:math> is measured by its
+expected loss or <emphasis>risk</emphasis>:</para>
+        <equation id="id2257095"><m:math mode="display">
+            <m:mrow>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≡</m:mo>
+              <m:msub>
+                <m:mi>E</m:mi>
+                <m:mrow>
+                  <m:mi>X</m:mi>
+                  <m:mo>,</m:mo>
+                  <m:mi>Y</m:mi>
+                </m:mrow>
+              </m:msub>
+              <m:mfenced separators="" open="[" close="]">
+                <m:mi>ℓ</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>X</m:mi>
+                <m:mo>)</m:mo>
+                <m:mo>,</m:mo>
+                <m:mi>Y</m:mi>
+                <m:mo>)</m:mo>
+              </m:mfenced>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+        <para id="id2257156">The risk tells us how well, on average, the predictor <m:math><m:mi>f</m:mi></m:math> performs
+with respect to the chosen loss function. A key quantity of interest
+is the mininum risk value, defined as</para>
+        <equation id="id2257174">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msup>
+                <m:mi>R</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mo>=</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">inf</m:mo>
+                <m:mi>f</m:mi>
+              </m:munder>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2257215">where the infinum is taking over all measurable functions.</para>
+      </section>
+      <section id="uid18">
+        <title>The Learning Problem</title>
+        <para id="id2257230">Suppose that <m:math><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow></m:math> are distributed according to <m:math><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi></m:mrow></m:msub></m:math> (<m:math><m:mrow><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow><m:mo>∼</m:mo><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi></m:mrow></m:msub></m:mrow></m:math> for short). Our goal is to find a map so that <m:math><m:mrow><m:mi>f</m:mi><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo><m:mo>≈</m:mo><m:mi>Y</m:mi></m:mrow></m:math> with high probability. Ideally, we would chose <m:math><m:mi>f</m:mi></m:math> to
+minimize the risk <m:math><m:mrow><m:mi>R</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo><m:mo>=</m:mo><m:mi>E</m:mi><m:mo>[</m:mo><m:mi>ℓ</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo><m:mo>,</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo><m:mo>]</m:mo></m:mrow></m:math>. However, in order to
+compute the risk (and hence optimize it) we need to know the joint
+distribution <m:math><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi></m:mrow></m:msub></m:math>. In many problems of practical interest, the
+joint distribution is unknown, and minimizing the risk is not
+possible.</para>
+        <para id="id2257407">Suppose that we have some exemplary samples from the distribution.
+Specifically, consider <m:math><m:mi>n</m:mi></m:math> samples <m:math><m:msubsup><m:mrow><m:msub><m:mi>X</m:mi><m:mi>i</m:mi></m:msub><m:mo>,</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub></m:mrow><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup></m:math> distributed
+independently and identically (iid) according to the otherwise unknown
+<m:math><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi></m:mrow></m:msub></m:math>. Let us call these samples <emphasis>training data</emphasis>, and denote
+the collection by <m:math><m:mrow><m:msub><m:mi>D</m:mi><m:mi>n</m:mi></m:msub><m:mo>≡</m:mo><m:msubsup><m:mrow><m:msub><m:mi>X</m:mi><m:mi>i</m:mi></m:msub><m:mo>,</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub></m:mrow><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup></m:mrow></m:math>. Let's also define a
+collection of candidate mappings <m:math><m:mi mathvariant="script">F</m:mi></m:math>. We will use the training data
+<m:math><m:msub><m:mi>D</m:mi><m:mi>n</m:mi></m:msub></m:math> to pick a mapping <m:math><m:mrow><m:msub><m:mi>f</m:mi><m:mi>n</m:mi></m:msub><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math> that we hope will be a good
+predictor. This is sometimes called the <emphasis>Model Selection</emphasis>
+problem. Note that the selected model <m:math><m:msub><m:mi>f</m:mi><m:mi>n</m:mi></m:msub></m:math> is a function of the
+training data:</para>
+        <equation id="id2257610">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msub>
+                <m:mi>f</m:mi>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>X</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>=</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>X</m:mi>
+                <m:mo>;</m:mo>
+                <m:msub>
+                  <m:mi>D</m:mi>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>,</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2257659">which is what the subscript <m:math><m:mi>n</m:mi></m:math> in <m:math><m:msub><m:mi>f</m:mi><m:mi>n</m:mi></m:msub></m:math> refers to.
+The risk of <m:math><m:msub><m:mi>f</m:mi><m:mi>n</m:mi></m:msub></m:math> is given by</para>
+        <equation id="id2257703"><m:math mode="display">
+            <m:mrow>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>f</m:mi>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>=</m:mo>
+              <m:msub>
+                <m:mi>E</m:mi>
+                <m:mrow>
+                  <m:mi>X</m:mi>
+                  <m:mo>,</m:mo>
+                  <m:mi>Y</m:mi>
+                </m:mrow>
+              </m:msub>
+              <m:mrow>
+                <m:mo>[</m:mo>
+                <m:mi>ℓ</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>f</m:mi>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>X</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>,</m:mo>
+                  <m:mi>Y</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>]</m:mo>
+              </m:mrow>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+        <para id="id2257775">Note that since <m:math><m:msub><m:mi>f</m:mi><m:mi>n</m:mi></m:msub></m:math> depends on
+<m:math><m:msub><m:mi>D</m:mi><m:mi>n</m:mi></m:msub></m:math> in addition to a new random pair <m:math><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow></m:math>, the risk is a random
+variable (i.e., a function of the training data <m:math><m:msub><m:mi>D</m:mi><m:mi>n</m:mi></m:msub></m:math>). Therefore, we
+are interested in the <emphasis>expected risk</emphasis>, computed over random
+realizations of the training data:</para>
+        <equation id="id2257852"><m:math mode="display">
+            <m:mrow>
+              <m:msub>
+                <m:mi>E</m:mi>
+                <m:msub>
+                  <m:mi>D</m:mi>
+                  <m:mi>n</m:mi>
+                </m:msub>
+              </m:msub>
+              <m:mrow>
+                <m:mo>[</m:mo>
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>f</m:mi>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>]</m:mo>
+              </m:mrow>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+        <para id="id2257896">We hope that <m:math><m:msub><m:mi>f</m:mi><m:mi>n</m:mi></m:msub></m:math> produces a small expected risk.</para>
+        <para id="id2257916">The notion of expected risk can be interpreted as follows. We would
+like to define an algorithm (a model selection process) that performs
+well on average, over any random sample of <m:math><m:mi>n</m:mi></m:math> training data. The
+expected risk is a measure of the expected performance of the
+algorithm with respect to the chosen loss function. That is, we are
+not gauging the risk of a particular map <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>, but rather we are
+measuring the performance of the algorithm that takes any realization
+of training data and selects an appropriate model in <m:math><m:mi mathvariant="script">F</m:mi></m:math>.</para>
+        <para id="id2257965">This course is concerned with determining “good” model spaces <m:math><m:mi mathvariant="script">F</m:mi></m:math>
+and useful and effective model selection algorithms.</para>
+      </section>
+    </section>
+  </content>
+</document>

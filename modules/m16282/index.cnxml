@@ -1,0 +1,1309 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Probably Approximately Correct (PAC) Learning</title>
+  <metadata>
+  <md:content-id>m16282</md:content-id><md:title>Probably Approximately Correct (PAC) Learning</md:title>
+  <md:abstract/>
+  <md:uuid>c8995bc8-4f44-47b6-92c7-b90c6e692f3c</md:uuid>
+</metadata>
+  <content>
+    <section id="uid1">
+      <title>Introduction</title>
+      <section id="uid2">
+        <title>Overview of the Learning Problem</title>
+        <para id="id2255554">The fundamental problem in learning from data is proper Model
+Selection. As we have seen in the previous lectures, a model that is
+too complex could overfit the training data (causing an estimation
+error) and a model that is too simple could be a bad approximation of
+the function that we are trying to estimate (causing an approximation
+error). The estimation error arises because of the fact that we do not
+know the true joint distribution of data in the input and output
+space, and therefore we minimize the empirical risk (which, for each
+candidate model, is a random number depending on the data) and
+estimate the average risk again from the limited number of training
+samples we have. The approximation error measures how well the
+functions in the chosen model space can approximate the underlying
+relationship between the output space on the input space, and in
+general improves as the “size” of our model space increases.</para>
+      </section>
+      <section id="uid3">
+        <title>Lecture Outline</title>
+        <para id="id2255596">In the preceding lectures, we looked at some solutions to deal with
+the overfitting problem. The basic approach followed was the Method
+of Sieves, in which the complexity of the model space was chosen as a
+function of the number of training samples. In particular, both the
+denoising and classification problems we looked at consider estimators
+based on histogram partitions. The size of the partition was an
+increasing function of the number of training samples. In this
+lecture, we will refine our learning methods further introduce model
+selection procedures that automatically adapt to the distribution of
+the training data, rather than basing the model class solely on the
+number of samples. This sort of adaptivity will play a major role in
+the design of more effective classifiers and denoising methods. The
+key to designing data-adaptive model selection procedures is obtaining
+useful upper bounds on the estimation error. To this end, we will
+introduce the idea of “Probably Approximately Correct” learning
+methods.</para>
+      </section>
+    </section>
+    <section id="uid4">
+      <title>Recap: Method of Sieves</title>
+      <para id="id2255642">The method of Sieves underpinned our approaches in the denoising
+problem and in the histogram classification problem. Recall that the
+basic idea is to define a sequence of model spaces <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mn>1</m:mn></m:msub></m:math>, <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mn>2</m:mn></m:msub></m:math>,
+...of increasing complexity, and then given the training data
+<m:math><m:msubsup><m:mrow><m:mo>{</m:mo><m:msub><m:mi>X</m:mi><m:mi>i</m:mi></m:msub><m:mo>,</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>}</m:mo></m:mrow><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup></m:math> select a model according to</para>
+      <equation id="id2255730"><m:math mode="display">
+          <m:mrow>
+            <m:mover accent="true">
+              <m:msub>
+                <m:mi>f</m:mi>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mo>=</m:mo>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:msub>
+                  <m:mi mathvariant="script">F</m:mi>
+                  <m:mi>n</m:mi>
+                </m:msub>
+              </m:mrow>
+            </m:munder>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2255808">The choice of the model space <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>n</m:mi></m:msub></m:math> (and hence the model complexity
+and structure) is determined completely by the sample size <m:math><m:mi>n</m:mi></m:math>, and
+does not depend on the (empirical) distribution of training data.
+This is a major limitation of the sieve method. In a nutshell, the
+method of sieves tells us to average the data in a certain way (
+e.g., over a partition of <m:math><m:mi mathvariant="script">X</m:mi></m:math>) based on the sample size, independent
+on the sample values themselves.</para>
+      <para id="id2255854">In general, learning basically comprises of two things:</para>
+      <list id="id2255858" list-type="enumerated">
+        <item id="uid5">Averaging data to reduce variability
+</item>
+        <item id="uid6">Deciding <emphasis>where (or how)</emphasis> to average
+</item>
+      </list>
+      <para id="id2255887">Sieves basically force us to deal with (2) <emphasis>a priori</emphasis> (before we
+analyze the training data). This will lead to suboptimal
+classifiers and estimators, in general. Indeed deciding where/how to
+average is the really interesting and fundamental aspect of learning;
+once this is decided we have effectively solved the learing problem.
+There are at least two possibilities for breaking the rigidity of the
+method of sieves, as we shall see in the following section.</para>
+    </section>
+    <section id="uid7">
+      <title>Data Adaptive Model Spaces</title>
+      <section id="uid8">
+        <title>Structural Risk Minimization (SRM)</title>
+        <para id="id2255918">The basic idea is to select <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>n</m:mi></m:msub></m:math> based on the training data
+themselves. Let <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mn>1</m:mn></m:msub></m:math>, <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mn>2</m:mn></m:msub></m:math>, ...be a sequence of model spaces
+of increasing sizes/complexities with</para>
+        <equation id="id2255973"><m:math mode="display">
+            <m:mrow>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">lim</m:mo>
+                <m:mrow>
+                  <m:mi>k</m:mi>
+                  <m:mo>→</m:mo>
+                  <m:mi>∞</m:mi>
+                </m:mrow>
+              </m:munder>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">inf</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:msub>
+                    <m:mi mathvariant="script">F</m:mi>
+                    <m:mi>k</m:mi>
+                  </m:msub>
+                </m:mrow>
+              </m:munder>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>=</m:mo>
+              <m:msup>
+                <m:mi>R</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+        <para id="id2254892">Let</para>
+        <equation id="id2254895">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>f</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mrow>
+                  <m:mi>n</m:mi>
+                  <m:mo>,</m:mo>
+                  <m:mi>k</m:mi>
+                </m:mrow>
+              </m:msub>
+              <m:mo>=</m:mo>
+              <m:mo form="prefix">arg</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:msub>
+                    <m:mi mathvariant="script">F</m:mi>
+                    <m:mi>k</m:mi>
+                  </m:msub>
+                </m:mrow>
+              </m:munder>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>R</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2256367">be a function from <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi></m:msub></m:math> that minimizes the empirical risk. This gives
+us a sequence of selected models <m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mrow><m:mi>n</m:mi><m:mo>,</m:mo><m:mn>1</m:mn></m:mrow></m:msub><m:mo>,</m:mo><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mrow><m:mi>n</m:mi><m:mo>,</m:mo><m:mn>2</m:mn></m:mrow></m:msub><m:mo>,</m:mo><m:mo>⋯</m:mo></m:mrow></m:math>
+Also associate with each set <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi></m:msub></m:math> a value <m:math><m:mrow><m:msub><m:mi>C</m:mi><m:mrow><m:mi>n</m:mi><m:mo>,</m:mo><m:mi>k</m:mi></m:mrow></m:msub><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math> that measures
+the complexity or “size” of the set <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi></m:msub></m:math>. Typically, <m:math><m:msub><m:mi>C</m:mi><m:mrow><m:mi>n</m:mi><m:mo>,</m:mo><m:mi>k</m:mi></m:mrow></m:msub></m:math>
+is monotonically increasing with <m:math><m:mi>k</m:mi></m:math> (since the sets are of
+increasing complexity) and decreasing with <m:math><m:mi>n</m:mi></m:math> (since we become more
+confident with more training data). More precisely, suppose that
+the <m:math><m:msub><m:mi>C</m:mi><m:mrow><m:mi>n</m:mi><m:mo>,</m:mo><m:mi>k</m:mi></m:mrow></m:msub></m:math> chosen so that</para>
+        <equation id="uid9">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>P</m:mi>
+              <m:mfenced separators="" open="(" close=")">
+                <m:munder>
+                  <m:mo movablelimits="true" form="prefix">sup</m:mo>
+                  <m:mrow>
+                    <m:mi>f</m:mi>
+                    <m:mo>∈</m:mo>
+                    <m:msub>
+                      <m:mi mathvariant="script">F</m:mi>
+                      <m:mi>k</m:mi>
+                    </m:msub>
+                  </m:mrow>
+                </m:munder>
+                <m:mrow>
+                  <m:mo>|</m:mo>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>R</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>f</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mi>R</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>f</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>|</m:mo>
+                </m:mrow>
+                <m:mo>&gt;</m:mo>
+                <m:msub>
+                  <m:mi>C</m:mi>
+                  <m:mrow>
+                    <m:mi>n</m:mi>
+                    <m:mo>,</m:mo>
+                    <m:mi>k</m:mi>
+                  </m:mrow>
+                </m:msub>
+              </m:mfenced>
+              <m:mo>&lt;</m:mo>
+              <m:mi>δ</m:mi>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2256664">for some small <m:math><m:mrow><m:mi>δ</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math>. Then we may conclude that with
+very high probability (at least <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>δ</m:mi></m:mrow></m:math>) the empirical risk
+<m:math><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> is within <m:math><m:msub><m:mi>C</m:mi><m:mrow><m:mi>n</m:mi><m:mo>,</m:mo><m:mi>k</m:mi></m:mrow></m:msub></m:math> of <m:math><m:mi>R</m:mi></m:math> uniformly on the class <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi></m:msub></m:math>.
+This type of bound suffices to bound the estimation error (variance)
+of the model selection process of the form <m:math><m:mrow><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>≤</m:mo><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>+</m:mo><m:msub><m:mi>C</m:mi><m:mrow><m:mi>n</m:mi><m:mo>,</m:mo><m:mi>k</m:mi></m:mrow></m:msub></m:mrow></m:math>, and SRM selects the final model by minimizing
+this bound over all functions in <m:math><m:mrow><m:msub><m:mo>⋃</m:mo><m:mrow><m:mi>k</m:mi><m:mo>≥</m:mo><m:mn>1</m:mn></m:mrow></m:msub><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi></m:msub></m:mrow></m:math>. The selected
+model is given by
+<m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mrow><m:mi>n</m:mi><m:mo>,</m:mo><m:mover accent="true"><m:mi>k</m:mi><m:mo>^</m:mo></m:mover></m:mrow></m:msub></m:math>, where</para>
+        <equation id="id2256884"><m:math mode="display">
+            <m:mrow>
+              <m:mover accent="true">
+                <m:mi>k</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mo>=</m:mo>
+              <m:mo form="prefix">arg</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>k</m:mi>
+                  <m:mo>≥</m:mo>
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:munder>
+              <m:mfenced separators="" open="{" close="}">
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>R</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>f</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mrow>
+                      <m:mi>n</m:mi>
+                      <m:mo>,</m:mo>
+                      <m:mi>k</m:mi>
+                    </m:mrow>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>+</m:mo>
+                <m:msub>
+                  <m:mi>C</m:mi>
+                  <m:mrow>
+                    <m:mi>n</m:mi>
+                    <m:mo>,</m:mo>
+                    <m:mi>k</m:mi>
+                  </m:mrow>
+                </m:msub>
+              </m:mfenced>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+        <para id="id2256986">A typical example could be the
+use of VC dimension to characterize the complexity of the collection
+of model spaces <emphasis>i.e.,</emphasis><m:math><m:msub><m:mi>C</m:mi><m:mrow><m:mi>n</m:mi><m:mo>,</m:mo><m:mi>k</m:mi></m:mrow></m:msub></m:math> is derived from a bound on the
+estimation error.</para>
+      </section>
+      <section id="uid10">
+        <title>Complexity Regularization</title>
+        <para id="id2257023">Consider a very large class of candidate models <m:math><m:mi mathvariant="script">F</m:mi></m:math>. To each <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>
+assign a complexity value <m:math><m:mrow><m:msub><m:mi>C</m:mi><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>. Assume that the complexity value is
+chosen so that</para>
+        <equation id="uid11"><m:math mode="display">
+            <m:mrow>
+              <m:mi>P</m:mi>
+              <m:mfenced separators="" open="(" close=")">
+                <m:munder>
+                  <m:mo movablelimits="true" form="prefix">sup</m:mo>
+                  <m:mrow>
+                    <m:mi>f</m:mi>
+                    <m:mo>∈</m:mo>
+                    <m:mi mathvariant="script">F</m:mi>
+                  </m:mrow>
+                </m:munder>
+                <m:mrow>
+                  <m:mo>|</m:mo>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>R</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>f</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mi>R</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>f</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>|</m:mo>
+                </m:mrow>
+                <m:mo>&gt;</m:mo>
+                <m:msub>
+                  <m:mi>C</m:mi>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mfenced>
+              <m:mo>&lt;</m:mo>
+              <m:mi>δ</m:mi>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+        <para id="id2257176">This probability bound also implies an upper bound on the estimation error
+and complexity regularization is based on the criterion</para>
+        <equation id="uid12"><m:math mode="display">
+            <m:mrow>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>f</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mo>=</m:mo>
+              <m:mo form="prefix">arg</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:mi mathvariant="script">F</m:mi>
+                </m:mrow>
+              </m:munder>
+              <m:mfenced separators="" open="{" close="}">
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>R</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>+</m:mo>
+                <m:msub>
+                  <m:mi>C</m:mi>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mfenced>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+        <para id="id2257280">Complexity Regularization and SRM are very similar and equivalent in
+certain instances. A distinguishing feature of SRM and complexity
+reqularization techniques is that the complexity and structure of the
+model is not fixed prior to examining the data; the data aid in the
+selection of the best complexity. In fact, the key difference compared
+to the Method of Sieves is that these techniques can allow the data to
+play an integral role in deciding where and how to average the data.</para>
+      </section>
+    </section>
+    <section id="uid13">
+      <title>Probably Approximately Correct (PAC) learning</title>
+      <para id="id2257300">Probability bounds of the forms in <link target-id="uid9" class="cnxn"/> and <link target-id="uid11" class="cnxn"/> are
+the foundation for SRM and complexity regularization techniques.
+The simplest of these bounds are known as PAC bounds in the machine
+learning community.</para>
+      <section id="uid14">
+        <title>Approximation and Estimation Errors</title>
+        <para id="id2257322">In order to develop complexity regularization schemes we will need to
+revisit the estimation error / approximation error trade-off. Let
+<m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mo>=</m:mo><m:mo form="prefix">arg</m:mo><m:msub><m:mo movablelimits="true" form="prefix">min</m:mo><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:msub><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> for some space of
+models <m:math><m:mi mathvariant="script">F</m:mi></m:math>.</para>
+        <equation id="id2257410">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:msup>
+                <m:mi>R</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mspace width="4pt"/>
+              <m:mo>=</m:mo>
+              <m:mspace width="4pt"/>
+              <m:munder>
+                <m:munder accentunder="true">
+                  <m:mrow>
+                    <m:mi>R</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:msub>
+                        <m:mover accent="true">
+                          <m:mi>f</m:mi>
+                          <m:mo>^</m:mo>
+                        </m:mover>
+                        <m:mi>n</m:mi>
+                      </m:msub>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:msub>
+                      <m:mo movablelimits="true" form="prefix">inf</m:mo>
+                      <m:mrow>
+                        <m:mi>f</m:mi>
+                        <m:mo>∈</m:mo>
+                        <m:mi mathvariant="script">F</m:mi>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mi>R</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                  </m:mrow>
+                  <m:mo>︸</m:mo>
+                </m:munder>
+                <m:mrow>
+                  <m:mtext>estimation</m:mtext>
+                  <m:mspace width="4.pt"/>
+                  <m:mtext>Error</m:mtext>
+                </m:mrow>
+              </m:munder>
+              <m:mspace width="4pt"/>
+              <m:mo>+</m:mo>
+              <m:mspace width="4pt"/>
+              <m:munder>
+                <m:munder accentunder="true">
+                  <m:mrow>
+                    <m:msub>
+                      <m:mo movablelimits="true" form="prefix">inf</m:mo>
+                      <m:mrow>
+                        <m:mi>f</m:mi>
+                        <m:mo>∈</m:mo>
+                        <m:mi mathvariant="script">F</m:mi>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mi>R</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:msup>
+                      <m:mi>R</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:mrow>
+                  <m:mo>︸</m:mo>
+                </m:munder>
+                <m:mrow>
+                  <m:mtext>approximation</m:mtext>
+                  <m:mspace width="4.pt"/>
+                  <m:mtext>error</m:mtext>
+                </m:mrow>
+              </m:munder>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2257600">The approximation error depends on how close <m:math><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup></m:math> is close to <m:math><m:mi mathvariant="script">F</m:mi></m:math>, and
+without making assumptions, this is unknown. The estimation error is
+quantifiable, and depends on the complexity or size of <m:math><m:mi mathvariant="script">F</m:mi></m:math>. The
+error decomposition is illustrated in <link target-id="uid15" class="cnxn"/>. The
+estimation error quantifies how much we can “trust” the empirical
+risk minimization process to select a model close to the best in a
+given class.</para>
+        <figure id="uid15" orient="horizontal"><media id="id48000970" alt=""><image src="../../media/newfig.png" mime-type="image/png" width="400"/><image for="pdf" src="../../media/newfig.eps" mime-type="application/postscript" print-width="3in"/></media>
+          
+        <caption>Relationship between the errors</caption></figure>
+        <para id="id2257666">Probability bounds of the forms in <link target-id="uid9" class="cnxn"/> and <link target-id="uid11" class="cnxn"/>
+guarantee that the empirical risk is uniformly close to the true risk,
+and using <link target-id="uid9" class="cnxn"/> and <link target-id="uid11" class="cnxn"/> it is possible to show that
+with high probability the selected model <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> satisfies</para>
+        <equation id="id2257712">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">inf</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:msub>
+                    <m:mi mathvariant="script">F</m:mi>
+                    <m:mi>k</m:mi>
+                  </m:msub>
+                </m:mrow>
+              </m:munder>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≤</m:mo>
+              <m:mi>C</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>n</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2257797">or</para>
+        <equation id="id2257802"><m:math mode="display">
+            <m:mrow>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">inf</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:msub>
+                    <m:mi mathvariant="script">F</m:mi>
+                    <m:mi>k</m:mi>
+                  </m:msub>
+                </m:mrow>
+              </m:munder>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≤</m:mo>
+              <m:msub>
+                <m:mi>C</m:mi>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+      </section>
+      <section id="uid16"><title>The PAC Learning Model</title>
+        
+        <para id="id2257896">The estimation error will be small if <m:math><m:mrow><m:mi>R</m:mi><m:mo>(</m:mo><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:math> is close to
+<m:math><m:mrow><m:msub><m:mo movablelimits="true" form="prefix">inf</m:mo><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:msub><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>. PAC learning expresses this as follows. We
+want <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> to be a “probably approximately correct” (PAC)
+model from <m:math><m:mi mathvariant="script">F</m:mi></m:math>. Formally, we say that <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> is <m:math><m:mi>ε</m:mi></m:math> accurate
+with confidence <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>δ</m:mi></m:mrow></m:math>, or <m:math><m:mrow><m:mo>(</m:mo><m:mi>ε</m:mi><m:mo>,</m:mo><m:mi>δ</m:mi><m:mo>)</m:mo><m:mo>-</m:mo></m:mrow></m:math>PAC for short, if</para>
+        <equation id="id2258069"><m:math mode="display">
+            <m:mrow>
+              <m:mi>P</m:mi>
+              <m:mfenced separators="" open="(" close=")">
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>f</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>-</m:mo>
+                <m:munder>
+                  <m:mo movablelimits="true" form="prefix">inf</m:mo>
+                  <m:mrow>
+                    <m:mi>f</m:mi>
+                    <m:mo>∈</m:mo>
+                    <m:mi mathvariant="script">F</m:mi>
+                  </m:mrow>
+                </m:munder>
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>&gt;</m:mo>
+                <m:mi>ε</m:mi>
+              </m:mfenced>
+              <m:mo>&lt;</m:mo>
+              <m:mi>δ</m:mi>
+            </m:mrow>
+<m:mo>.</m:mo>
+
+          </m:math>
+        </equation>
+        <para id="id2258151">This says that the difference between <m:math><m:mrow><m:mi>R</m:mi><m:mo>(</m:mo><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:math> and <m:math><m:mrow><m:msub><m:mo movablelimits="true" form="prefix">inf</m:mo><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:msub><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> is greater than <m:math><m:mi>ε</m:mi></m:math> with probability less than
+<m:math><m:mi>δ</m:mi></m:math>. Sometimes, especially in the machine learning community, PAC
+bounds are stated as, “with probability of at least <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>δ</m:mi></m:mrow></m:math>,
+<m:math><m:mrow><m:mrow><m:mo>|</m:mo><m:mi>R</m:mi></m:mrow><m:mrow><m:mo>(</m:mo><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>-</m:mo><m:msub><m:mo movablelimits="true" form="prefix">inf</m:mo><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:msub><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mrow><m:mo>|</m:mo><m:mo>≤</m:mo><m:mi>ε</m:mi></m:mrow></m:mrow></m:math>”</para>
+        <para id="id2258331">To introduce PAC bounds, let us consider a simple case. Let <m:math><m:mi mathvariant="script">F</m:mi></m:math>consist
+of a finite number of models, and let <m:math><m:mrow><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo></m:mrow></m:math> denote that number.
+Furthermore, assume that <m:math><m:mrow><m:msub><m:mo movablelimits="true" form="prefix">min</m:mo><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:msub><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mn>0</m:mn></m:mrow></m:math>.</para>
+
+<example id="exam1">
+        <para id="id2258406"><m:math><m:mi mathvariant="script">F</m:mi></m:math>= set of all histogram classifiers with M bins
+<m:math><m:mrow><m:mo>⇒</m:mo><m:mrow><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo></m:mrow><m:mo>=</m:mo><m:msup><m:mn>2</m:mn><m:mi>M</m:mi></m:msup></m:mrow></m:math>.</para>
+        <equation id="id2258453">
+          <m:math mode="display">
+            <m:mrow>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:mi mathvariant="script">F</m:mi>
+                </m:mrow>
+              </m:munder>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>=</m:mo>
+              <m:mn>0</m:mn>
+              <m:mo>⇒</m:mo>
+              <m:mo>∃</m:mo>
+              <m:mspace width="4.pt"/>
+              <m:mtext>a</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>classifier</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>in</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mi mathvariant="script">F</m:mi>
+              <m:mspace width="4.pt"/>
+              <m:mtext>that</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>has</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>a</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>zero</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>probability</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>of</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>error</m:mtext>
+            </m:mrow>
+          </m:math>
+        </equation>
+</example>
+<rule id="theo1" type="Theorem"><label>Theorem</label>
+<statement id="id48002125">
+        <para id="id2258566"> 
+Assume <m:math><m:mrow><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo><m:mo>&lt;</m:mo><m:mi>∞</m:mi></m:mrow></m:math> and <m:math><m:mrow><m:msub><m:mo movablelimits="true" form="prefix">min</m:mo><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:msub><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mn>0</m:mn></m:mrow></m:math>, where <m:math><m:mrow><m:mi>R</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo><m:mo>=</m:mo><m:mi>P</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo><m:mo>≠</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow></m:math>. Let <m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mo>=</m:mo><m:mo form="prefix">arg</m:mo><m:msub><m:mo movablelimits="true" form="prefix">min</m:mo><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:msub><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>, where <m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mfrac><m:mn>1</m:mn><m:mi>n</m:mi></m:mfrac><m:msubsup><m:mo>∑</m:mo><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup><m:msub><m:mn mathvariant="bold">1</m:mn><m:mrow><m:mo>{</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>X</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>≠</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>}</m:mo></m:mrow></m:msub></m:mrow></m:math>. Then for every <m:math><m:mi>n</m:mi></m:math> and
+<m:math><m:mrow><m:mi>ε</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math>,</para>
+        <equation id="id2258862"><m:math mode="display">
+            <m:mrow>
+              <m:mi>P</m:mi>
+              <m:mfenced separators="" open="(" close=")">
+                <m:mi>R</m:mi>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+                <m:mo>&gt;</m:mo>
+                <m:mi>ε</m:mi>
+              </m:mfenced>
+              <m:mspace width="4pt"/>
+              <m:mo>≤</m:mo>
+              <m:mspace width="4pt"/>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+                <m:mo>|</m:mo>
+              </m:mrow>
+              <m:msup>
+                <m:mi>e</m:mi>
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mi>n</m:mi>
+                  <m:mi>ε</m:mi>
+                </m:mrow>
+              </m:msup>
+              <m:mspace width="4pt"/>
+              <m:mo>≡</m:mo>
+              <m:mspace width="4pt"/>
+              <m:mi>δ</m:mi>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+</statement>
+<proof id="id48002523">        
+<para id="id2258958">
+
+Since <m:math><m:mrow><m:msub><m:mo movablelimits="true" form="prefix">min</m:mo><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:msub><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mn>0</m:mn></m:mrow></m:math>, it follows that <m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mn>0</m:mn></m:mrow></m:math>.
+In fact, there may be several <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math> such that <m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mn>0</m:mn></m:mrow></m:math>.
+Let <m:math><m:mrow><m:mi mathvariant="script">G</m:mi><m:mo>=</m:mo><m:mo>{</m:mo><m:mi>f</m:mi><m:mo>:</m:mo><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mn>0</m:mn><m:mo>}</m:mo></m:mrow></m:math>.</para>
+        <equation id="id2259155">
+          <m:math mode="display">
+            <m:mtable displaystyle="true">
+              <m:mtr>
+                <m:mtd columnalign="right">
+                  <m:mrow>
+                    <m:mi>P</m:mi>
+                    <m:mo>(</m:mo>
+                    <m:mi>R</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:msub>
+                        <m:mover accent="true">
+                          <m:mi>f</m:mi>
+                          <m:mo>^</m:mo>
+                        </m:mover>
+                        <m:mi>n</m:mi>
+                      </m:msub>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>&gt;</m:mo>
+                    <m:mi>ε</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mtd>
+                <m:mtd>
+                  <m:mo>≤</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mi>P</m:mi>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:munder>
+                        <m:mo>⋃</m:mo>
+                        <m:mrow>
+                          <m:mi>f</m:mi>
+                          <m:mo>∈</m:mo>
+                          <m:mi mathvariant="script">G</m:mi>
+                        </m:mrow>
+                      </m:munder>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>R</m:mi>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>f</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>&gt;</m:mo>
+                        <m:mi>ε</m:mi>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mi>P</m:mi>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:munder>
+                        <m:mo>⋃</m:mo>
+                        <m:mrow>
+                          <m:mi>f</m:mi>
+                          <m:mo>∈</m:mo>
+                          <m:mi mathvariant="script">F</m:mi>
+                        </m:mrow>
+                      </m:munder>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>R</m:mi>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>f</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>&gt;</m:mo>
+                        <m:mi>ε</m:mi>
+                        <m:mo>,</m:mo>
+                        <m:mspace width="4pt"/>
+                        <m:msub>
+                          <m:mover accent="true">
+                            <m:mi>R</m:mi>
+                            <m:mo>^</m:mo>
+                          </m:mover>
+                          <m:mi>n</m:mi>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>f</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>=</m:mo>
+                        <m:mn>0</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mi>P</m:mi>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:munder>
+                        <m:mo>⋃</m:mo>
+                        <m:mrow>
+                          <m:mi>f</m:mi>
+                          <m:mo>∈</m:mo>
+                          <m:mi mathvariant="script">F</m:mi>
+                          <m:mo>:</m:mo>
+                          <m:mi>R</m:mi>
+                          <m:mo>(</m:mo>
+                          <m:mi>f</m:mi>
+                          <m:mo>)</m:mo>
+                          <m:mo>&gt;</m:mo>
+                          <m:mi>ε</m:mi>
+                        </m:mrow>
+                      </m:munder>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:msub>
+                          <m:mover accent="true">
+                            <m:mi>R</m:mi>
+                            <m:mo>^</m:mo>
+                          </m:mover>
+                          <m:mi>n</m:mi>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>f</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>=</m:mo>
+                        <m:mn>0</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>≤</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:munder>
+                      <m:mo>∑</m:mo>
+                      <m:mrow>
+                        <m:mi>f</m:mi>
+                        <m:mo>∈</m:mo>
+                        <m:mi mathvariant="script">F</m:mi>
+                        <m:mo>:</m:mo>
+                        <m:mi>R</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>f</m:mi>
+                        <m:mo>)</m:mo>
+                        <m:mo>&gt;</m:mo>
+                        <m:mi>ε</m:mi>
+                      </m:mrow>
+                    </m:munder>
+                    <m:mi>P</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:msub>
+                        <m:mover accent="true">
+                          <m:mi>R</m:mi>
+                          <m:mo>^</m:mo>
+                        </m:mover>
+                        <m:mi>n</m:mi>
+                      </m:msub>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>f</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>=</m:mo>
+                      <m:mn>0</m:mn>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>≤</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:msup>
+                    <m:mrow>
+                      <m:mo>|</m:mo>
+                      <m:mi mathvariant="script">F</m:mi>
+                      <m:mo>|</m:mo>
+                      <m:mo>.</m:mo>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>-</m:mo>
+                        <m:mi>ε</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                    </m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:msup>
+                </m:mtd>
+              </m:mtr>
+            </m:mtable>
+          </m:math>
+        </equation>
+        <para id="id2259539">The last inequality follows from the fact that if <m:math><m:mrow><m:mi>R</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo><m:mo>=</m:mo><m:mi>P</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo><m:mo>≠</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo><m:mo>&gt;</m:mo><m:mi>ε</m:mi></m:mrow></m:math>, then the probability that <m:math><m:mi>n</m:mi></m:math>
+i.i.d. samples will satisfy <m:math><m:mrow><m:mi>f</m:mi><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo><m:mo>=</m:mo><m:mi>Y</m:mi></m:mrow></m:math> is less than or equal to
+<m:math><m:msup><m:mrow><m:mo>(</m:mo><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>ε</m:mi><m:mo>)</m:mo></m:mrow><m:mi>n</m:mi></m:msup></m:math>. Note that this is simply the probability
+that <m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mfrac><m:mn>1</m:mn><m:mi>n</m:mi></m:mfrac><m:msubsup><m:mo>∑</m:mo><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup><m:msub><m:mn mathvariant="bold">1</m:mn><m:mrow><m:mo>{</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>X</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>≠</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>}</m:mo></m:mrow></m:msub><m:mo>=</m:mo><m:mn>0</m:mn></m:mrow></m:math>. Finally apply the inequality <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>x</m:mi><m:mo>≤</m:mo><m:msup><m:mi>e</m:mi><m:mrow><m:mo>-</m:mo><m:mi>x</m:mi></m:mrow></m:msup></m:mrow></m:math> to obtain
+the desired result.</para>
+        <para id="id2259788">Note that for <m:math><m:mi>n</m:mi></m:math> sufficiently large, <m:math><m:mrow><m:mi>δ</m:mi><m:mo>=</m:mo><m:mrow><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo></m:mrow><m:msup><m:mi>e</m:mi><m:mrow><m:mo>-</m:mo><m:mi>n</m:mi><m:mi>ε</m:mi></m:mrow></m:msup></m:mrow></m:math>
+is arbitrarily small. To achieve a <m:math><m:mrow><m:mo>(</m:mo><m:mi>ε</m:mi><m:mo>,</m:mo><m:mi>δ</m:mi><m:mo>)</m:mo></m:mrow></m:math>-PAC bound
+for a desired <m:math><m:mrow><m:mi>ε</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math> and <m:math><m:mrow><m:mi>δ</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math> we require at least
+<m:math><m:mrow><m:mi>n</m:mi><m:mo>=</m:mo><m:mfrac><m:mrow><m:mo form="prefix">log</m:mo><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo><m:mo>-</m:mo><m:mo form="prefix">log</m:mo><m:mi>δ</m:mi></m:mrow><m:mi>ε</m:mi></m:mfrac></m:mrow></m:math> training examples.</para>
+</proof>
+</rule>
+<rule id="coro234234" type="Corollary"><label>Corollary</label>
+<statement id="id48003651">  
+      <para id="id2259927"> 
+Assume that <m:math><m:mrow><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo><m:mo>&lt;</m:mo><m:mi>∞</m:mi></m:mrow></m:math> and <m:math><m:mrow><m:msub><m:mo movablelimits="true" form="prefix">min</m:mo><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:msub><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mn>0</m:mn></m:mrow></m:math>. Then for every
+<m:math><m:mi>n</m:mi></m:math></para>
+        <equation id="id2260008"><m:math mode="display">
+            <m:mrow>
+              <m:mi>E</m:mi>
+              <m:mrow>
+                <m:mo>[</m:mo>
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>f</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>]</m:mo>
+              </m:mrow>
+              <m:mo>≤</m:mo>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mn>1</m:mn>
+                  <m:mo>+</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mo>|</m:mo>
+                  <m:mi mathvariant="script">F</m:mi>
+                  <m:mo>|</m:mo>
+                </m:mrow>
+                <m:mi>n</m:mi>
+              </m:mfrac>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+</statement>
+<proof id="id48003836">
+        <para id="id2260080">
+ Recall that for any non-negative random variable <m:math><m:mi>Z</m:mi></m:math> with finite mean,
+<m:math><m:mrow><m:mi>E</m:mi><m:mrow><m:mo>[</m:mo><m:mi>Z</m:mi><m:mo>]</m:mo></m:mrow><m:mo>=</m:mo><m:msubsup><m:mo>∫</m:mo><m:mrow><m:mn>0</m:mn></m:mrow><m:mi>∞</m:mi></m:msubsup><m:mi>P</m:mi><m:mrow><m:mo>(</m:mo><m:mi>Z</m:mi><m:mo>&gt;</m:mo><m:mi>t</m:mi><m:mo>)</m:mo></m:mrow><m:mi>d</m:mi><m:mi>t</m:mi></m:mrow></m:math>. This follows from an
+application of integration by parts.</para>
+        <equation id="id2260151">
+          <m:math mode="display">
+            <m:mtable displaystyle="true">
+              <m:mtr>
+                <m:mtd columnalign="right">
+                  <m:mrow>
+                    <m:mi>E</m:mi>
+                    <m:mo>[</m:mo>
+                    <m:mi>R</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:msub>
+                        <m:mover accent="true">
+                          <m:mi>f</m:mi>
+                          <m:mo>^</m:mo>
+                        </m:mover>
+                        <m:mi>n</m:mi>
+                      </m:msub>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>]</m:mo>
+                  </m:mrow>
+                </m:mtd>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:msubsup>
+                      <m:mo>∫</m:mo>
+                      <m:mn>0</m:mn>
+                      <m:mi>∞</m:mi>
+                    </m:msubsup>
+                    <m:mi>P</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>R</m:mi>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:msub>
+                          <m:mover accent="true">
+                            <m:mi>f</m:mi>
+                            <m:mo>^</m:mo>
+                          </m:mover>
+                          <m:mi>n</m:mi>
+                        </m:msub>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>&gt;</m:mo>
+                      <m:mi>t</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mi>d</m:mi>
+                    <m:mi>t</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:msubsup>
+                      <m:mo>∫</m:mo>
+                      <m:mn>0</m:mn>
+                      <m:mi>u</m:mi>
+                    </m:msubsup>
+                    <m:munder>
+                      <m:munder accentunder="true">
+                        <m:mrow>
+                          <m:mi>P</m:mi>
+                          <m:mo>(</m:mo>
+                          <m:mi>R</m:mi>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+                            <m:msub>
+                              <m:mover accent="true">
+                                <m:mi>f</m:mi>
+                                <m:mo>^</m:mo>
+                              </m:mover>
+                              <m:mi>n</m:mi>
+                            </m:msub>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                          <m:mo>&gt;</m:mo>
+                          <m:mi>t</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>︸</m:mo>
+                      </m:munder>
+                      <m:mrow>
+                        <m:mo>≤</m:mo>
+                        <m:mn>1</m:mn>
+                      </m:mrow>
+                    </m:munder>
+                    <m:mi>d</m:mi>
+                    <m:mi>t</m:mi>
+                    <m:mo>+</m:mo>
+                    <m:msubsup>
+                      <m:mo>∫</m:mo>
+                      <m:mi>u</m:mi>
+                      <m:mi>∞</m:mi>
+                    </m:msubsup>
+                    <m:mi>P</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>R</m:mi>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:msub>
+                          <m:mover accent="true">
+                            <m:mi>f</m:mi>
+                            <m:mo>^</m:mo>
+                          </m:mover>
+                          <m:mi>n</m:mi>
+                        </m:msub>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>&gt;</m:mo>
+                      <m:mi>t</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mi>d</m:mi>
+                    <m:mi>t</m:mi>
+                    <m:mo>,</m:mo>
+                    <m:mspace width="4.pt"/>
+                    <m:mspace width="4.pt"/>
+                    <m:mtext>for</m:mtext>
+                    <m:mspace width="4.pt"/>
+                    <m:mtext>any</m:mtext>
+                    <m:mspace width="4.pt"/>
+                    <m:mrow>
+                      <m:mi>u</m:mi>
+                      <m:mo>&gt;</m:mo>
+                      <m:mn>0</m:mn>
+                    </m:mrow>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>≤</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mi>u</m:mi>
+                    <m:mo>+</m:mo>
+                    <m:mrow>
+                      <m:mo>|</m:mo>
+                      <m:mi mathvariant="script">F</m:mi>
+                      <m:mo>|</m:mo>
+                    </m:mrow>
+                    <m:msubsup>
+                      <m:mo>∫</m:mo>
+                      <m:mi>u</m:mi>
+                      <m:mi>∞</m:mi>
+                    </m:msubsup>
+                    <m:msup>
+                      <m:mi>e</m:mi>
+                      <m:mrow>
+                        <m:mo>-</m:mo>
+                        <m:mi>n</m:mi>
+                        <m:mi>t</m:mi>
+                      </m:mrow>
+                    </m:msup>
+                    <m:mi>d</m:mi>
+                    <m:mi>t</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mi>u</m:mi>
+                    <m:mo>+</m:mo>
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:mo>|</m:mo>
+                        <m:mi mathvariant="script">F</m:mi>
+                        <m:mo>|</m:mo>
+                      </m:mrow>
+                      <m:mi>n</m:mi>
+                    </m:mfrac>
+                    <m:msup>
+                      <m:mi>e</m:mi>
+                      <m:mrow>
+                        <m:mo>-</m:mo>
+                        <m:mi>n</m:mi>
+                        <m:mi>u</m:mi>
+                      </m:mrow>
+                    </m:msup>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+            </m:mtable>
+          </m:math>
+        </equation>
+        <para id="id2260499">Minimizing with respect to <m:math><m:mi>u</m:mi></m:math> produces the smallest upper bound with <m:math><m:mrow><m:mi>u</m:mi><m:mo>=</m:mo><m:mfrac><m:mrow><m:mo form="prefix">log</m:mo><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo></m:mrow><m:mi>n</m:mi></m:mfrac></m:mrow></m:math></para>
+      </proof>
+</rule></section>
+    </section>
+  </content>
+</document>

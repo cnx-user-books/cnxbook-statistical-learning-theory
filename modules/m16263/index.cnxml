@@ -1,0 +1,1348 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml" xmlns:bib="http://bibtexml.sf.net/">
+  <title>Basic Elements of Statistical Decision Theory and Statistical Learning Theory</title>
+  <metadata>
+  <md:content-id>m16263</md:content-id><md:title>Basic Elements of Statistical Decision Theory and Statistical Learning Theory</md:title>
+  <md:abstract>This paper reviews and contrasts the basic elements of statistical decision theory and statistical learning theory. It is not intended to be a comprehensive treatment of either subject, but rather just enough to draw comparisons between the two.</md:abstract>
+  <md:uuid>b4e683fb-735f-40fc-84dc-086831c6ed20</md:uuid>
+</metadata>
+  <content>
+    <para id="id2255537">Throughout this module, let <m:math><m:mi>X</m:mi></m:math> denote the <emphasis>input</emphasis> to a
+decision-making process and <m:math><m:mi>Y</m:mi></m:math> denote the correct response or <emphasis>output</emphasis> (e.g., the value of a parameter, the label of a class, the
+signal of interest). We assume that <m:math><m:mi>X</m:mi></m:math> and <m:math><m:mi>Y</m:mi></m:math> are random variables
+or random vectors with joint distribution <m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>,</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>, where <m:math><m:mi>x</m:mi></m:math>
+and <m:math><m:mi>y</m:mi></m:math> denote specific values that may be taken by the random
+variables <m:math><m:mi>X</m:mi></m:math> and <m:math><m:mi>Y</m:mi></m:math>, respectively. The observation <m:math><m:mi>X</m:mi></m:math> is used to
+make decisions pertaining to the quantity of interest. For the
+purposes of illustration, we will focus on the task of determining the
+value of the quantity of interest. A decision rule for this task is a function <m:math><m:mi>f</m:mi></m:math> that takes the observation <m:math><m:mi>X</m:mi></m:math>
+as input and outputs a prediction of the quantity <m:math><m:mi>Y</m:mi></m:math>. We denote a
+decision rule by <m:math><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover></m:math> or <m:math><m:mrow><m:mi>f</m:mi><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow></m:math>, when we wish to indicate
+explicitly the dependence of the decision rule on the observation. We
+will examine techniques for designing decision rules and for analyzing
+their performance.</para>
+    <section id="uid2">
+      <title>Measuring Decision Accuracy: Loss and Risk Functions</title>
+      <para id="id2255991">The accuracy of a decision is measured with a loss function. For example, if our goal is to determine the value of
+<m:math><m:mi>Y</m:mi></m:math>, then a loss function takes as inputs the true value <m:math><m:mi>Y</m:mi></m:math> and
+the predicted value (the decision) <m:math><m:mrow><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover><m:mo>=</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> and
+outputs a non-negative real number (the “loss”) reflective of the
+accuracy of the decision. Two of the most commonly encountered loss
+functions include:</para>
+      <list id="id2256052" list-type="enumerated">
+        <item id="uid4">0/1 loss: <m:math><m:mrow><m:msub><m:mi>ℓ</m:mi><m:mrow><m:mn>0</m:mn><m:mo>/</m:mo><m:mn>1</m:mn></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover><m:mo>,</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow><m:mspace width="4pt"/><m:mo>=</m:mo><m:mspace width="4pt"/><m:msub><m:mi mathvariant="bold">I</m:mi><m:mrow><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover><m:mo>≠</m:mo><m:mi>Y</m:mi></m:mrow></m:msub></m:mrow></m:math>, which is the indicator function
+taking the value of 1 when <m:math><m:mrow><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover><m:mo>≠</m:mo><m:mi>Y</m:mi></m:mrow></m:math> and taking the
+value 0 when <m:math><m:mrow><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mi>Y</m:mi></m:mrow></m:math>.
+</item>
+        <item id="uid5">squared error loss: <m:math><m:mrow><m:msub><m:mi>ℓ</m:mi><m:mn>2</m:mn></m:msub><m:mrow><m:mo>(</m:mo><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover><m:mo>,</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow><m:mspace width="4pt"/><m:mo>=</m:mo><m:mspace width="4pt"/><m:msubsup><m:mrow><m:mo>∥</m:mo><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover><m:mo>-</m:mo><m:mi>Y</m:mi><m:mo>∥</m:mo></m:mrow><m:mn>2</m:mn><m:mn>2</m:mn></m:msubsup></m:mrow></m:math>, which is simply the sum of squared
+differences between the elements of <m:math><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover></m:math> and <m:math><m:mi>Y</m:mi></m:math>.
+</item>
+      </list>
+      <para id="id2256289">The 0/1 loss is commonly used in detection and classification
+problems, and the squared error loss is more appropriate for problems
+involving the estimation of a continuous parameter. Note that since the
+inputs to the loss function may be random variables, so is the loss.</para>
+      <para id="id2256297">A risk <m:math><m:mrow><m:mi>R</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:math> is a function of the decision rule <m:math><m:mi>f</m:mi></m:math>, and
+is defined to be the expectation of a loss with respect to the joint
+distribution <m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>,</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>. For example, the expected 0/1 loss
+produces the <emphasis>probability of error</emphasis> risk function; i.e., a simply
+calculation shows that <m:math><m:mrow><m:msub><m:mi>R</m:mi><m:mrow><m:mn>0</m:mn><m:mo>/</m:mo><m:mn>1</m:mn></m:mrow></m:msub><m:mrow><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mi>E</m:mi><m:mo>[</m:mo></m:mrow><m:mrow><m:mo>(</m:mo><m:msub><m:mi mathvariant="bold">I</m:mi><m:mrow><m:mi>f</m:mi><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo><m:mo>≠</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mo>]</m:mo></m:mrow><m:mo>=</m:mo><m:mtext>Pr</m:mtext><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow><m:mo>≠</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>. The expected squared error loss
+produces the <emphasis>mean squared error</emphasis> MSE risk function, <m:math><m:mrow><m:msub><m:mi>R</m:mi><m:mn>2</m:mn></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:msubsup><m:mrow><m:mi>E</m:mi><m:mo>[</m:mo><m:mo>∥</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow><m:mo>-</m:mo><m:mi>Y</m:mi><m:mo>∥</m:mo></m:mrow><m:mn>2</m:mn><m:mn>2</m:mn></m:msubsup><m:mrow><m:mo>]</m:mo></m:mrow></m:mrow></m:math>.</para>
+      <para id="id2256523">Optimal decisions are obtained by choosing a decision rule <m:math><m:mi>f</m:mi></m:math> that
+minimizes the desired risk function. Given complete knowledge of the
+probability distributions involved (e.g., <m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>,</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>) one can
+explicitly or numerically design an optimal decision rule, denoted
+<m:math><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup></m:math>, that minimizes the risk function.</para>
+    </section>
+    <section id="uid7">
+      <title>The Maximum Likelihood Principle</title>
+      <para id="id2256595">The conditional distribution of the observation <m:math><m:mi>X</m:mi></m:math> given the quantity
+of interest <m:math><m:mi>Y</m:mi></m:math> is denoted by <m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>. The conditional
+distribution <m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> can be viewed as a generative model,
+probabilistically describing the observations resulting from a given
+value, <m:math><m:mi>y</m:mi></m:math>, of the quantity of interest. For example, if <m:math><m:mi>y</m:mi></m:math> is the
+value of a parameter, the <m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> is the probability
+distribution of the observation <m:math><m:mi>X</m:mi></m:math> when the parameter value is set to
+<m:math><m:mi>y</m:mi></m:math>. If <m:math><m:mi>X</m:mi></m:math> is a continuous random variable with conditional density
+<m:math><m:mrow><m:msub><m:mi>p</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> or a discrete random variable with conditional
+probability mass function (pmf) <m:math><m:mrow><m:msub><m:mi>p</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>, then given a value <m:math><m:mi>y</m:mi></m:math>
+we can assess the probability of a particular measurment value <m:math><m:mi>y</m:mi></m:math> by
+the magnitude of either the conditional density or pmf.</para>
+      <para id="id2256848">In decision making problems, we know the value of the observation, but
+do not know the value <m:math><m:mi>y</m:mi></m:math>. Therefore, it is appealing to consider the
+conditional density or pmf as a function of the unknown values <m:math><m:mi>y</m:mi></m:math>,
+with <m:math><m:mi>X</m:mi></m:math> fixed at its observed value. The resulting function is
+called the likelihood function. As the name suggests, values of <m:math><m:mi>y</m:mi></m:math>
+where the likelihood function is largest are intuitively reasonable
+indicators of the true value of the unknown quantity, which we will denote
+by <m:math><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup></m:math>. The rationale for this is that these values would produce
+conditional densities or pmfs that place high probability on the
+observation <m:math><m:mrow><m:mi>X</m:mi><m:mo>=</m:mo><m:mi>x</m:mi></m:mrow></m:math>.</para>
+      <para id="id2256924">The Maximum Likelihood Estimator
+(MLE) is defined to be the value of <m:math><m:mi>y</m:mi></m:math> that maximizes the
+likelihood function; i.e., in the continuous case</para>
+      <equation id="id2256941">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mover accent="true">
+              <m:mi>y</m:mi>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>X</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mspace width="4pt"/>
+            <m:mo>=</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">max</m:mo>
+              <m:mi>y</m:mi>
+            </m:munder>
+            <m:msub>
+              <m:mi>p</m:mi>
+              <m:mrow>
+                <m:mi>X</m:mi>
+                <m:mo>|</m:mo>
+                <m:mi>Y</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>X</m:mi>
+              <m:mo>|</m:mo>
+              <m:mi>y</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257015">with an analogous
+definition for the discrete case by replacing the conditional density
+with the conditional pmf. The decision rule <m:math><m:mrow><m:mover accent="true"><m:mi>y</m:mi><m:mo>^</m:mo></m:mover><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> is
+called an “estimator,” which is common in decision problems
+involving a continuous parameter. Note that maximizing the likelihood
+function is equivalent to minimizing the negative log-likelihood
+function (since the logarithm is a monotonic transformation). Now let
+<m:math><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup></m:math> denote the true value of <m:math><m:mi>Y</m:mi></m:math>. Then we can view the negative
+log-likelihood as a loss function</para>
+      <equation id="id2257080">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>ℓ</m:mi>
+              <m:mi>L</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>y</m:mi>
+              <m:mo>,</m:mo>
+              <m:msup>
+                <m:mi>y</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mspace width="4pt"/>
+            <m:mo>=</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mo>-</m:mo>
+            <m:mo form="prefix">log</m:mo>
+            <m:msub>
+              <m:mi>p</m:mi>
+              <m:mrow>
+                <m:mi>X</m:mi>
+                <m:mo>|</m:mo>
+                <m:mi>Y</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>X</m:mi>
+              <m:mo>|</m:mo>
+              <m:mi>y</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257153">where the
+dependence on <m:math><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup></m:math> on the right hand side is embodied in the
+observation <m:math><m:mi>X</m:mi></m:math> on the left. An interesting special case of the MLE
+results when the conditional density <m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> is a Gaussian, in
+which case the negative log-likelihood corresponds to a squared error
+loss function.</para>
+      <para id="id2257218">Now let us consider the expectation of this
+loss, with respect to the conditional distribution
+<m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>|</m:mo><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup><m:mo>)</m:mo></m:mrow></m:mrow></m:math>:</para>
+      <equation id="id2257260">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mi>E</m:mi>
+                  <m:mo>[</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:msub>
+                    <m:mi>p</m:mi>
+                    <m:mrow>
+                      <m:mi>X</m:mi>
+                      <m:mo>|</m:mo>
+                      <m:mi>Y</m:mi>
+                    </m:mrow>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>X</m:mi>
+                    <m:mo>|</m:mo>
+                    <m:mi>y</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>]</m:mo>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo>∫</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>p</m:mi>
+                          <m:mrow>
+                            <m:mi>X</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>Y</m:mi>
+                          </m:mrow>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>x</m:mi>
+                          <m:mo>|</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:mfenced>
+                  <m:msub>
+                    <m:mi>p</m:mi>
+                    <m:mrow>
+                      <m:mi>X</m:mi>
+                      <m:mo>|</m:mo>
+                      <m:mi>Y</m:mi>
+                    </m:mrow>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>x</m:mi>
+                    <m:mo>|</m:mo>
+                    <m:msup>
+                      <m:mi>y</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mi>d</m:mi>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <para id="id2257399">The true value <m:math><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup></m:math> minimizes the expected negative log-likelihood
+(or, equivalently, maximizes the expected log-likelihood ). To see
+this, compare the expected log-likelihood of <m:math><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup></m:math> with that of any
+other value <m:math><m:mi>y</m:mi></m:math>:</para>
+      <equation id="id2257444"><m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mi>E</m:mi>
+                  <m:mo>[</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:msub>
+                    <m:mi>p</m:mi>
+                    <m:mrow>
+                      <m:mi>X</m:mi>
+                      <m:mo>|</m:mo>
+                      <m:mi>Y</m:mi>
+                    </m:mrow>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>X</m:mi>
+                    <m:mo>|</m:mo>
+                    <m:msup>
+                      <m:mi>y</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:msub>
+                    <m:mi>p</m:mi>
+                    <m:mrow>
+                      <m:mi>X</m:mi>
+                      <m:mo>|</m:mo>
+                      <m:mi>Y</m:mi>
+                    </m:mrow>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>X</m:mi>
+                    <m:mo>|</m:mo>
+                    <m:mi>y</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>]</m:mo>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mi>E</m:mi>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:mfrac>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>p</m:mi>
+                            <m:mrow>
+                              <m:mi>X</m:mi>
+                              <m:mo>|</m:mo>
+                              <m:mi>Y</m:mi>
+                            </m:mrow>
+                          </m:msub>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+                            <m:mi>X</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:msup>
+                              <m:mi>y</m:mi>
+                              <m:mo>*</m:mo>
+                            </m:msup>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                        </m:mrow>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>p</m:mi>
+                            <m:mrow>
+                              <m:mi>X</m:mi>
+                              <m:mo>|</m:mo>
+                              <m:mi>Y</m:mi>
+                            </m:mrow>
+                          </m:msub>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+                            <m:mi>X</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>y</m:mi>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mfrac>
+                    </m:mfenced>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo>∫</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>p</m:mi>
+                          <m:mrow>
+                            <m:mi>X</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>Y</m:mi>
+                          </m:mrow>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>x</m:mi>
+                          <m:mo>|</m:mo>
+                          <m:msup>
+                            <m:mi>y</m:mi>
+                            <m:mo>*</m:mo>
+                          </m:msup>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>p</m:mi>
+                          <m:mrow>
+                            <m:mi>X</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>Y</m:mi>
+                          </m:mrow>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>x</m:mi>
+                          <m:mo>|</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:mfenced>
+                  <m:msub>
+                    <m:mi>p</m:mi>
+                    <m:mrow>
+                      <m:mi>X</m:mi>
+                      <m:mo>|</m:mo>
+                      <m:mi>Y</m:mi>
+                    </m:mrow>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>x</m:mi>
+                    <m:mo>|</m:mo>
+                    <m:msup>
+                      <m:mi>y</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mi>d</m:mi>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mtext>KL</m:mtext>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>p</m:mi>
+                    <m:mrow>
+                      <m:mi>X</m:mi>
+                      <m:mo>|</m:mo>
+                      <m:mi>Y</m:mi>
+                    </m:mrow>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>x</m:mi>
+                    <m:mo>|</m:mo>
+                    <m:msup>
+                      <m:mi>y</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>,</m:mo>
+                  <m:msub>
+                    <m:mi>p</m:mi>
+                    <m:mrow>
+                      <m:mi>X</m:mi>
+                      <m:mo>|</m:mo>
+                      <m:mi>Y</m:mi>
+                    </m:mrow>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>x</m:mi>
+                    <m:mo>|</m:mo>
+                    <m:mi>y</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2257806">The quantity <m:math><m:mrow><m:mtext>KL</m:mtext><m:mo>(</m:mo><m:msub><m:mi>p</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup><m:mo>)</m:mo></m:mrow><m:mo>,</m:mo><m:msub><m:mi>p</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow><m:mo>)</m:mo></m:mrow></m:math> is called the
+Kullback-Leibler (KL) divergence between the conditional density
+function <m:math><m:mrow><m:msub><m:mi>p</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup><m:mo>)</m:mo></m:mrow></m:mrow></m:math> and <m:math><m:mrow><m:msub><m:mi>p</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>. The KL divergence is
+non-negative, and zero if and only if the two densities are equal
+<link target-id="bid0" class="cnxn"/>. So, we see that the KL divergence acts as a sort of
+risk function in the context of Maximum Likelihood Estimation.</para>
+    </section>
+    <section id="uid9">
+      <title>The Cramer-Rao Lower Bound</title>
+      <para id="id2257970">The MLE is based on finding the value for <m:math><m:mi>Y</m:mi></m:math> that maximizes the
+likelihood function. Intuitively, if the maximum point is very
+distinct, say a well isolated peak in the likelihood function, then
+the easier it will be to distinguish the MLE from alternative
+decisions. Consider the case in which <m:math><m:mi>Y</m:mi></m:math> is a scalar quantity.
+The “peakiness” of the log-likelihood function can be gauged by
+examining its curvature, <m:math><m:mrow><m:mo>-</m:mo><m:mfrac><m:mrow><m:msup><m:mi>∂</m:mi><m:mn>2</m:mn></m:msup><m:mo form="prefix">log</m:mo><m:msub><m:mi>p</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow><m:mrow><m:mi>∂</m:mi><m:msup><m:mi>y</m:mi><m:mn>2</m:mn></m:msup></m:mrow></m:mfrac></m:mrow></m:math>, at the point of maximum likelihood. The higher the
+curvature, the more peaky is the behavior of the likelihood function
+at the maximum point. Of course, we hope that the MLE will be a good
+predictor (decision) for the unknown true value <m:math><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup></m:math>. So, rather
+than looking at the curvature of the log-likelihood function at the
+maximum likelihood point, a more appropriate measure of how easily it
+will be to distinguish <m:math><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup></m:math> from the alternatives is the expected
+curvature of the log-likelihood function evaluated at the value <m:math><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup></m:math>.
+The expectation taken over all possible observations with respect to
+the conditional density <m:math><m:mrow><m:msub><m:mi>p</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup><m:mo>)</m:mo></m:mrow></m:mrow></m:math>. This quantity, denoted
+<m:math><m:mrow><m:mi>I</m:mi><m:mrow><m:mo>(</m:mo><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mi>E</m:mi><m:mrow><m:mo>[</m:mo><m:mo>-</m:mo><m:mfrac><m:mrow><m:msup><m:mi>∂</m:mi><m:mn>2</m:mn></m:msup><m:mo form="prefix">log</m:mo><m:msub><m:mi>p</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow><m:mrow><m:mi>∂</m:mi><m:msup><m:mi>y</m:mi><m:mn>2</m:mn></m:msup></m:mrow></m:mfrac><m:mo>]</m:mo></m:mrow><m:msub><m:mrow><m:mo>|</m:mo></m:mrow><m:mrow><m:mi>y</m:mi><m:mo>=</m:mo><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup></m:mrow></m:msub></m:mrow></m:math>, is called the Fisher Information (FI). In
+fact, the FI provides us with an important performance bound known as
+the Cramer-Rao Lower Bound (CRLB).</para>
+      <para id="id2258260">The CRLB states that under some mild regularity assumptions about the
+conditional density function <m:math><m:mrow><m:msub><m:mi>p</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>, the variance of any
+unbiased estimator is bounded from below by the inverse of the
+<m:math><m:mrow><m:mi>I</m:mi><m:mo>(</m:mo><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup><m:mo>)</m:mo></m:mrow></m:math><link target-id="bid1" class="cnxn"/>, <link target-id="bid2" class="cnxn"/>, <link target-id="bid3" class="cnxn"/>. Recall that an unbiased
+estimator is any estimator <m:math><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover></m:math> that satisfies
+<m:math><m:mrow><m:mi>E</m:mi><m:mrow><m:mo>[</m:mo><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover><m:mo>]</m:mo></m:mrow><m:mo>=</m:mo><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup></m:mrow></m:math>. The CRLB tells us is that</para>
+      <equation id="id2258389"><m:math mode="display">
+          <m:mrow>
+            <m:mtext>var</m:mtext>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mover accent="true">
+                <m:mi>Y</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mspace width="4pt"/>
+            <m:mo>≥</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:mrow>
+                <m:mi>I</m:mi>
+                <m:mo>(</m:mo>
+                <m:msup>
+                  <m:mi>y</m:mi>
+                  <m:mo>*</m:mo>
+                </m:msup>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:mfrac>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2258443">If <m:math><m:mi>Y</m:mi></m:math> is a
+vector-valued quantity, then the expected negative Hessian matrix
+(matrix of partial second derivatives) of the log-likelihood function
+is called the Fisher Information Matrix (FIM), and a similar inequality tells us that the variance
+of each component of any unbiased estimator of <m:math><m:msup><m:mi>y</m:mi><m:mo>*</m:mo></m:msup></m:math> is bounded below
+by the corresponding diagonal element of the inverse of the FIM.
+Since the MSE of an unbiased estimator is equal to its variance, we
+see that the CRLB provides a very useful lower bound on the best MSE
+performance that we can hope to achieve. Thus, the CRLB is often used
+as a comparison point for evaluating estimators. It may or may not be
+possible to achieve the CRLB, but if we find a decision rule that
+does, we know that it also minimizes the MSE risk among all possible
+unbiased estimators. In general, it may be difficult to compute the
+CRLB, but in certain important cases it is possible to find
+closed-form or computational solutions.</para>
+    </section>
+    <section id="uid12">
+      <title>Bayesian Decision Theory</title>
+      <para id="id2258500">Bayesian Decision Theory provides a formal system for integrating
+prior knowledge and observed observations. For
+the purposes of illustration we will focus on problems involving
+continuous variables and observations, but extensions to discrete
+cases are straightforward (simple replace probability densities with
+probability mass functions, and integrals with summations). The key
+elements of Bayesian methods are:</para>
+      <list id="id2258510" list-type="enumerated">
+        <item id="uid13">a prior probability density function <m:math><m:mrow><m:msub><m:mi>p</m:mi><m:mi>Y</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> describing a
+priori knowledge of probable states for the quantity <m:math><m:mi>Y</m:mi></m:math>;
+</item>
+        <item id="uid14">the likelihood function <m:math><m:mrow><m:msub><m:mi>p</m:mi><m:mrow><m:mi>X</m:mi><m:mo>|</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>|</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>, as described above;
+</item>
+        <item id="uid15">the posterior density function <m:math><m:mrow><m:msub><m:mi>p</m:mi><m:mrow><m:mi>Y</m:mi><m:mo>|</m:mo><m:mi>X</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>y</m:mi><m:mo>|</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>.
+</item>
+      </list>
+      <para id="id2258645">The posterior density is a function of the prior and likelihood, obtained
+according to Bayes rule:</para>
+      <equation id="id2258650"><m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>p</m:mi>
+              <m:mrow>
+                <m:mi>Y</m:mi>
+                <m:mo>|</m:mo>
+                <m:mi>X</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>y</m:mi>
+              <m:mo>|</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mfrac>
+              <m:mrow>
+                <m:msub>
+                  <m:mi>p</m:mi>
+                  <m:mrow>
+                    <m:mi>X</m:mi>
+                    <m:mo>|</m:mo>
+                    <m:mi>Y</m:mi>
+                  </m:mrow>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>x</m:mi>
+                  <m:mo>|</m:mo>
+                  <m:mi>y</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:msub>
+                  <m:mi>p</m:mi>
+                  <m:mi>Y</m:mi>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>y</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mrow>
+              <m:mrow>
+                <m:mo>∫</m:mo>
+                <m:msub>
+                  <m:mi>p</m:mi>
+                  <m:mrow>
+                    <m:mi>X</m:mi>
+                    <m:mo>|</m:mo>
+                    <m:mi>Y</m:mi>
+                  </m:mrow>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>x</m:mi>
+                  <m:mo>|</m:mo>
+                  <m:mi>y</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:msub>
+                  <m:mi>p</m:mi>
+                  <m:mi>Y</m:mi>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>y</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mi>d</m:mi>
+                <m:mi>y</m:mi>
+              </m:mrow>
+            </m:mfrac>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2258776">The posterior is an indicator of
+probable values for <m:math><m:mi>Y</m:mi></m:math>, based on the prior knowledge and the
+observation. Several options exist for deriving a specific estimate
+of <m:math><m:mi>Y</m:mi></m:math> using the posterior. The mean value of the posterior density
+is one common choice (commonly called the <emphasis>posterior mean</emphasis>). The
+posterior mean is the decision rule that minimizes the expected
+squared error loss (MSE risk) function. The value <m:math><m:mi>y</m:mi></m:math> where the
+posterior density is maximized is another popular estimator (commonly
+called the <emphasis>Maximum A Posteriori</emphasis> (MAP) estimator). Note that the
+denominator of the posterior is independent of <m:math><m:mi>y</m:mi></m:math>, so the MAP
+estimator is simply the maximizer of the product of the likelihood and
+the prior. Therefore, if the prior is a constant function, the MAP
+estimator and MLE coincide.</para>
+    </section>
+    <section id="uid16">
+      <title>Statistical Learning</title>
+      <para id="id2258850">In all of the methods described above, we assumed some amount of
+knowledge about the distributions of the observation <m:math><m:mi>X</m:mi></m:math> and quantity
+of interest <m:math><m:mi>Y</m:mi></m:math>. Such knowledge can come from a careful analysis of
+the physical characteristics of the problem at hand, or it can be
+gleaned from previous experience. However, there are situations where
+it is difficult to model the physics of the problem and we may not
+have enough experience to develop complete and accurate probability
+models. In such cases, it is natural to adopt a <emphasis>statistical
+learning</emphasis> approach <link target-id="bid4" class="cnxn"/>, <link target-id="bid5" class="cnxn"/>.</para>
+      <para id="id2258896">Statistical learning methods are based on developing decision rules or
+estimators based only on a collection of training examples, rather
+than predetermined probability models. Statistical learning methods
+are often said to be <emphasis>distribution-free</emphasis>, since they do not assume
+particular probability models. The canonical set-up for statistical
+learning is as follows. We begin with a collection of training
+examples, <m:math><m:msubsup><m:mrow><m:mo>{</m:mo><m:mrow><m:mo>(</m:mo><m:msub><m:mi>X</m:mi><m:mi>i</m:mi></m:msub><m:mo>,</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>}</m:mo></m:mrow><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup></m:math>, which are assumed to be
+independently and identically distributed according to an <emphasis>unknown</emphasis> probability distribution <m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>,</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>. If we knew
+<m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mo>,</m:mo><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>,</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>, then we could compute a desired risk function and
+design an optimal decision rule using the methods described above. In
+essence, the training examples give us a glimpse at the underlying
+distribution, but our knowledge of it is far from complete. We cannot
+exactly compute a risk function, and therefore we cannot derive a
+corresponding optimal decision rule.</para>
+      <para id="id2259041">There are at least two ways to proceed at this point. One possibility
+is to use the training examples to estimate the joint probability
+distribution, and then use this estimate to derive an decision rule.
+Unfortunately, the (general-purpose) problem of estimating a
+distribution is often more difficult from a limited pool of data than
+is the problem of designing a specific-purpose decision rule. For
+this reason, a second possibility is more commonly favored in
+practice. Rather than estimating the complete distribution, one can
+use the training examples to directly design a decision rule. More
+precisely, perhaps the most common approach is to use the training
+examples to compute an estimate of the desired risk function.</para>
+      <para id="id2259056">Suppose that we are interested in minimizing a particular risk
+function. Recall that the risk is the expected value of a chosen loss
+function. Let <m:math><m:mrow><m:mi>ℓ</m:mi><m:mo>(</m:mo><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover><m:mo>,</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow></m:math> denote the loss, and let
+<m:math><m:mrow><m:mi>f</m:mi><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow></m:math> denote a candidate decision function, mapping observations to
+predictions about <m:math><m:mi>Y</m:mi></m:math> (i.e., <m:math><m:mrow><m:mover accent="true"><m:mi>Y</m:mi><m:mo>^</m:mo></m:mover><m:mo>=</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>). The
+<emphasis>empirical risk function</emphasis> is constructed from the training examples
+as follows:</para>
+      <equation id="id2259152"><m:math mode="display">
+          <m:mrow>
+            <m:mover accent="true">
+              <m:mi>R</m:mi>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mspace width="4pt"/>
+            <m:mo>=</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:mi>n</m:mi>
+            </m:mfrac>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:munderover>
+            <m:mi>ℓ</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>X</m:mi>
+                  <m:mi>i</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>,</m:mo>
+              <m:msub>
+                <m:mi>Y</m:mi>
+                <m:mi>i</m:mi>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2259242">This is simply the average loss of the decision rule <m:math><m:mi>f</m:mi></m:math> over the set
+of training examples. Note that since the training examples are
+independent and identically distributed, the expected value of the
+empirical risk is equal to the true risk <m:math><m:mrow><m:mi>R</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo><m:mo>=</m:mo><m:mi>E</m:mi><m:mo>[</m:mo><m:mi>ℓ</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo><m:mo>,</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo><m:mo>]</m:mo></m:mrow></m:math>.
+Moreover, we known (according to the law of large numbers) that the
+empirical risk tends to the true risk as the size of the training
+sample increases. These facts lend support to the idea of choosing a
+decision rule to minimize the empirical risk.</para>
+      <para id="id2259309">Empirical risk minimization (ERM) is just this process. Given a
+collection of possible decision rules, say <m:math><m:mi mathvariant="script">F</m:mi></m:math>, ERM selects a
+decision rule according to</para>
+      <equation id="id2259325"><m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>f</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mspace width="4pt"/>
+            <m:mo>=</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:mover accent="true">
+              <m:mi>R</m:mi>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2259399">The
+selected rule, <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math>, obviously depends on the given set of
+training examples, and therefore it is itself a random quantity. The
+theoretically optimal counterpart to <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> is the decision
+rule that minimizes the true risk</para>
+      <equation id="id2259450"><m:math mode="display">
+          <m:mrow>
+            <m:msup>
+              <m:mi>f</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mspace width="4pt"/>
+            <m:mo>=</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2259510">The central problem in
+statistical learning is to quantify how close <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> performs
+relative to <m:math><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup></m:math>. Note that <m:math><m:mrow><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup><m:mo>)</m:mo></m:mrow><m:mo>≤</m:mo><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math>, since
+<m:math><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup></m:math> minimizes the true risk. Thus, one way to gauge the performance
+of <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> relative to <m:math><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup></m:math> is to show that there exists
+small positive values <m:math><m:mi>ϵ</m:mi></m:math> and <m:math><m:mi>δ</m:mi></m:math> such that with
+probability at least <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>δ</m:mi></m:mrow></m:math> we have</para>
+      <equation id="id2259685"><m:math mode="display">
+          <m:mrow>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>f</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mspace width="4pt"/>
+            <m:mo>≤</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>f</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>+</m:mo>
+            <m:mi>ϵ</m:mi>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2259745">If an inequality of
+this form holds, then we say that <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> is a <emphasis>Probability Approximately Correct</emphasis> (PAC) decision rule <link target-id="bid6" class="cnxn"/>.</para>
+      <para id="id2259785">To show that the empirical risk minimizer is a PAC decision rule, we
+first must understand how closely the empirical risk matches the true
+risk. First, let us consider the empirical and true risk of the
+decision rule <m:math><m:mi>f</m:mi></m:math>. Assume that the loss function is bounded between
+0 and 1 (possibly after a suitable normalization). Then the
+empirical risk function is a sum of independent random variables
+bounded between 0 and 1. Hoeffding's inequality is a bound on the
+deviations of such random sums from their corresponding mean values
+<link target-id="bid4" class="cnxn"/>. In this case, the mean value is the true risk of
+<m:math><m:mi>f</m:mi></m:math>, and Hoeffding's inequality states that</para>
+      <equation id="id2259822"><m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mi>P</m:mi>
+              <m:mo>(</m:mo>
+              <m:mo>|</m:mo>
+            </m:mrow>
+            <m:mover accent="true">
+              <m:mi>R</m:mi>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>&gt;</m:mo>
+              <m:mi>ϵ</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mspace width="4pt"/>
+            <m:mo>≤</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mn>2</m:mn>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mn>2</m:mn>
+                <m:mi>n</m:mi>
+                <m:msup>
+                  <m:mi>ϵ</m:mi>
+                  <m:mn>2</m:mn>
+                </m:msup>
+              </m:mrow>
+            </m:msup>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2259909">Another equivalent statement is that the inequality
+<m:math><m:mrow><m:mrow><m:mo>|</m:mo></m:mrow><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mrow><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>-</m:mo><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>|</m:mo><m:mo>≤</m:mo><m:mi>ϵ</m:mi></m:mrow></m:mrow></m:math> holds with probability at least
+<m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mn>2</m:mn><m:msup><m:mi>e</m:mi><m:mrow><m:mo>-</m:mo><m:mn>2</m:mn><m:mi>n</m:mi><m:msup><m:mi>ϵ</m:mi><m:mn>2</m:mn></m:msup></m:mrow></m:msup></m:mrow></m:math>. Thus, the two risks are probably close
+together, and the greater the number of training examples, <m:math><m:mi>n</m:mi></m:math>, the
+closer they are.</para>
+      <para id="id2260010">Now we would like a similar condition to hold for all <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>, since ERM optimizes over the entire collection <m:math><m:mi mathvariant="script">F</m:mi></m:math>.
+Suppose that <m:math><m:mi mathvariant="script">F</m:mi></m:math> is a finite collection of decision rules. Let
+<m:math><m:mrow><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo></m:mrow></m:math> denote the number of rules in <m:math><m:mi mathvariant="script">F</m:mi></m:math>. The
+probability that the difference between the true and empirical risks, of
+one or more of the decision rules, exceeds <m:math><m:mi>ϵ</m:mi></m:math> is bounded by
+the sum of the probabilities of each individual event of the form
+<m:math><m:mrow><m:mrow><m:mo>|</m:mo></m:mrow><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mrow><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>-</m:mo><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>|</m:mo><m:mo>&gt;</m:mo><m:mi>ϵ</m:mi></m:mrow></m:mrow></m:math>, the so-called <emphasis>Union of Events</emphasis>
+bound. Therefore, with probability at least <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mrow><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo><m:mn>2</m:mn></m:mrow><m:msup><m:mi>e</m:mi><m:mrow><m:mo>-</m:mo><m:mn>2</m:mn><m:mi>n</m:mi><m:msup><m:mi>ϵ</m:mi><m:mn>2</m:mn></m:msup></m:mrow></m:msup></m:mrow></m:math> we have that</para>
+      <equation id="id2260194">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+            </m:mrow>
+            <m:mover accent="true">
+              <m:mi>R</m:mi>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mrow>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>≤</m:mo>
+              <m:mi>ϵ</m:mi>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2260244">for all <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>.
+Equivalently, setting <m:math><m:mrow><m:mi>δ</m:mi><m:mo>=</m:mo><m:mrow><m:mn>2</m:mn><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo></m:mrow><m:msup><m:mi>e</m:mi><m:mrow><m:mo>-</m:mo><m:mn>2</m:mn><m:mi>n</m:mi><m:msup><m:mi>ϵ</m:mi><m:mn>2</m:mn></m:msup></m:mrow></m:msup></m:mrow></m:math>, we have
+that with probability at least <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>δ</m:mi></m:mrow></m:math> and for all <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math></para>
+      <equation id="id2260343"><m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+            </m:mrow>
+            <m:mover accent="true">
+              <m:mi>R</m:mi>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mrow>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>≤</m:mo>
+            </m:mrow>
+            <m:msqrt>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mo>|</m:mo>
+                  <m:mi mathvariant="script">F</m:mi>
+                  <m:mo>|</m:mo>
+                  <m:mo>+</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mo>(</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mo>/</m:mo>
+                  <m:mi>δ</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mrow>
+                  <m:mn>2</m:mn>
+                  <m:mi>n</m:mi>
+                </m:mrow>
+              </m:mfrac>
+            </m:msqrt>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2260430">Notice that the two risks are
+uniformly close together, and the closeness indicated by the bound
+increases as <m:math><m:mi>n</m:mi></m:math> increases and decreases as the number of decision
+rules in <m:math><m:mi mathvariant="script">F</m:mi></m:math> increases. In fact, the bound scales with
+<m:math><m:mrow><m:mo form="prefix">log</m:mo><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo></m:mrow></m:math>, and so it is reasonable to interpret the logarithm
+of the number of decision rules under consideration as a measure of
+the <emphasis>complexity</emphasis> of the class.</para>
+      <para id="id2260488">Now using this bound, we can show that <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> is a PAC
+decision rule as follows. Note that with probability at least <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>δ</m:mi></m:mrow></m:math></para>
+      <equation id="id2260528">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mi>R</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>f</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>≤</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mover accent="true">
+                    <m:mi>R</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msub>
+                      <m:mover accent="true">
+                        <m:mi>f</m:mi>
+                        <m:mo>^</m:mo>
+                      </m:mover>
+                      <m:mi>n</m:mi>
+                    </m:msub>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>+</m:mo>
+                  <m:msqrt>
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:mo form="prefix">log</m:mo>
+                        <m:mo>|</m:mo>
+                        <m:mi mathvariant="script">F</m:mi>
+                        <m:mo>|</m:mo>
+                        <m:mo>+</m:mo>
+                        <m:mo form="prefix">log</m:mo>
+                        <m:mo>(</m:mo>
+                        <m:mn>2</m:mn>
+                        <m:mo>/</m:mo>
+                        <m:mi>δ</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mrow>
+                        <m:mn>2</m:mn>
+                        <m:mi>n</m:mi>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:msqrt>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>≤</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mover accent="true">
+                    <m:mi>R</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msup>
+                      <m:mi>f</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>+</m:mo>
+                  <m:msqrt>
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:mo form="prefix">log</m:mo>
+                        <m:mo>|</m:mo>
+                        <m:mi mathvariant="script">F</m:mi>
+                        <m:mo>|</m:mo>
+                        <m:mo>+</m:mo>
+                        <m:mo form="prefix">log</m:mo>
+                        <m:mo>(</m:mo>
+                        <m:mn>2</m:mn>
+                        <m:mo>/</m:mo>
+                        <m:mi>δ</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mrow>
+                        <m:mn>2</m:mn>
+                        <m:mi>n</m:mi>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:msqrt>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>≤</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mi>R</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msup>
+                      <m:mi>f</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>+</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:msqrt>
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:mo form="prefix">log</m:mo>
+                        <m:mo>|</m:mo>
+                        <m:mi mathvariant="script">F</m:mi>
+                        <m:mo>|</m:mo>
+                        <m:mo>+</m:mo>
+                        <m:mo form="prefix">log</m:mo>
+                        <m:mo>(</m:mo>
+                        <m:mn>2</m:mn>
+                        <m:mo>/</m:mo>
+                        <m:mi>δ</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mrow>
+                        <m:mn>2</m:mn>
+                        <m:mi>n</m:mi>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:msqrt>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <para id="id2260788">where the first inequality follows since the true and empirical risks
+are close for all <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>, and in particular for
+<m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math>, the second inequality holds since by definition
+<m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> minimizes the empirical risk, and the third inequality
+holds again since the empirical risk is close to the true risk for all
+<m:math><m:mi>f</m:mi></m:math>, in this case for <m:math><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup></m:math> in particular. So, we have shown that
+<m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> is PAC.</para>
+      <para id="id2260903">PAC bounds of this form can be extended in many directions, for
+example to infinitely large or uncountable classes of decision rules,
+but the basic ingredients of the theory are essentially like those
+demonstrated above. The bottom line is that empirical risk
+minimization is a reasonable approach, provided one has access to a
+sufficient number of training examples and the number, or more
+generally the complexity, of the class of decision rules under
+consideration is not too great.</para>
+    </section>
+    <section id="uid17">
+      <title>Further reading</title>
+      <para id="id2260922">Excellent treatments of classical decision and estimation theory can
+be found in a number of textbooks
+<link target-id="bid1" class="cnxn"/>, <link target-id="bid2" class="cnxn"/>, <link target-id="bid3" class="cnxn"/>, <link target-id="bid0" class="cnxn"/>. For references on
+statistical learning theory, outstanding textbooks are also available
+<link target-id="bid4" class="cnxn"/>, <link target-id="bid5" class="cnxn"/>, <link target-id="bid6" class="cnxn"/> for further reading.</para>
+    </section>
+  </content>
+  <bib:file>
+    <bib:entry id="bid0">
+      <bib:book>
+<!--required fields-->
+        <bib:author>Cover, T. and Thomas, J. A.</bib:author>
+        <bib:title>Elements of Information Theory</bib:title>
+        <bib:publisher>Wiley</bib:publisher>
+        <bib:year>1991</bib:year>
+<!--optional fields-->
+        <bib:volume/>
+        <bib:series/>
+        <bib:address/>
+        <bib:edition/>
+        <bib:month/>
+        <bib:note/>
+      </bib:book>
+    </bib:entry>
+    <bib:entry id="bid4">
+      <bib:book>
+<!--required fields-->
+        <bib:author>Devroye, L. and Györfi, L. and Lugosi, G.</bib:author>
+        <bib:title>A Probabilistic Theory of Pattern Recognition</bib:title>
+        <bib:publisher>Spring, New York</bib:publisher>
+        <bib:year>1996</bib:year>
+<!--optional fields-->
+        <bib:volume/>
+        <bib:series/>
+        <bib:address/>
+        <bib:edition/>
+        <bib:month/>
+        <bib:note/>
+      </bib:book>
+    </bib:entry>
+    <bib:entry id="bid3">
+      <bib:book>
+<!--required fields-->
+        <bib:author>Kay, S. M.</bib:author>
+        <bib:title>Fundamentals of Statistical Signal Processing</bib:title>
+        <bib:publisher>Prentice Hall</bib:publisher>
+        <bib:year>1993</bib:year>
+<!--optional fields-->
+        <bib:volume/>
+        <bib:series/>
+        <bib:address/>
+        <bib:edition/>
+        <bib:month/>
+        <bib:note/>
+      </bib:book>
+    </bib:entry>
+    <bib:entry id="bid2">
+      <bib:book>
+<!--required fields-->
+        <bib:author>Lehmann, E. L.</bib:author>
+        <bib:title>Theory of Point Estimation</bib:title>
+        <bib:publisher>Wiley, New York</bib:publisher>
+        <bib:year>1983</bib:year>
+<!--optional fields-->
+        <bib:volume/>
+        <bib:series/>
+        <bib:address/>
+        <bib:edition/>
+        <bib:month/>
+        <bib:note/>
+      </bib:book>
+    </bib:entry>
+    <bib:entry id="bid1">
+      <bib:book>
+<!--required fields-->
+        <bib:author>Trees, H. L. Van</bib:author>
+        <bib:title>Detection, Estimation, and Modulation Theory, Part I</bib:title>
+        <bib:publisher>Wiley, New York</bib:publisher>
+        <bib:year>1968</bib:year>
+<!--optional fields-->
+        <bib:volume/>
+        <bib:series/>
+        <bib:address/>
+        <bib:edition/>
+        <bib:month/>
+        <bib:note/>
+      </bib:book>
+    </bib:entry>
+    <bib:entry id="bid6">
+      <bib:article>
+<!--required fields-->
+        <bib:author>Valiant, L. G.</bib:author>
+        <bib:title>A Theory of the Learnable</bib:title>
+        <bib:journal>Communications of the ACM</bib:journal>
+        <bib:year>1984</bib:year>
+<!--optional fields-->
+        <bib:volume>27</bib:volume>
+        <bib:number/>
+        <bib:pages>1134-1142</bib:pages>
+        <bib:month/>
+        <bib:note/>
+      </bib:article>
+    </bib:entry>
+    <bib:entry id="bid5">
+      <bib:book>
+<!--required fields-->
+        <bib:author>Vapnik, V. N.</bib:author>
+        <bib:title>Statistical Learning Theory</bib:title>
+        <bib:publisher>Wiley, New York</bib:publisher>
+        <bib:year>1998</bib:year>
+<!--optional fields-->
+        <bib:volume/>
+        <bib:series/>
+        <bib:address/>
+        <bib:edition/>
+        <bib:month/>
+        <bib:note/>
+      </bib:book>
+    </bib:entry>
+  </bib:file>
+</document>

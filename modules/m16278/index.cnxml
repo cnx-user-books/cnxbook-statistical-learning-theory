@@ -1,0 +1,1860 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Nonlinear Approximation and Wavelet Analysis</title>
+  <metadata>
+  <md:content-id>m16278</md:content-id><md:title>Nonlinear Approximation and Wavelet Analysis</md:title>
+  <md:abstract/>
+  <md:uuid>576b47b7-697d-4368-ada6-819c49598c7c</md:uuid>
+</metadata>
+
+<content>
+    <section id="uid1"><title>Review</title>
+      
+      <para id="id2255547">In <link document="m16261" class="cnxn">Lecture 4</link> and <link document="m16268" class="cnxn">15</link>, we investigated the problem of denoising a
+smooth signal in additive white noise. In <link document="m16261" class="cnxn">Lecture 4</link>, we considered
+Lipschitz functions and showed that by filling constants on a
+uniform partition of width <m:math><m:msup><m:mi>n</m:mi><m:mrow><m:mo>-</m:mo><m:mn>1</m:mn><m:mo>/</m:mo><m:mn>3</m:mn></m:mrow></m:msup></m:math> we can achieve an <m:math><m:msup><m:mi>n</m:mi><m:mrow><m:mo>-</m:mo><m:mn>2</m:mn><m:mo>/</m:mo><m:mn>3</m:mn></m:mrow></m:msup></m:math>
+rate of MSE convergence.</para>
+      <para id="id2255602">In <link document="m16268" class="cnxn">Lecture 15</link>, we considered Holder-<m:math><m:mi>α</m:mi></m:math> smooth functions, and
+we demonstrated that by automatically selecting partition width
+and using polynomial fits we can obtain a MSE convergence rate of
+<m:math><m:msup><m:mi>n</m:mi><m:mrow><m:mo>-</m:mo><m:mn>2</m:mn><m:mi>α</m:mi><m:mo>/</m:mo><m:mn>2</m:mn><m:mi>α</m:mi><m:mo>+</m:mo><m:mn>1</m:mn></m:mrow></m:msup></m:math>, substantially better when <m:math><m:mrow><m:mi>α</m:mi><m:mo>&gt;</m:mo><m:mn>1</m:mn></m:mrow></m:math>. Also important is the fact that we don't need to know the
+value of <m:math><m:mi>α</m:mi></m:math> a priori. The estimator <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> is
+fundamentally different than its counterpart in <link document="m16261" class="cnxn">Lecture 4</link>.</para>
+      <para id="id2255694">In both cases <m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>t</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> is a linear function (polynomial on
+constant fit) of the data in each interval of the underlying
+partition. In <link document="m16261" class="cnxn">Lecture 4</link>, the partition was independent of the
+data, and so the overall estimator is a linear function of
+the data
+.</para>
+      <para id="id2255737">However, in <link document="m16268" class="cnxn">Lecture 15</link> the partition itself was selected based on
+the data. Consequently, <m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>t</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> is a non-linear function
+of the data
+. Linear estimators (linear functions of the data)
+cannot adapt to unknown degrees of smoothness. In this lecture, we
+lay the groundwork for one more important extension in the
+denoising application - spatial adaptivity. That is, we would like
+to construct estimators that not only adapt to unknown degrees of
+global smoothness, but that also adapt to spatially varying
+
+degrees of smoothness.</para>
+      <para id="id2255789">We will focus on the approximation theoretic aspects of the
+problem in this lecture, considering tree-based approximations and
+wavelet expansions. In the <link document="m17357" class="cnxn">next lecture</link>, we will apply these
+results to the denoising problem, this will bring us up to date
+with the current state-of-the-art in denoising and non-parametric
+estimation.</para>
+      <para id="id2255797">Recall that Holder spaces contain smooth functions that are well
+approximated with polynomials or piecewise polynomial functions.
+Holder spaces are quite large and contain many interesting
+signals. However, Holder spaces are still inadequate in many
+applications. Often, we encounter functions that are not smooth
+everywhere; they contain discontinuities, jumps, spikes, etc.
+Indeed, the "singularities" (or non-smooth points) can be the most
+interesting and informative aspects of the functions.</para>
+<example id="exam987982435"><para id="id2255817">
+Functions not smooth everywhere.</para>
+      <figure id="uid3" orient="vertical">
+        <subfigure id="id2255844">
+          <media id="id20222954" alt=""><image src="../../media/f1-6f05.png" mime-type="image/png" width="373"/><image for="pdf" src="../../media/f1.eps" mime-type="application/postscript" print-width="8cm"/></media>
+        </subfigure>
+        <subfigure id="id2255856">
+          <media id="id20163331" alt=""><image src="../../media/f2.png" mime-type="image/png" width="413"/><image for="pdf" src="../../media/f2.eps" mime-type="application/postscript" print-width="8cm"/></media>
+        </subfigure>
+        <caption>Example of functions not smooth everywhere. (a) 1-D
+Case (b) 2-D Case</caption>
+      </figure>
+      <para id="id2255877">Furthermore, functions of interest may possess different degrees
+of smoothness in different regions.</para></example>
+<example id="exam98798234">      
+<para id="id2255882">Functions with different degrees of smoothness.</para>
+      <figure id="uid5" orient="vertical">
+        <subfigure id="id2255908">
+          <media id="id20163440" alt=""><image src="../../media/f3.png" mime-type="image/png" width="285"/><image for="pdf" src="../../media/f3.eps" mime-type="application/postscript" print-width="8cm"/></media>
+        </subfigure>
+        <subfigure id="id2255919">
+          <media id="id20163492" alt=""><image src="../../media/f4.png" mime-type="image/png" width="371"/><image for="pdf" src="../../media/f4.eps" mime-type="application/postscript" print-width="8cm"/></media>
+        </subfigure>
+        <caption>Example of functions having different degrees of
+smoothness. (a) 1-D Case (b) 2-D Case</caption>
+      </figure>
+    </example></section>
+    <section id="uid6"><title>NonLinear Approximation via Trees</title>
+      
+      <para id="id2255948">Let <m:math><m:mrow><m:msup><m:mi>B</m:mi><m:mi>α</m:mi></m:msup><m:mrow><m:mo>(</m:mo><m:msub><m:mi>C</m:mi><m:mi>α</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math> denote the set of all functions that are
+<m:math><m:mrow><m:msup><m:mi>H</m:mi><m:mi>α</m:mi></m:msup><m:mrow><m:mo>(</m:mo><m:msub><m:mi>C</m:mi><m:mi>α</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math> everywhere except on a set of measure zero.
+To simplify the notation, we won't explicitly identify the domain
+(e.g., <m:math><m:mrow><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow></m:math> or <m:math><m:msup><m:mrow><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow><m:mi>d</m:mi></m:msup></m:math>); that will be clear from the context.</para>
+<example id="exam3">
+<title>Sets of measure zero</title>
+      <figure id="uid8" orient="vertical">
+        <subfigure id="id2256318">
+          <media id="id20163696" alt=""><image src="../../media/f5.png" mime-type="image/png" width="279"/><image for="pdf" src="../../media/f5.eps" mime-type="application/postscript" print-width="8cm"/></media>
+        </subfigure>
+        <subfigure id="id2256329">
+          <media id="id20163749" alt=""><image src="../../media/f6.png" mime-type="image/png" width="281"/><image for="pdf" src="../../media/f6.eps" mime-type="application/postscript" print-width="8cm"/></media>
+        </subfigure>
+        <caption>Sets of measure zero. (a) 1-D Case (b) 2-D Case</caption>
+      </figure>
+      <para id="id2256350">Let's consider a 1-D case first.</para>
+      <para id="id2256354">Let <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:msup><m:mi>B</m:mi><m:mi>α</m:mi></m:msup><m:mrow><m:mo>(</m:mo><m:msub><m:mi>C</m:mi><m:mi>α</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math> and consider approximating <m:math><m:mi>f</m:mi></m:math> by
+a piecewise polynomial function on a uniform partition.</para>
+      <para id="id2256400">If <m:math><m:mi>f</m:mi></m:math> is Holder-<m:math><m:mi>α</m:mi></m:math> smooth everywhere, then by using an
+appropriate partition width <m:math><m:msup><m:mi>k</m:mi><m:mrow><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:msup></m:math> and fitting degree
+<m:math><m:mrow><m:mo>⌈</m:mo><m:mi>α</m:mi><m:mo>⌉</m:mo></m:mrow></m:math> polynomials on each interval we have an
+approximation <m:math><m:msub><m:mi>f</m:mi><m:mi>k</m:mi></m:msub></m:math> satisfying</para>
+      <equation id="id2256468">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>t</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+            </m:mrow>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>k</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>t</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>≤</m:mo>
+            </m:mrow>
+            <m:msub>
+              <m:mi>C</m:mi>
+              <m:mi>α</m:mi>
+            </m:msub>
+            <m:msup>
+              <m:mi>k</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mi>α</m:mi>
+              </m:mrow>
+            </m:msup>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256531">and</para>
+      <equation id="id2256536"><m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>k</m:mi>
+            </m:msub>
+            <m:msubsup>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mo>|</m:mo>
+              </m:mrow>
+              <m:msub>
+                <m:mi>L</m:mi>
+                <m:mn>2</m:mn>
+              </m:msub>
+              <m:mn>2</m:mn>
+            </m:msubsup>
+            <m:mo>=</m:mo>
+            <m:mi>O</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>k</m:mi>
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mi>α</m:mi>
+                </m:mrow>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+<m:mo>.</m:mo>      
+  </m:math>
+      </equation>
+      
+      <figure id="uid9" orient="horizontal"><media id="id20363811" alt=""><image src="../../media/f7.png" mime-type="image/png"/><image for="pdf" src="../../media/f7.eps" mime-type="application/postscript"/></media><caption>Smooth curve with a discontinuity.</caption></figure>
+      <para id="id2256636">However, if there is a discontinuity then for <m:math><m:mi>t</m:mi></m:math> in the interval
+containing the discontinuity the difference</para>
+      <equation id="id2256650">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>t</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+            </m:mrow>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>k</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>t</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>|</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256692">will not be small.</para>
+</example>
+<example id="exam4">
+      <para id="id2256697"> 
+Suppose <m:math><m:mi>f</m:mi></m:math> is piecewise Lipschitz and <m:math><m:msub><m:mi>f</m:mi><m:mi>k</m:mi></m:msub></m:math> ia a piecewise
+constant.</para>
+      <figure id="uid11" orient="horizontal"><media id="id20363999" alt=""><image src="../../media/f8_try.png" mime-type="image/png"/><image for="pdf" src="../../media/f8_try.eps" mime-type="application/postscript"/></media></figure>
+      <equation id="id2256753">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>t</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+            </m:mrow>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>k</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>t</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>≈</m:mo>
+              <m:mi>Δ</m:mi>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256800">where <m:math><m:mi>Δ</m:mi></m:math> is a constant
+equal to average of <m:math><m:mi>f</m:mi></m:math> on right and left side of discontinuity in
+this interval.</para>
+      <equation id="id2256824"><m:math mode="display">
+          <m:mrow>
+            <m:mo>⇒</m:mo>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>k</m:mi>
+            </m:msub>
+            <m:msubsup>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mo>|</m:mo>
+              </m:mrow>
+              <m:msub>
+                <m:mi>L</m:mi>
+                <m:mn>2</m:mn>
+              </m:msub>
+              <m:mn>2</m:mn>
+            </m:msubsup>
+            <m:mrow>
+              <m:mo>=</m:mo>
+              <m:mi>O</m:mi>
+              
+            </m:mrow>
+<m:mo>(</m:mo>            
+<m:msup>
+              <m:mi>k</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:msup>
+    </m:mrow>
+<m:mo>)</m:mo>      
+        </m:math>
+      </equation>
+      <para id="id2256890">where <m:math><m:msup><m:mi>k</m:mi><m:mrow><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:msup></m:math> is
+the width of the interval. Notice this rate is quite slow.</para>
+      <para id="id2256913">This problem naturally suggests the following remedy: use very
+small intervals near discontinuities and larger intervals in
+smooth regions. Specifically, suppose we use intervals of width
+<m:math><m:msup><m:mi>k</m:mi><m:mrow><m:mo>-</m:mo><m:mn>2</m:mn><m:mi>α</m:mi></m:mrow></m:msup></m:math> to contain the discontinuities and the intervals of
+width <m:math><m:msup><m:mi>k</m:mi><m:mrow><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:msup></m:math> elsewhere. Then accordingly piecewise polynomial
+approximation <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>˜</m:mo></m:mover><m:mi>k</m:mi></m:msub></m:math> satisfies</para>
+      <equation id="id2256978"><m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>f</m:mi>
+                <m:mo>˜</m:mo>
+              </m:mover>
+              <m:mi>k</m:mi>
+            </m:msub>
+            <m:msubsup>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mo>|</m:mo>
+              </m:mrow>
+              <m:msub>
+                <m:mi>L</m:mi>
+                <m:mn>2</m:mn>
+              </m:msub>
+              <m:mn>2</m:mn>
+            </m:msubsup>
+            <m:mo>=</m:mo>
+            <m:mi>O</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>k</m:mi>
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mi>α</m:mi>
+                </m:mrow>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+<m:mo>.</m:mo>     
+   </m:math>
+      </equation>
+      
+      <para id="id2257058">We can accomplish this need for "adaptive resolution" or
+"multiresolution" using recursive partitions and trees.</para>
+    </example></section>
+    <section id="uid12"><title>Recursive Dyadic Partitions</title>
+      
+      <para id="id2257071">We discussed this idea already in our examination of
+classification trees. Here is the basic idea again, graphically.</para>
+      <figure id="uid13" orient="horizontal"><media id="id20321447" alt=""><image src="../../media/f9.png" mime-type="image/png"/><image for="pdf" src="../../media/f9.eps" mime-type="application/postscript"/></media><caption>Complete and pruned RDP along with their correspnding
+tree structures.</caption></figure>
+      <para id="id2257103">Consider a function <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:msup><m:mi>B</m:mi><m:mi>α</m:mi></m:msup><m:mrow><m:mo>(</m:mo><m:msub><m:mi>C</m:mi><m:mi>α</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math> that contains no
+more than m points of discontinuity, and is <m:math><m:mrow><m:msup><m:mi>H</m:mi><m:mi>α</m:mi></m:msup><m:mrow><m:mo>(</m:mo><m:msub><m:mi>C</m:mi><m:mi>α</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math>
+away from these points.</para>
+<rule id="lem1" type="Lemma"><label>Lemma</label>
+<statement id="id20321552">
+      <para id="id2257169"> 
+Consider a complete RDP with n intervals, then there exists an
+associated pruned RDP with <m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:mi>k</m:mi><m:mi>l</m:mi><m:mi>o</m:mi><m:mi>g</m:mi><m:mi>n</m:mi><m:mo>)</m:mo></m:mrow></m:math> intervals, such that an
+associated piecewise degree <m:math><m:mrow><m:mo>⌈</m:mo><m:mi>α</m:mi><m:mo>⌉</m:mo></m:mrow></m:math> polynomial
+approximation <m:math><m:mrow><m:mover accent="true"><m:mo>(</m:mo><m:mo>˜</m:mo></m:mover><m:msub><m:mrow><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mi>k</m:mi></m:msub></m:mrow></m:math>, has a squared approximation error of
+<m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:mi>m</m:mi><m:mi>i</m:mi><m:mi>n</m:mi><m:mrow><m:mo>(</m:mo><m:msup><m:mi>k</m:mi><m:mrow><m:mo>-</m:mo><m:mn>2</m:mn><m:mi>α</m:mi></m:mrow></m:msup><m:mo>,</m:mo><m:msup><m:mi>n</m:mi><m:mrow><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:msup><m:mo>)</m:mo></m:mrow><m:mo>)</m:mo></m:mrow></m:math>.</para>
+</statement>
+<proof id="id20321677">
+      <para id="id2257298"> Assume <m:math><m:mrow><m:mi>n</m:mi><m:mo>&gt;</m:mo><m:mi>k</m:mi><m:mo>&gt;</m:mo><m:mi>m</m:mi></m:mrow></m:math>. Divide <m:math><m:mrow><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow></m:math> into <m:math><m:mi>k</m:mi></m:math> intervals. If <m:math><m:mi>f</m:mi></m:math>
+is smooth on a particular interval <m:math><m:mi>I</m:mi></m:math>, then</para>
+      <equation id="id2257385">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>t</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+            </m:mrow>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>f</m:mi>
+                <m:mo>˜</m:mo>
+              </m:mover>
+              <m:mi>k</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>t</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>=</m:mo>
+              <m:mi>O</m:mi>
+            </m:mrow>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>k</m:mi>
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mi>α</m:mi>
+                </m:mrow>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>∀</m:mo>
+            <m:mi>t</m:mi>
+            <m:mo>∈</m:mo>
+            <m:mi>I</m:mi>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+
+      </equation>
+      <para id="id2257472">In intervals that contain a discontinuity, recursively subdivide
+into two until the discontinuity is contained in an interval of
+width <m:math><m:msup><m:mi>n</m:mi><m:mrow><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:msup></m:math>. This process results in at most <m:math><m:mrow><m:mi>l</m:mi><m:mi>o</m:mi><m:msub><m:mi>g</m:mi><m:mn>2</m:mn></m:msub><m:mi>n</m:mi></m:mrow></m:math> addition
+subintervals per discontinuity, and the squared approximation
+error is <m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:mi>k</m:mi><m:mrow><m:mo>-</m:mo><m:mn>2</m:mn><m:mi>α</m:mi></m:mrow><m:mo>)</m:mo></m:mrow></m:math> on all of them accept the <m:math><m:mi>m</m:mi></m:math> intervals
+of width <m:math><m:msup><m:mi>n</m:mi><m:mrow><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:msup></m:math> containing the discontinuities where the error
+is <m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:mn>1</m:mn><m:mo>)</m:mo></m:mrow></m:math> at each point.</para>
+      <para id="id2257587">Thus, the overall squared <m:math><m:msub><m:mi>L</m:mi><m:mn>2</m:mn></m:msub></m:math> norm is</para>
+      <equation id="id2257605">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>f</m:mi>
+                <m:mo>˜</m:mo>
+              </m:mover>
+              <m:mi>k</m:mi>
+            </m:msub>
+            <m:msubsup>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mo>|</m:mo>
+              </m:mrow>
+              <m:msub>
+                <m:mi>L</m:mi>
+                <m:mn>2</m:mn>
+              </m:msub>
+              <m:mn>2</m:mn>
+            </m:msubsup>
+            <m:mo>=</m:mo>
+            <m:mi>O</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>m</m:mi>
+              <m:mi>i</m:mi>
+              <m:mi>n</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msup>
+                  <m:mi>k</m:mi>
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mi>α</m:mi>
+                  </m:mrow>
+                </m:msup>
+                <m:mo>,</m:mo>
+                <m:msup>
+                  <m:mi>n</m:mi>
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:mn>1</m:mn>
+                  </m:mrow>
+                </m:msup>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257705">and there are at most <m:math><m:mrow><m:mi>k</m:mi><m:mo>+</m:mo><m:mi>l</m:mi><m:mi>o</m:mi><m:msub><m:mi>g</m:mi><m:mn>2</m:mn></m:msub><m:mi>n</m:mi></m:mrow></m:math>
+intervals in the partition. Since k&gt;m, we can upperbound the
+number of intervals by <m:math><m:mrow><m:mn>2</m:mn><m:mi>k</m:mi><m:mi>l</m:mi><m:mi>o</m:mi><m:msub><m:mi>g</m:mi><m:mn>2</m:mn></m:msub><m:mi>n</m:mi></m:mrow></m:math>.</para>
+      <para id="id2257767">Note that if the initial complete RDP has <m:math><m:mrow><m:mi>n</m:mi><m:mo>≈</m:mo><m:msup><m:mi>k</m:mi><m:mrow><m:mn>2</m:mn><m:mi>α</m:mi></m:mrow></m:msup></m:mrow></m:math>
+intervals, then the squared error is <m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:msup><m:mi>k</m:mi><m:mrow><m:mo>-</m:mo><m:mn>2</m:mn><m:mi>α</m:mi></m:mrow></m:msup><m:mo>)</m:mo></m:mrow></m:math>.</para>
+      <para id="id2257822">Thus, we only incur a factor of <m:math><m:mrow><m:mn>2</m:mn><m:mi>α</m:mi><m:mi>l</m:mi><m:mi>o</m:mi><m:mi>g</m:mi><m:mi>k</m:mi></m:mrow></m:math> additional leafs
+and achieve the same overall approximation error as in the
+<m:math><m:mrow><m:msup><m:mi>H</m:mi><m:mi>α</m:mi></m:msup><m:mrow><m:mo>(</m:mo><m:msub><m:mi>C</m:mi><m:mi>α</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math> case. We will see that this is a small price
+to pay in order to handle not only smooth functions, but also
+piecewise smooth functions.</para>
+    </proof>
+</rule></section>
+    <section id="uid15"><title>Wavelet Approximations</title>
+      
+      <para id="id2257887">Let <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:msup><m:mi>L</m:mi><m:mn>2</m:mn></m:msup><m:mrow><m:mo>(</m:mo><m:mrow><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow><m:mo>)</m:mo></m:mrow></m:mrow></m:math>; <m:math><m:mrow><m:mo>∫</m:mo><m:msup><m:mi>f</m:mi><m:mn>2</m:mn></m:msup><m:mrow><m:mo>(</m:mo><m:mi>t</m:mi><m:mo>)</m:mo></m:mrow><m:mi>d</m:mi><m:mi>t</m:mi><m:mo>&lt;</m:mo><m:mi>∞</m:mi></m:mrow></m:math>.</para>
+      <para id="id2257962">A wavelet approximation is a series of the form</para>
+      <equation id="id2257966">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>f</m:mi>
+            <m:mo>=</m:mo>
+            <m:msub>
+              <m:mi>c</m:mi>
+              <m:mi>o</m:mi>
+            </m:msub>
+            <m:mo>+</m:mo>
+            <m:munder>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>≥</m:mo>
+                <m:mn>0</m:mn>
+              </m:mrow>
+            </m:munder>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:msup>
+                <m:mn>2</m:mn>
+                <m:mi>j</m:mi>
+              </m:msup>
+            </m:munderover>
+            <m:mo>&lt;</m:mo>
+            <m:mi>f</m:mi>
+            <m:mo>,</m:mo>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mo>&gt;</m:mo>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2258060">where <m:math><m:msub><m:mi>c</m:mi><m:mi>o</m:mi></m:msub></m:math> is a constant <m:math><m:mrow><m:mo>(</m:mo><m:msub><m:mi>c</m:mi><m:mi>o</m:mi></m:msub><m:mo>=</m:mo><m:msubsup><m:mo>∫</m:mo><m:mn>0</m:mn><m:mn>1</m:mn></m:msubsup><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:mi>t</m:mi><m:mo>)</m:mo></m:mrow><m:mi>d</m:mi><m:mi>t</m:mi><m:mo>)</m:mo></m:mrow></m:math>,</para>
+      <equation id="id2258125">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mo>&lt;</m:mo>
+            <m:mi>f</m:mi>
+            <m:mo>,</m:mo>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mo>&gt;</m:mo>
+            <m:mo>=</m:mo>
+            <m:msubsup>
+              <m:mo>∫</m:mo>
+              <m:mn>0</m:mn>
+              <m:mn>1</m:mn>
+            </m:msubsup>
+            <m:mi>f</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>t</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>t</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mi>d</m:mi>
+            <m:mi>t</m:mi>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2258204">and the basis
+functions <m:math><m:msub><m:mi>ψ</m:mi><m:mrow><m:mi>j</m:mi><m:mo>,</m:mo><m:mi>k</m:mi></m:mrow></m:msub></m:math> are orthonormal, oscillatory signals,
+each with an associated scale <m:math><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:mi>j</m:mi></m:mrow></m:msup></m:math> and position <m:math><m:mrow><m:mi>k</m:mi><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:mi>j</m:mi></m:mrow></m:msup></m:mrow></m:math>.
+<m:math><m:msub><m:mi>ψ</m:mi><m:mrow><m:mi>j</m:mi><m:mo>,</m:mo><m:mi>k</m:mi></m:mrow></m:msub></m:math> is called the wavelet at scale <m:math><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:mi>j</m:mi></m:mrow></m:msup></m:math> and position
+<m:math><m:mrow><m:mi>k</m:mi><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:mi>j</m:mi></m:mrow></m:msup></m:mrow></m:math>.</para>
+<example id="exam5">
+<title>Haar Wavelets</title>
+      <equation id="id2258340">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>t</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:msup>
+              <m:mn>2</m:mn>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>/</m:mo>
+                <m:mn>2</m:mn>
+              </m:mrow>
+            </m:msup>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mn mathvariant="bold">1</m:mn>
+                <m:mrow>
+                  <m:mo>{</m:mo>
+                  <m:mi>t</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:mrow>
+                    <m:mo>[</m:mo>
+                    <m:msup>
+                      <m:mn>2</m:mn>
+                      <m:mrow>
+                        <m:mo>-</m:mo>
+                        <m:mi>j</m:mi>
+                      </m:mrow>
+                    </m:msup>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>k</m:mi>
+                      <m:mo>-</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>,</m:mo>
+                    <m:msup>
+                      <m:mn>2</m:mn>
+                      <m:mrow>
+                        <m:mo>-</m:mo>
+                        <m:mi>j</m:mi>
+                      </m:mrow>
+                    </m:msup>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>k</m:mi>
+                      <m:mo>-</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>/</m:mo>
+                      <m:mn>2</m:mn>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>]</m:mo>
+                  </m:mrow>
+                  <m:mo>}</m:mo>
+                </m:mrow>
+              </m:msub>
+              <m:mo>-</m:mo>
+              <m:msub>
+                <m:mn mathvariant="bold">1</m:mn>
+                <m:mrow>
+                  <m:mo>{</m:mo>
+                  <m:mi>t</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:mrow>
+                    <m:mo>[</m:mo>
+                    <m:msup>
+                      <m:mn>2</m:mn>
+                      <m:mrow>
+                        <m:mo>-</m:mo>
+                        <m:mi>j</m:mi>
+                      </m:mrow>
+                    </m:msup>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>k</m:mi>
+                      <m:mo>-</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>/</m:mo>
+                      <m:mn>2</m:mn>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>,</m:mo>
+                    <m:msup>
+                      <m:mn>2</m:mn>
+                      <m:mrow>
+                        <m:mo>-</m:mo>
+                        <m:mi>j</m:mi>
+                      </m:mrow>
+                    </m:msup>
+                    <m:mi>k</m:mi>
+                    <m:mo>]</m:mo>
+                  </m:mrow>
+                  <m:mo>}</m:mo>
+                </m:mrow>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <figure id="uid17" orient="horizontal"><media id="id20323204" alt=""><image src="../../media/f10.png" mime-type="image/png"/><image for="pdf" src="../../media/f10.eps" mime-type="application/postscript"/></media><caption>Haar Wavelet</caption></figure>
+      <equation id="id2258562">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msubsup>
+              <m:mo>∫</m:mo>
+              <m:mn>0</m:mn>
+              <m:mn>1</m:mn>
+            </m:msubsup>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>t</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mi>d</m:mi>
+            <m:mi>t</m:mi>
+            <m:mo>=</m:mo>
+            <m:mn>0</m:mn>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <equation id="id2258613">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msubsup>
+              <m:mo>∫</m:mo>
+              <m:mn>0</m:mn>
+              <m:mn>1</m:mn>
+            </m:msubsup>
+            <m:msubsup>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+              <m:mn>2</m:mn>
+            </m:msubsup>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>t</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mi>d</m:mi>
+            <m:mi>t</m:mi>
+            <m:mo>=</m:mo>
+            <m:msubsup>
+              <m:mo>∫</m:mo>
+              <m:mrow>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>k</m:mi>
+                  <m:mo>-</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:msup>
+                  <m:mn>2</m:mn>
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:mi>j</m:mi>
+                  </m:mrow>
+                </m:msup>
+              </m:mrow>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:msup>
+                  <m:mn>2</m:mn>
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:mi>j</m:mi>
+                  </m:mrow>
+                </m:msup>
+              </m:mrow>
+            </m:msubsup>
+            <m:msup>
+              <m:mn>2</m:mn>
+              <m:mi>j</m:mi>
+            </m:msup>
+            <m:mi>d</m:mi>
+            <m:mi>t</m:mi>
+            <m:mo>=</m:mo>
+            <m:mn>1</m:mn>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <equation id="id2258724">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msubsup>
+              <m:mo>∫</m:mo>
+              <m:mn>0</m:mn>
+              <m:mn>1</m:mn>
+            </m:msubsup>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>t</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>l</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>m</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>t</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mi>d</m:mi>
+            <m:mi>t</m:mi>
+            <m:mo>=</m:mo>
+            <m:msub>
+              <m:mi>δ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>l</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mo>.</m:mo>
+            <m:msub>
+              <m:mi>δ</m:mi>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>m</m:mi>
+              </m:mrow>
+            </m:msub>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <note id="id2258820" type="Note"><label>Note</label>
+ If <m:math><m:mi>f</m:mi></m:math> is constant on <m:math><m:mrow><m:mo>[</m:mo><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:mi>j</m:mi></m:mrow></m:msup><m:mrow><m:mo>(</m:mo><m:mi>k</m:mi><m:mo>-</m:mo><m:mn>1</m:mn><m:mo>)</m:mo></m:mrow><m:mo>,</m:mo><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:mi>j</m:mi></m:mrow></m:msup><m:mi>k</m:mi><m:mo>]</m:mo></m:mrow></m:math>, then</note>
+      <equation id="id2258888">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mo>∫</m:mo>
+            <m:mi>f</m:mi>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>t</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mn>0</m:mn>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2258932">Suppose <m:math><m:mi>f</m:mi></m:math> is piecewise constant with at most <m:math><m:mi>m</m:mi></m:math>
+discontinuities. Let</para>
+      <equation id="id2258954">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>J</m:mi>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:msub>
+              <m:mi>c</m:mi>
+              <m:mi>o</m:mi>
+            </m:msub>
+            <m:mo>+</m:mo>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>0</m:mn>
+              </m:mrow>
+              <m:mrow>
+                <m:mi>J</m:mi>
+                <m:mo>-</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:munderover>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:msup>
+                <m:mn>2</m:mn>
+                <m:mi>j</m:mi>
+              </m:msup>
+            </m:munderover>
+            <m:mo>&lt;</m:mo>
+            <m:mi>f</m:mi>
+            <m:mo>,</m:mo>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mo>&gt;</m:mo>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2259061"> Then, <m:math><m:msub><m:mi>f</m:mi><m:mi>J</m:mi></m:msub></m:math> has at
+most <m:math><m:mrow><m:mi>m</m:mi><m:mi>J</m:mi></m:mrow></m:math> non-zero wavelet coefficients; i.e., <m:math><m:mrow><m:mo>&lt;</m:mo><m:mi>f</m:mi><m:mo>,</m:mo><m:msub><m:mi>ψ</m:mi><m:mrow><m:mi>j</m:mi><m:mo>,</m:mo><m:mi>k</m:mi></m:mrow></m:msub><m:mo>&gt;</m:mo><m:mo>=</m:mo><m:mn>0</m:mn></m:mrow></m:math> for all but <m:math><m:mrow><m:mi>m</m:mi><m:mi>J</m:mi></m:mrow></m:math> terms, since at most one Haar Wavelet at each
+scale senses each point of discontinuity. Said another way, all
+but at most <m:math><m:mi>m</m:mi></m:math> of the wavelets at each scale have support over
+constant regions of <m:math><m:mi>f</m:mi></m:math>.</para>
+      <para id="id2259162"><m:math><m:msub><m:mi>f</m:mi><m:mi>J</m:mi></m:msub></m:math> itself will be piecewise constant with discontinuities only
+possible occurring at end points of the intervals
+<m:math><m:mrow><m:mo>[</m:mo><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:mi>J</m:mi></m:mrow></m:msup><m:mrow><m:mo>(</m:mo><m:mi>k</m:mi><m:mo>-</m:mo><m:mn>1</m:mn><m:mo>)</m:mo></m:mrow><m:mo>,</m:mo><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:mi>J</m:mi></m:mrow></m:msup><m:mi>k</m:mi><m:mo>]</m:mo></m:mrow></m:math>. Therefore, in this case</para>
+      <equation id="id2259230">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>J</m:mi>
+            </m:msub>
+            <m:msubsup>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mo>|</m:mo>
+              </m:mrow>
+              <m:msub>
+                <m:mi>L</m:mi>
+                <m:mn>2</m:mn>
+              </m:msub>
+              <m:mn>2</m:mn>
+            </m:msubsup>
+            <m:mo>=</m:mo>
+            <m:mi>O</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mn>2</m:mn>
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mi>J</m:mi>
+                </m:mrow>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259299">Daubechies wavelets are the extension of the Haar wavelet idea.
+Haar wavelets have one "vanishing moment":</para>
+      <equation id="id2259304">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msubsup>
+              <m:mo>∫</m:mo>
+              <m:mn>0</m:mn>
+              <m:mn>1</m:mn>
+            </m:msubsup>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:mn>0</m:mn>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259344">Daubechies wavelets are "smoother" basis functions with extra
+vanishing moments. The Daubechies-<m:math><m:mi>N</m:mi></m:math> wavelet has <m:math><m:mi>N</m:mi></m:math> vanishing
+moments.</para>
+      <equation id="id2259370">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msubsup>
+              <m:mo>∫</m:mo>
+              <m:mn>0</m:mn>
+              <m:mn>1</m:mn>
+            </m:msubsup>
+            <m:msup>
+              <m:mi>t</m:mi>
+              <m:mi>l</m:mi>
+            </m:msup>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mi>d</m:mi>
+            <m:mi>t</m:mi>
+            <m:mo>=</m:mo>
+            <m:mn>0</m:mn>
+            <m:mi>f</m:mi>
+            <m:mi>o</m:mi>
+            <m:mi>r</m:mi>
+            <m:mi>l</m:mi>
+            <m:mo>=</m:mo>
+            <m:mn>0</m:mn>
+            <m:mo>,</m:mo>
+            <m:mn>1</m:mn>
+            <m:mo>,</m:mo>
+            <m:mo>.</m:mo>
+            <m:mo>.</m:mo>
+            <m:mo>.</m:mo>
+            <m:mo>,</m:mo>
+            <m:mi>N</m:mi>
+            <m:mo>-</m:mo>
+            <m:mn>1</m:mn>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259456">The Daubechies-1 wavelet is just the Haar case.</para>
+      <para id="id2259463">If <m:math><m:mi>f</m:mi></m:math> is a piecewise degree <m:math><m:mrow><m:mo>≤</m:mo><m:mi>N</m:mi></m:mrow></m:math> polynomial with at most m
+pieces, then using the Daubechies-<m:math><m:mi>N</m:mi></m:math> wavelet system.</para>
+      <equation id="id2259498">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>J</m:mi>
+            </m:msub>
+            <m:msubsup>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mo>|</m:mo>
+              </m:mrow>
+              <m:msub>
+                <m:mi>L</m:mi>
+                <m:mn>2</m:mn>
+              </m:msub>
+              <m:mn>2</m:mn>
+            </m:msubsup>
+            <m:mo>=</m:mo>
+            <m:mi>O</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mn>2</m:mn>
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mi>J</m:mi>
+                </m:mrow>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>;</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259567">and</para>
+      <equation id="id2259572">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>J</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>t</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:msub>
+              <m:mi>c</m:mi>
+              <m:mi>o</m:mi>
+            </m:msub>
+            <m:mo>+</m:mo>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>0</m:mn>
+              </m:mrow>
+              <m:mrow>
+                <m:mi>J</m:mi>
+                <m:mo>-</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:munderover>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:msup>
+                <m:mn>2</m:mn>
+                <m:mi>j</m:mi>
+              </m:msup>
+            </m:munderover>
+            <m:mo>&lt;</m:mo>
+            <m:mi>f</m:mi>
+            <m:mo>,</m:mo>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mo>&gt;</m:mo>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>t</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259695">has at most
+<m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:mi>m</m:mi><m:mi>J</m:mi><m:mo>)</m:mo></m:mrow></m:math> non-zero wavelet coefficients. <m:math><m:msub><m:mi>f</m:mi><m:mi>J</m:mi></m:msub></m:math> is called the Discrete Wavelet Transform (DWT)
+ approximation of <m:math><m:mi>f</m:mi></m:math>. The key
+idea is the same as we saw with trees.</para>
+    </example></section>
+    <section id="uid18">
+      <title>Sampled Data</title>
+      <para id="id2259758">We can also use DWT's to analyze and represent discrete, sampled
+functions. Suppose,</para>
+      <equation id="id2259763">
+        <m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:mi>f</m:mi>
+              <m:mo>̲</m:mo>
+            </m:munder>
+            <m:mo>=</m:mo>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mn>1</m:mn>
+                <m:mo>/</m:mo>
+                <m:mi>n</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>,</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mn>2</m:mn>
+                <m:mo>/</m:mo>
+                <m:mi>n</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>,</m:mo>
+              <m:mo>.</m:mo>
+              <m:mo>.</m:mo>
+              <m:mo>.</m:mo>
+              <m:mo>,</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>n</m:mi>
+                <m:mo>/</m:mo>
+                <m:mi>n</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259842">then we can write <m:math><m:munder><m:mi>f</m:mi><m:mo>̲</m:mo></m:munder></m:math> as</para>
+      <equation id="id2259861">
+        <m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:mi>f</m:mi>
+              <m:mo>̲</m:mo>
+            </m:munder>
+            <m:mo>=</m:mo>
+            <m:msub>
+              <m:mi>c</m:mi>
+              <m:mi>o</m:mi>
+            </m:msub>
+            <m:mo>+</m:mo>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>0</m:mn>
+              </m:mrow>
+              <m:mrow>
+                <m:mi>l</m:mi>
+                <m:mi>o</m:mi>
+                <m:msub>
+                  <m:mi>g</m:mi>
+                  <m:mn>2</m:mn>
+                </m:msub>
+                <m:mi>n</m:mi>
+                <m:mo>-</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:munderover>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:msup>
+                <m:mn>2</m:mn>
+                <m:mi>j</m:mi>
+              </m:msup>
+            </m:munderover>
+            <m:mo>&lt;</m:mo>
+            <m:munder>
+              <m:mi>f</m:mi>
+              <m:mo>̲</m:mo>
+            </m:munder>
+            <m:mo>,</m:mo>
+            <m:msub>
+              <m:munder>
+                <m:mi>ψ</m:mi>
+                <m:mo>̲</m:mo>
+              </m:munder>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mo>&gt;</m:mo>
+            <m:msub>
+              <m:munder>
+                <m:mi>ψ</m:mi>
+                <m:mo>̲</m:mo>
+              </m:munder>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259992">where</para>
+      <equation id="id2259998">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:munder>
+                <m:mi>ψ</m:mi>
+                <m:mo>̲</m:mo>
+              </m:munder>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:msub>
+                <m:mi>ψ</m:mi>
+                <m:mrow>
+                  <m:mi>j</m:mi>
+                  <m:mo>,</m:mo>
+                  <m:mi>k</m:mi>
+                </m:mrow>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mn>1</m:mn>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>,</m:mo>
+              <m:msub>
+                <m:mi>ψ</m:mi>
+                <m:mrow>
+                  <m:mi>j</m:mi>
+                  <m:mo>,</m:mo>
+                  <m:mi>k</m:mi>
+                </m:mrow>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mn>2</m:mn>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>,</m:mo>
+              <m:mo>.</m:mo>
+              <m:mo>.</m:mo>
+              <m:mo>.</m:mo>
+              <m:mo>,</m:mo>
+              <m:msub>
+                <m:mi>ψ</m:mi>
+                <m:mrow>
+                  <m:mi>j</m:mi>
+                  <m:mo>,</m:mo>
+                  <m:mi>k</m:mi>
+                </m:mrow>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>n</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2260109">is a discrete time analog of the continuous time
+wavelets we considered before. In particular,</para>
+      <equation id="id2260116">
+        <m:math mode="display">
+          <m:mrow>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:munderover>
+            <m:msup>
+              <m:mi>i</m:mi>
+              <m:mi>l</m:mi>
+            </m:msup>
+            <m:msub>
+              <m:mi>ψ</m:mi>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>i</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mn>0</m:mn>
+            <m:mo>,</m:mo>
+            <m:mi>l</m:mi>
+            <m:mo>=</m:mo>
+            <m:mn>0</m:mn>
+            <m:mo>,</m:mo>
+            <m:mn>1</m:mn>
+            <m:mo>,</m:mo>
+            <m:mo>.</m:mo>
+            <m:mo>.</m:mo>
+            <m:mo>.</m:mo>
+            <m:mo>,</m:mo>
+            <m:mi>N</m:mi>
+            <m:mo>-</m:mo>
+            <m:mn>1</m:mn>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2260204">for the Daubechies-<m:math><m:mi>N</m:mi></m:math>
+discrete wavelets.</para>
+      <equation id="id2260219">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mo>&lt;</m:mo>
+            <m:munder>
+              <m:mi>f</m:mi>
+              <m:mo>̲</m:mo>
+            </m:munder>
+            <m:mo>,</m:mo>
+            <m:msub>
+              <m:munder>
+                <m:mi>ψ</m:mi>
+                <m:mo>̲</m:mo>
+              </m:munder>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mo>&gt;</m:mo>
+            <m:mo>=</m:mo>
+            <m:msup>
+              <m:munder>
+                <m:mi>f</m:mi>
+                <m:mo>̲</m:mo>
+              </m:munder>
+              <m:mi>T</m:mi>
+            </m:msup>
+            <m:msub>
+              <m:munder>
+                <m:mi>ψ</m:mi>
+                <m:mo>̲</m:mo>
+              </m:munder>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>k</m:mi>
+              </m:mrow>
+            </m:msub>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2260292">Thus, we also have an
+analogous approximation result: If <m:math><m:munder><m:mi>f</m:mi><m:mo>̲</m:mo></m:munder></m:math> are samples
+from a piecewise degree <m:math><m:mrow><m:mo>≤</m:mo><m:mi>N</m:mi></m:mrow></m:math> polynomial function with a finite
+number <m:math><m:mi>m</m:mi></m:math> of discontinuities, then <m:math><m:munder><m:mi>f</m:mi><m:mo>̲</m:mo></m:munder></m:math> has <m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:mi>m</m:mi><m:mi>J</m:mi><m:mo>)</m:mo></m:mrow></m:math>
+non-zero wavelet coefficients.</para>
+    </section>
+    <section id="uid19">
+      <title>Approximating <!--Math is not currently allowed in CNXML section title.--> functions with wavelets</title>
+      <para id="id2260392">Suppose <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:msup><m:mi>B</m:mi><m:mi>α</m:mi></m:msup><m:mrow><m:mo>(</m:mo><m:msub><m:mi>C</m:mi><m:mi>α</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math> and has a finite number of
+discontinuities. Let <m:math><m:msub><m:mi>f</m:mi><m:mi>p</m:mi></m:msub></m:math> denote piecewise degree-<m:math><m:mrow><m:mi>N</m:mi><m:mo>(</m:mo><m:mi>N</m:mi><m:mo>=</m:mo><m:mo>⌈</m:mo><m:mi>α</m:mi><m:mo>⌉</m:mo><m:mo>)</m:mo></m:mrow></m:math> polynomial approximation to <m:math><m:mi>f</m:mi></m:math> with
+<m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:mi>k</m:mi><m:mo>)</m:mo></m:mrow></m:math> pieces; a uniform partition into <m:math><m:mi>k</m:mi></m:math> equal length intervals
+followed by addition splits at the points of discontinuity.</para>
+      <figure id="uid20" orient="horizontal"><media id="id19589922" alt=""><image src="../../media/f11.png" mime-type="image/png"/><image for="pdf" src="../../media/f11.eps" mime-type="application/postscript"/></media></figure>
+      <para id="id2260532">Then</para>
+      <equation id="id2260535">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>t</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+            </m:mrow>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>p</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>t</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mrow>
+              <m:msup>
+                <m:mo>|</m:mo>
+                <m:mn>2</m:mn>
+              </m:msup>
+              <m:mo>=</m:mo>
+              <m:mi>O</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msup>
+                  <m:mi>k</m:mi>
+                  <m:mo>(</m:mo>
+                </m:msup>
+                <m:mo>-</m:mo>
+                <m:mn>2</m:mn>
+                <m:mi>α</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>∀</m:mo>
+            <m:mi>t</m:mi>
+            <m:mo>∈</m:mo>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mn>0</m:mn>
+              <m:mo>,</m:mo>
+              <m:mn>1</m:mn>
+              <m:mo>]</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <equation id="id2260628">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>⇒</m:mo>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>i</m:mi>
+                <m:mo>/</m:mo>
+                <m:mi>n</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+            </m:mrow>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>p</m:mi>
+            </m:msub>
+            <m:msup>
+              <m:mrow>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>i</m:mi>
+                  <m:mo>/</m:mo>
+                  <m:mi>n</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>|</m:mo>
+              </m:mrow>
+              <m:mn>2</m:mn>
+            </m:msup>
+            <m:mo>=</m:mo>
+            <m:mi>O</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>k</m:mi>
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mi>α</m:mi>
+                </m:mrow>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mi>i</m:mi>
+            <m:mo>=</m:mo>
+            <m:mn>1</m:mn>
+            <m:mo>,</m:mo>
+            <m:mo>.</m:mo>
+            <m:mo>.</m:mo>
+            <m:mo>.</m:mo>
+            <m:mo>,</m:mo>
+            <m:mi>n</m:mi>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <equation id="id2260730">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mo>⇒</m:mo>
+            <m:mn>1</m:mn>
+            <m:mo>/</m:mo>
+            <m:mrow>
+              <m:mi>n</m:mi>
+              <m:mo>|</m:mo>
+              <m:mo>|</m:mo>
+            </m:mrow>
+            <m:munder>
+              <m:mi>f</m:mi>
+              <m:mo>̲</m:mo>
+            </m:munder>
+            <m:mo>-</m:mo>
+            <m:msub>
+              <m:munder>
+                <m:mi>f</m:mi>
+                <m:mo>̲</m:mo>
+              </m:munder>
+              <m:mi>p</m:mi>
+            </m:msub>
+            <m:msubsup>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mo>|</m:mo>
+              </m:mrow>
+              <m:msub>
+                <m:mi>L</m:mi>
+                <m:mn>2</m:mn>
+              </m:msub>
+              <m:mn>2</m:mn>
+            </m:msubsup>
+            <m:mo>=</m:mo>
+            <m:mi>O</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>k</m:mi>
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mi>α</m:mi>
+                </m:mrow>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mrow>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2260820">and <m:math><m:msub><m:munder><m:mi>f</m:mi><m:mo>̲</m:mo></m:munder><m:mi>p</m:mi></m:msub></m:math> has
+<m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:mi>k</m:mi><m:mi>l</m:mi><m:mi>o</m:mi><m:msub><m:mi>g</m:mi><m:mn>2</m:mn></m:msub><m:mi>n</m:mi><m:mo>)</m:mo></m:mrow></m:math> non-zero coefficients according to our previous
+analysis.</para>
+    </section>
+    <section id="uid21">
+      <title>Wavelets in 2-D</title>
+      <para id="id2260883">Suppose <m:math><m:mi>f</m:mi></m:math> is a 2-D image that is piecewise polynomial:</para>
+      <figure id="uid22" orient="horizontal"><media id="id19590511" alt=""><image src="../../media/f12.png" mime-type="image/png"/><image for="pdf" src="../../media/f12.eps" mime-type="application/postscript"/></media></figure>
+      <para id="id2260923">A pruned RDP of <m:math><m:mi>k</m:mi></m:math> squares decorated with polyfits gives</para>
+      <equation id="id2260936"><m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>k</m:mi>
+            </m:msub>
+            <m:msubsup>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mo>|</m:mo>
+              </m:mrow>
+              <m:msub>
+                <m:mi>L</m:mi>
+                <m:mn>2</m:mn>
+              </m:msub>
+              <m:mn>2</m:mn>
+            </m:msubsup>
+            <m:mo>=</m:mo>
+            <m:mi>O</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>k</m:mi>
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <figure id="uid23" orient="horizontal"><media id="id19590670" alt=""><image src="../../media/f13.png" mime-type="image/png"/><image for="pdf" src="../../media/f13.eps" mime-type="application/postscript"/></media></figure>
+      <para id="id2261029">Let <m:math><m:mrow><m:munder><m:mi>f</m:mi><m:mo>̲</m:mo></m:munder><m:msubsup><m:mrow><m:mo>=</m:mo><m:mo>[</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:mi>i</m:mi><m:mo>/</m:mo><m:mi>k</m:mi><m:mo>,</m:mo><m:mi>j</m:mi><m:mo>/</m:mo><m:mi>k</m:mi><m:mo>)</m:mo></m:mrow></m:mrow><m:mrow><m:mi>i</m:mi><m:mo>,</m:mo><m:mi>j</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup></m:mrow></m:math> sample range.</para>
+      <equation id="id2261093">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>t</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>,</m:mo>
+                <m:mi>j</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>k</m:mi>
+            </m:munderover>
+            <m:mi>f</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>i</m:mi>
+              <m:mo>/</m:mo>
+              <m:mi>k</m:mi>
+              <m:mo>,</m:mo>
+              <m:mi>j</m:mi>
+              <m:mo>/</m:mo>
+              <m:mi>k</m:mi>
+              <m:mi>k</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:msub>
+              <m:mn mathvariant="bold">1</m:mn>
+              <m:mrow>
+                <m:mo>{</m:mo>
+                <m:mi>t</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mrow>
+                  <m:mo>[</m:mo>
+                  <m:mrow>
+                    <m:mi>i</m:mi>
+                    <m:mo>-</m:mo>
+                    <m:mn>1</m:mn>
+                  </m:mrow>
+                  <m:mo>/</m:mo>
+                  <m:mi>k</m:mi>
+                  <m:mo>,</m:mo>
+                  <m:mi>i</m:mi>
+                  <m:mo>/</m:mo>
+                  <m:mi>k</m:mi>
+                  <m:mo>)</m:mo>
+                  <m:mi>x</m:mi>
+                  <m:mo>[</m:mo>
+                  <m:mrow>
+                    <m:mi>j</m:mi>
+                    <m:mo>-</m:mo>
+                    <m:mn>1</m:mn>
+                  </m:mrow>
+                  <m:mo>/</m:mo>
+                  <m:mi>k</m:mi>
+                  <m:mo>,</m:mo>
+                  <m:mi>j</m:mi>
+                  <m:mo>/</m:mo>
+                  <m:mi>k</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>}</m:mo>
+              </m:mrow>
+            </m:msub>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2261235">then</para>
+      <equation id="id2261241">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mrow>
+              <m:mo>|</m:mo>
+              <m:mo>|</m:mo>
+              <m:mi>f</m:mi>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:msub>
+              <m:mi>f</m:mi>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:msubsup>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mo>|</m:mo>
+              </m:mrow>
+              <m:msub>
+                <m:mi>L</m:mi>
+                <m:mn>2</m:mn>
+              </m:msub>
+              <m:mn>2</m:mn>
+            </m:msubsup>
+            <m:mo>=</m:mo>
+            <m:mi>O</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>k</m:mi>
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2261308"><m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:mn>1</m:mn><m:mo>)</m:mo></m:mrow></m:math> error on <m:math><m:mi>k</m:mi></m:math> of the <m:math><m:msup><m:mi>k</m:mi><m:mn>2</m:mn></m:msup></m:math> pixels, near zero elsewhere. The
+DWT of <m:math><m:munder><m:mi>f</m:mi><m:mo>̲</m:mo></m:munder></m:math> has <m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:mi>k</m:mi><m:mo>)</m:mo></m:mrow></m:math> non-zero wavelet coefficients.
+<m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:msup><m:mn>2</m:mn><m:mi>j</m:mi></m:msup><m:mo>)</m:mo></m:mrow></m:math> at scale <m:math><m:mrow><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:mi>j</m:mi></m:mrow></m:msup><m:mo>,</m:mo><m:mi>j</m:mi><m:mo>=</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>,</m:mo><m:mo>.</m:mo><m:mo>.</m:mo><m:mo>.</m:mo><m:mo>,</m:mo><m:mi>l</m:mi><m:mi>o</m:mi><m:mi>g</m:mi><m:mi>n</m:mi><m:mo>.</m:mo></m:mrow></m:math></para>
+    </section>
+  </content>
+</document>

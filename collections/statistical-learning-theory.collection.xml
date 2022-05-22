@@ -1,0 +1,33 @@
+<col:collection xmlns="http://cnx.rice.edu/collxml" xmlns:col="http://cnx.rice.edu/collxml" xml:lang="en">
+  <metadata xmlns:md="http://cnx.rice.edu/mdml" mdml-version="0.5">
+    <md:content-id>col10532</md:content-id>
+    <md:title>Statistical Learning Theory</md:title>
+    <md:language>en</md:language>
+    <md:license url="http://creativecommons.org/licenses/by/2.0/">Creative Commons Attribution License</md:license>
+    <md:uuid>a7b196ae-fde4-49db-a708-eff934ddb8b0</md:uuid>
+<md:slug>statistical-learning-theory</md:slug>
+</metadata>
+  <col:content>
+    <col:module document="m16263"/>
+    <col:module document="m16269"/>
+    <col:module document="m16272"/>
+    <col:module document="m16274"/>
+    <col:module document="m16261"/>
+    <col:module document="m16280"/>
+    <col:module document="m16282"/>
+    <col:module document="m16264"/>
+    <col:module document="m16265"/>
+    <col:module document="m16271"/>
+    <col:module document="m16266"/>
+    <col:module document="m16287"/>
+    <col:module document="m16267"/>
+    <col:module document="m16276"/>
+    <col:module document="m16275"/>
+    <col:module document="m16268"/>
+    <col:module document="m16278"/>
+    <col:module document="m16284"/>
+    <col:module document="m16283"/>
+    <col:module document="m16262"/>
+    <col:module document="m17357"/>
+  </col:content>
+</col:collection>

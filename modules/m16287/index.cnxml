@@ -1,0 +1,2663 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Decision Trees</title>
+  <metadata>
+  <md:content-id>m16287</md:content-id><md:title>Decision Trees</md:title>
+  <md:abstract/>
+  <md:uuid>17dea973-6ea9-423d-ac4a-535e11956856</md:uuid>
+</metadata>
+  <content>
+    <section id="uid1"><title>Minimum Complexity Penalized Function</title>
+      
+      <para id="id2255548">Recall the basic results of the last lectures: let <m:math><m:mi mathvariant="script">X</m:mi></m:math> and <m:math><m:mi mathvariant="script">Y</m:mi></m:math>
+denote the input and output spaces respectively. Let <m:math><m:mrow><m:mi>X</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">X</m:mi></m:mrow></m:math> and
+<m:math><m:mrow><m:mi>Y</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">X</m:mi></m:mrow></m:math> be random variables with unknown joint probability
+distribution <m:math><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mi>Y</m:mi></m:mrow></m:msub></m:math>. We would like to use <m:math><m:mi>X</m:mi></m:math> to “predict”
+<m:math><m:mi>Y</m:mi></m:math>. Consider a loss function <m:math><m:mrow><m:mn>0</m:mn><m:mo>≤</m:mo><m:mi>ℓ</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub><m:mo>,</m:mo><m:msub><m:mi>y</m:mi><m:mn>2</m:mn></m:msub><m:mo>)</m:mo></m:mrow><m:mo>≤</m:mo><m:mn>1</m:mn><m:mo>,</m:mo><m:mspace width="4pt"/><m:mo>∀</m:mo><m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub><m:mo>,</m:mo><m:msub><m:mi>y</m:mi><m:mn>2</m:mn></m:msub><m:mo>∈</m:mo><m:mi mathvariant="script">Y</m:mi></m:mrow></m:math>. This function is used to measure the accuracy of
+our prediction. Let <m:math><m:mi mathvariant="script">F</m:mi></m:math> be a collection of candidate functions
+(models), <m:math><m:mrow><m:mi>f</m:mi><m:mo>:</m:mo><m:mi mathvariant="script">X</m:mi><m:mo>→</m:mo><m:mi mathvariant="script">Y</m:mi></m:mrow></m:math>. The expected risk we incur is given
+by <m:math><m:mrow><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>≡</m:mo><m:msub><m:mi>E</m:mi><m:mrow><m:mi>X</m:mi><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>[</m:mo><m:mi>ℓ</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow><m:mo>,</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow><m:mo>]</m:mo></m:mrow></m:mrow></m:math>. We have access only to a
+number of i.i.d. samples, <m:math><m:msubsup><m:mrow><m:mo>{</m:mo><m:msub><m:mi>X</m:mi><m:mi>i</m:mi></m:msub><m:mo>,</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>}</m:mo></m:mrow><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup></m:math>. These allow us to
+compute the empirical risk <m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>≡</m:mo><m:mfrac><m:mn>1</m:mn><m:mi>n</m:mi></m:mfrac><m:msubsup><m:mo>∑</m:mo><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup><m:mi>ℓ</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>X</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>,</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math>.</para>
+      <para id="id2256182">Assume in the following that <m:math><m:mi mathvariant="script">F</m:mi></m:math> is countable. Assign a positive
+number <m:math><m:mrow><m:mi>c</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:math> to each <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math> such that <m:math><m:mrow><m:msub><m:mo>∑</m:mo><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:msub><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:mi>c</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:msup><m:mo>≤</m:mo><m:mn>1</m:mn></m:mrow></m:math>. If we use a prefix code to describe each element
+of <m:math><m:mi mathvariant="script">F</m:mi></m:math> and define <m:math><m:mrow><m:mi>c</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:math> to be the codeword length (in bits) for
+each <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>, the last inequality is automatically satisfied.</para>
+      <para id="id2256318">We define the <emphasis>minimum complexity penalized estimator</emphasis> as</para>
+      <equation id="id2256326">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>f</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mo>≡</m:mo>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:mfenced separators="" open="{" close="}">
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>R</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mi>c</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo>+</m:mo>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+            </m:mfenced>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256452">As we showed previously we have the bound</para>
+      <equation id="id2256455">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:mfenced separators="" open="{" close="}">
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mi>c</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo>+</m:mo>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+              <m:mo>+</m:mo>
+              <m:mfrac>
+                <m:mn>1</m:mn>
+                <m:msqrt>
+                  <m:mi>n</m:mi>
+                </m:msqrt>
+              </m:mfrac>
+            </m:mfenced>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256585">The performance (risk) of <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> is on average better than</para>
+      <equation id="id2256610">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msubsup>
+                <m:mi>f</m:mi>
+                <m:mi>n</m:mi>
+                <m:mo>*</m:mo>
+              </m:msubsup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>+</m:mo>
+            <m:msqrt>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mi>c</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msubsup>
+                      <m:mi>f</m:mi>
+                      <m:mi>n</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msubsup>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mo>+</m:mo>
+                  <m:mfrac>
+                    <m:mn>1</m:mn>
+                    <m:mn>2</m:mn>
+                  </m:mfrac>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mi>n</m:mi>
+                </m:mrow>
+                <m:mrow>
+                  <m:mn>2</m:mn>
+                  <m:mi>n</m:mi>
+                </m:mrow>
+              </m:mfrac>
+            </m:msqrt>
+            <m:mo>+</m:mo>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:msqrt>
+                <m:mi>n</m:mi>
+              </m:msqrt>
+            </m:mfrac>
+            <m:mo>,</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256700">where</para>
+      <equation id="id2256705">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msubsup>
+              <m:mi>f</m:mi>
+              <m:mi>n</m:mi>
+              <m:mo>*</m:mo>
+            </m:msubsup>
+            <m:mo>=</m:mo>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:mfenced separators="" open="{" close="}">
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mi>c</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo>+</m:mo>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+            </m:mfenced>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256812">If it happens that the
+optimal function, that is</para>
+      <equation id="id2256818">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msup>
+              <m:mi>f</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mo>=</m:mo>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mspace width="4.pt"/>
+                <m:mtext>measurable</m:mtext>
+              </m:mrow>
+            </m:munder>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>,</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256871">is close to an <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math> with a small <m:math><m:mrow><m:mi>c</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:math>,
+then <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> will perform almost as well as the optimal
+function.</para>
+<example id="exam1">
+      <para id="id2256930"> 
+Suppose <m:math><m:mrow><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>, then</para>
+      <equation id="id2256959">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>f</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>+</m:mo>
+            <m:msqrt>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mi>c</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msup>
+                      <m:mi>f</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mo>+</m:mo>
+                  <m:mfrac>
+                    <m:mn>1</m:mn>
+                    <m:mn>2</m:mn>
+                  </m:mfrac>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mi>n</m:mi>
+                </m:mrow>
+                <m:mrow>
+                  <m:mn>2</m:mn>
+                  <m:mi>n</m:mi>
+                </m:mrow>
+              </m:mfrac>
+            </m:msqrt>
+            <m:mo>+</m:mo>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:msqrt>
+                <m:mi>n</m:mi>
+              </m:msqrt>
+            </m:mfrac>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257073">Furthermore if <m:math><m:mrow><m:mi>c</m:mi><m:mrow><m:mo>(</m:mo><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mi>O</m:mi><m:mrow><m:mo>(</m:mo><m:mo form="prefix">log</m:mo><m:mi>n</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>
+then</para>
+      <equation id="id2257117">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>f</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>+</m:mo>
+            <m:mi>O</m:mi>
+            <m:mfenced open="(" close=")">
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                  <m:mi>n</m:mi>
+                </m:mfrac>
+              </m:msqrt>
+            </m:mfenced>
+            <m:mo>,</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257197">that is, only within a small
+<m:math><m:mrow><m:mi>O</m:mi><m:mfenced open="(" close=")"><m:msqrt><m:mfrac><m:mrow><m:mo form="prefix">log</m:mo><m:mi>n</m:mi></m:mrow><m:mi>n</m:mi></m:mfrac></m:msqrt></m:mfenced></m:mrow></m:math> offset of the optimal risk.</para>
+      <para id="id2257230">In general, we can also bound the excess risk <m:math><m:mrow><m:mi>E</m:mi><m:mrow><m:mo>[</m:mo><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>]</m:mo></m:mrow><m:mo>-</m:mo><m:msup><m:mi>R</m:mi><m:mo>*</m:mo></m:msup></m:mrow></m:math>, where <m:math><m:msup><m:mi>R</m:mi><m:mo>*</m:mo></m:msup></m:math> is the Bayes risk,</para>
+      <equation id="id2257294">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msup>
+              <m:mi>R</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mo>=</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">inf</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mspace width="4.pt"/>
+                <m:mtext>measurable</m:mtext>
+              </m:mrow>
+            </m:munder>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257343">By subtracting <m:math><m:msup><m:mi>R</m:mi><m:mo>*</m:mo></m:msup></m:math> (a constant)
+from both sides of the inequality</para>
+      <equation id="id2257364">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:mfenced separators="" open="{" close="}">
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mi>c</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo>+</m:mo>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+              <m:mo>+</m:mo>
+              <m:mfrac>
+                <m:mn>1</m:mn>
+                <m:msqrt>
+                  <m:mi>n</m:mi>
+                </m:msqrt>
+              </m:mfrac>
+            </m:mfenced>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257492">we obtain</para>
+      <equation id="id2257498">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:msup>
+              <m:mi>R</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mo>≤</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:mfenced separators="" open="{" close="}">
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:msup>
+                <m:mi>R</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mo>+</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mi>c</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo>+</m:mo>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+              <m:mo>+</m:mo>
+              <m:mfrac>
+                <m:mn>1</m:mn>
+                <m:msqrt>
+                  <m:mi>n</m:mi>
+                </m:msqrt>
+              </m:mfrac>
+            </m:mfenced>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257651">Note that two terms in
+this upper bound: <m:math><m:mrow><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>-</m:mo><m:msup><m:mi>R</m:mi><m:mo>*</m:mo></m:msup></m:mrow></m:math> is a bound on the approximation error of
+a model <m:math><m:mi>f</m:mi></m:math>, and remainder is a bound on the estimation error
+associated with <m:math><m:mi>f</m:mi></m:math>. Thus, we see that complexity regularization
+automatically optimizes a balance between approximation and estimation
+errors. In other words, complexity regularization is <emphasis>adaptive</emphasis>
+to the unknown tradeoff between approximation and estimation.</para>
+    </example></section>
+    <section id="uid3">
+      <title>Classification</title>
+      <para id="id2257720">Consider the particularization of the above to a classification
+scenario. Let <m:math><m:mrow><m:mi mathvariant="script">X</m:mi><m:mo>=</m:mo><m:msup><m:mrow><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow><m:mi>d</m:mi></m:msup></m:mrow></m:math>, <m:math><m:mrow><m:mi mathvariant="script">Y</m:mi><m:mo>=</m:mo><m:mo>{</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>}</m:mo></m:mrow></m:math> and <m:math><m:mrow><m:mi>ℓ</m:mi><m:mrow><m:mo>(</m:mo><m:mover accent="true"><m:mi>y</m:mi><m:mo>^</m:mo></m:mover><m:mo>,</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow><m:mo>≡</m:mo><m:msub><m:mn mathvariant="bold">1</m:mn><m:mrow><m:mo>{</m:mo><m:mover accent="true"><m:mi>y</m:mi><m:mo>^</m:mo></m:mover><m:mo>≠</m:mo><m:mi>y</m:mi><m:mo>}</m:mo></m:mrow></m:msub></m:mrow></m:math>. Then <m:math><m:mrow><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:msub><m:mi>E</m:mi><m:mrow><m:mi>X</m:mi><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>[</m:mo><m:msub><m:mn mathvariant="bold">1</m:mn><m:mrow><m:mo>{</m:mo><m:mi>f</m:mi><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo><m:mo>≠</m:mo><m:mi>Y</m:mi><m:mo>}</m:mo></m:mrow></m:msub><m:mo>]</m:mo></m:mrow><m:mo>=</m:mo><m:mi>P</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow><m:mo>≠</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>. The Bayes risk is given by</para>
+      <equation id="id2257927">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msup>
+              <m:mi>R</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mo>=</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">inf</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mspace width="4.pt"/>
+                <m:mtext>measurable</m:mtext>
+              </m:mrow>
+            </m:munder>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257977">As it was observed before, the Bayes
+classifier (<emphasis>i.e., </emphasis>a classifier that achieves the Bayes risk) is
+given by</para>
+      <equation id="id2257990">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msup>
+              <m:mi>f</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mfenced separators="" open="{" close="">
+              <m:mtable>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mn>1</m:mn>
+                      <m:mo>,</m:mo>
+                      <m:mspace width="0.277778em"/>
+                      <m:mspace width="0.277778em"/>
+                    </m:mrow>
+                  </m:mtd>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mi>P</m:mi>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>Y</m:mi>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>|</m:mo>
+                        <m:mi>X</m:mi>
+                        <m:mo>=</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>≥</m:mo>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mn>2</m:mn>
+                      </m:mfrac>
+                    </m:mrow>
+                  </m:mtd>
+                </m:mtr>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+                      <m:mo>,</m:mo>
+                      <m:mspace width="0.277778em"/>
+                      <m:mspace width="0.277778em"/>
+                    </m:mrow>
+                  </m:mtd>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mi>P</m:mi>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>Y</m:mi>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>|</m:mo>
+                        <m:mi>X</m:mi>
+                        <m:mo>=</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>&lt;</m:mo>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mn>2</m:mn>
+                      </m:mfrac>
+                    </m:mrow>
+                  </m:mtd>
+                </m:mtr>
+              </m:mtable>
+            </m:mfenced>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2258132">This classifier can be expressed in a different way. Consider the
+set <m:math><m:mrow><m:msup><m:mi>G</m:mi><m:mo>*</m:mo></m:msup><m:mo>=</m:mo><m:mrow><m:mo>{</m:mo><m:mi>x</m:mi><m:mo>:</m:mo><m:mspace width="4pt"/><m:mi>P</m:mi><m:mrow><m:mo>(</m:mo><m:mi>Y</m:mi><m:mo>=</m:mo><m:mn>1</m:mn><m:mo>|</m:mo><m:mi>X</m:mi><m:mo>=</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow><m:mo>≥</m:mo><m:mn>1</m:mn><m:mo>/</m:mo><m:mn>2</m:mn><m:mo>}</m:mo></m:mrow></m:mrow></m:math>. The Bayes classifier can written
+as <m:math><m:mrow><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:msub><m:mn mathvariant="bold">1</m:mn><m:mrow><m:mo>{</m:mo><m:mi>x</m:mi><m:mo>∈</m:mo><m:msup><m:mi>G</m:mi><m:mo>*</m:mo></m:msup><m:mo>}</m:mo></m:mrow></m:msub></m:mrow></m:math>. Therefore the classifier is
+characterized entirely by the set <m:math><m:msup><m:mi>G</m:mi><m:mo>*</m:mo></m:msup></m:math>, if <m:math><m:mrow><m:mi>X</m:mi><m:mo>∈</m:mo><m:msup><m:mi>G</m:mi><m:mo>*</m:mo></m:msup></m:mrow></m:math> then the
+“best” guess is that <m:math><m:mi>Y</m:mi></m:math> is one, and vice-versa. The boundary of
+this set corresponds to the points where the decision is harder.
+The boundary of <m:math><m:msup><m:mi>G</m:mi><m:mo>*</m:mo></m:msup></m:math> is called the <emphasis>Bayes Decision Boundary</emphasis>.
+In <link target-id="uid4" class="cnxn"/>(a) this concept is illustrated. If
+<m:math><m:mrow><m:mi>η</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo><m:mo>=</m:mo><m:mi>P</m:mi><m:mo>(</m:mo><m:mi>Y</m:mi><m:mo>=</m:mo><m:mn>1</m:mn><m:mo>|</m:mo><m:mi>X</m:mi><m:mo>=</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow></m:math> is a continuous function then the Bayes
+decision boundary is simply given by <m:math><m:mrow><m:mo>{</m:mo><m:mi>x</m:mi><m:mo>:</m:mo><m:mspace width="4pt"/><m:mi>P</m:mi><m:mo>(</m:mo><m:mi>Y</m:mi><m:mo>=</m:mo><m:mn>1</m:mn><m:mo>|</m:mo><m:mi>X</m:mi><m:mo>=</m:mo><m:mi>x</m:mi><m:mo>)</m:mo><m:mo>=</m:mo><m:mn>1</m:mn><m:mo>/</m:mo><m:mn>2</m:mn><m:mo>}</m:mo></m:mrow></m:math>.
+Clearly the structure of the decision boundary provides important
+information on the difficulty of the problem.</para>
+      <figure id="uid4" orient="vertical">
+        <subfigure id="id2258439">
+          <media id="id8628536" alt=""><image src="../../media/BayesD.png" mime-type="image/png" width="272"/><image for="pdf" src="../../media/BayesD.eps" mime-type="application/postscript" print-width="6cm"/></media>
+        </subfigure>
+        <subfigure id="id2258451">
+          <media id="id8628591" alt=""><image src="../../media/BayesD2.png" mime-type="image/png" width="272"/><image for="pdf" src="../../media/BayesD2.eps" mime-type="application/postscript" print-width="6cm"/></media>
+        </subfigure>
+        <caption>(a) The Bayes classifier and the Bayes decision
+boundary ; (b) Example of the i.i.d. training
+pairs.</caption>
+      </figure>
+      <section id="uid5"><title>Empirical Classifier Design</title>
+        
+        <para id="id2258480">Given <m:math><m:mi>n</m:mi></m:math> i.i.d. training pairs, <m:math><m:msubsup><m:mrow><m:mo>{</m:mo><m:msub><m:mi>X</m:mi><m:mi>i</m:mi></m:msub><m:mo>,</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>}</m:mo></m:mrow><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup></m:math>, we want to
+construct a classifier <m:math><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> that performs well on
+average, <emphasis>i.e., </emphasis>we want <m:math><m:mrow><m:mi>E</m:mi><m:mo>[</m:mo><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>]</m:mo></m:mrow></m:math> as close to <m:math><m:msup><m:mi>R</m:mi><m:mo>*</m:mo></m:msup></m:math> as
+possible. In <link target-id="uid4" class="cnxn"/>(b) an example of the i.i.d.
+training pairs is depicted.</para>
+        <para id="id2258622">The construction of a classifier boils down to the estimation of
+the Bayes decision boundary. The histogram rule, discussed in a
+previous lecture, approaches the problem by subdividing the
+feature space into small boxes and taking a majority vote of the
+training data in each box. A typical result is depicted in
+<link target-id="uid7" class="cnxn"/>(a).</para>
+        <para id="id2258640">The main problem with the histogram rule is that it is solving a
+more complicated problem than it is actually necessary. We do not
+need to determine the correct label for each individual box
+directly (the histogram rule is essentially estimating <m:math><m:mrow><m:mi>η</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow></m:math>).
+In principle we only need to locate the decision boundary and
+assign the correct label on either side (notice that the accuracy
+of a majority vote over a region increases with the size of the
+region). The next example illustrates this.</para>
+<example id="exam235243">
+<title>Three Different Classifiers</title> 
+        <para id="id2258675">The pictures below correspond to the approximation of the Bayes
+classifier by three different classifiers:</para>
+        <figure id="uid7" orient="vertical">
+          <subfigure id="id2258699">
+            <media id="id10552266" alt=""><image src="../../media/histogram.png" mime-type="image/png" width="272"/><image for="pdf" src="../../media/histogram.eps" mime-type="application/postscript" print-width="4.5cm"/></media>
+          </subfigure>
+          <subfigure id="id2258711">
+            <media id="id10778708" alt=""><image src="../../media/linear.png" mime-type="image/png" width="272"/><image for="pdf" src="../../media/linear.eps" mime-type="application/postscript" print-width="4.5cm"/></media>
+          </subfigure>
+          <subfigure id="id2258724">
+            <media id="id11932257" alt=""><image src="../../media/tree.png" mime-type="image/png" width="272"/><image for="pdf" src="../../media/tree.eps" mime-type="application/postscript" print-width="4.5cm"/></media>
+          </subfigure>
+          <caption>(a) Histogram classifier ; (b) Linear classifier;
+(c)Tree classifier.</caption>
+        </figure>
+        <para id="id2258751">The linear classifier and the tree classifier (to be defined
+formally later) both attack the problem of finding the boundary
+more directly than the histogram classifier, and therefore they
+tend to produce much better results in theory and practice. In the
+following we will demonstrate this for classification trees.</para>
+      </example></section>
+    </section>
+    <section id="uid8">
+      <title>Binary Classification Trees</title>
+      <para id="id2258768">Binary classification trees are constructed by a two-step process:</para>
+      <list id="id2258772" list-type="enumerated">
+        <item id="uid9">Tree growing
+</item>
+        <item id="uid10">Tree pruning
+</item>
+      </list>
+      <para id="id2258797">The basic idea is to first grow a very large, complicated tree
+classifier, that explains the the training data very accurately,
+but has poor generalization characteristics, and then prune this
+tree, to avoid overfitting.</para>
+      <section id="uid11">
+        <title>Growing Trees</title>
+        <para id="id2258811">The growing process is based on recursively subudividing the
+feature space. Usually the subdivisions are splits of existing
+regions into two smaller regions (<emphasis>i.e., </emphasis>binary splits) and usually
+the splits are perpendicular to one of the feature axes. An
+example of such construction is depicted in <link target-id="uid12" class="cnxn"/>.</para>
+        <figure id="uid12" orient="horizontal">
+          <media id="id11206217" alt=""><image src="../../media/CART_like.png" mime-type="image/png" width="818"/><image for="pdf" src="../../media/CART_like.eps" mime-type="application/postscript" print-width="6in"/></media>
+          <caption>Growing a recursive binary tree
+(<m:math><m:mrow><m:mi mathvariant="script">X</m:mi><m:mo>=</m:mo><m:msup><m:mrow><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow><m:mn>2</m:mn></m:msup></m:mrow></m:math>).</caption>
+        </figure>
+        <para id="id2258877">Often the splitting process is based on the training data, and is
+designed to separate data with different labels as much as possible.
+It such constructions, the “splits,” and hence the tree-structure
+itself, are data dependent. Alternatively, the splitting and
+subdivision could be independent from the training data. The latter
+approach is the one we are going to investigate in detail, and we will
+consider Dyadic Decision Trees and Recursive Dyadic Partitions
+(depicted in <link target-id="uid13" class="cnxn"/>) in particular.</para>
+        <para id="id2258900">Until now we have been referring to trees, but did not make clear how
+do trees relate to partitions. It turns out that any decision tree can
+be associated with a partition of the input space <m:math><m:mi mathvariant="script">X</m:mi></m:math> and
+vice-versa. In particular, a Recursive Dyadic Partition (RDP) can be
+associated with a (binary) tree. In fact, this is the most efficient
+way of describing a RDP. In <link target-id="uid13" class="cnxn"/> we illustrate the
+procedure. Each leaf of the tree corresponds to a cell of the
+partition. The nodes in the tree correspond to the various partition
+cells that are generated through in the construction of the tree. The
+orientation of the dyadic split alternates between the levels of the
+tree (for the example of <link target-id="uid13" class="cnxn"/>, at the root level the
+split is done in the horizontal axis, at the level below that (the
+level of nodes 2 and 3) the split is done in the vertical axis, and so
+on...). The tree is called dyadic because the splits of cells are always
+at the midpoint along one coordinate axis, and consequently the sidelengths
+of all cells are dyadic (i.e., powers of 2).</para>
+        <figure id="uid13" orient="horizontal">
+          <media id="id4410698" alt=""><image src="../../media/RDPs.png" mime-type="image/png" width="621"/><image for="pdf" src="../../media/RDPs.eps" mime-type="application/postscript" print-width="15cm"/></media>
+          <caption>Example of Recursive Dyadic Partition (RDP) growing
+(<m:math><m:mrow><m:mi mathvariant="script">X</m:mi><m:mo>=</m:mo><m:msup><m:mrow><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow><m:mn>2</m:mn></m:msup></m:mrow></m:math>).</caption>
+        </figure>
+        <para id="id2255417">In the following we are going to consider the 2-dimensional case, but
+all the results can be easily generalized for the <m:math><m:mi>d</m:mi></m:math>-dimensional case
+(<m:math><m:mrow><m:mi>d</m:mi><m:mo>≥</m:mo><m:mn>2</m:mn></m:mrow></m:math>), provided the dyadic tree construction is defined
+properly. Consider a recursive dyadic partition of the feature space
+into <m:math><m:mi>k</m:mi></m:math> boxes of equal size. Associated with this partition is a tree
+<m:math><m:mi>T</m:mi></m:math>. Minimizing the empirical risk with respect to this partition
+produces the histogram classifier with <m:math><m:mi>k</m:mi></m:math> equal-sized bins. Consider
+also all the possible partitions corresponding to pruned versions of
+the tree <m:math><m:mi>T</m:mi></m:math>. Minimizing the empirical risk with respect to those
+other partitions results in other classifiers (dyadic decision trees)
+that are fundamentally different than the histogram rule we analyzed
+earlier.</para>
+      </section>
+      <section id="uid14">
+        <title>Pruning</title>
+        <para id="id2255500">Let <m:math><m:mi mathvariant="script">F</m:mi></m:math> be the collection of all possible dyadic decision trees
+corresponding to recursive dyadic partitions of the feature space.
+Each such tree can be prefix encoded with a bit-string proportional to
+the number of leafs in the tree as follows; encode the structure of
+the tree in a top-down fashion: (i) assign a zero at each branch node
+and a one at each leaf node (terminal node) (ii) read the code in a
+breadth-first fashion, top-down, left-right. <link target-id="uid15" class="cnxn"/>
+exemplifies this coding strategy. Notice that, since we are
+considering binary trees, the total number of nodes is twice the
+number of leafs minus one, that is, if the number of leafs in the tree
+is <m:math><m:mi>k</m:mi></m:math> then the number of nodes is <m:math><m:mrow><m:mn>2</m:mn><m:mi>k</m:mi><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:math>. Therefore to encode a tree
+with <m:math><m:mi>k</m:mi></m:math> leafs we need <m:math><m:mrow><m:mn>2</m:mn><m:mi>k</m:mi><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:math> bits.</para>
+        <para id="id2259304">Since we want to use the partition associated with this tree for
+classification we need to assign a decision label (either zero or one)
+to each leaf. Hence, to encode a decision tree in this fashion we need
+<m:math><m:mrow><m:mn>3</m:mn><m:mi>k</m:mi><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:math> bits, where <m:math><m:mi>k</m:mi></m:math> is the number of leafs. For a tree with <m:math><m:mi>k</m:mi></m:math>
+leafs the first <m:math><m:mrow><m:mn>2</m:mn><m:mi>k</m:mi><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:math> bits of the codeword encode the tree structure,
+and the remaining <m:math><m:mi>k</m:mi></m:math> bits encode the classification labels. This is
+easily shown to be a prefix code, therefore we can use this under our
+classification scenario.</para>
+        <figure id="uid15" orient="horizontal">
+          <media id="id9932344" alt=""><image src="../../media/coding.png" mime-type="image/png" width="265"/><image for="pdf" src="../../media/coding.eps" mime-type="application/postscript" print-width="7cm"/></media>
+          <caption>Illustration of the tree coding technique: example of a
+tree and corresponding prefix code.</caption>
+        </figure>
+        <para id="id2259388">Let</para>
+        <equation id="id2259391">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msubsup>
+                <m:mover accent="true">
+                  <m:mi>f</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+                <m:mo>*</m:mo>
+              </m:msubsup>
+              <m:mo>=</m:mo>
+              <m:mo form="prefix">arg</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:mi mathvariant="script">F</m:mi>
+                </m:mrow>
+              </m:munder>
+              <m:mfenced separators="" open="{" close="}">
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>R</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>+</m:mo>
+                <m:msqrt>
+                  <m:mfrac>
+                    <m:mrow>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mn>3</m:mn>
+                        <m:mi>k</m:mi>
+                        <m:mo>-</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mn>2</m:mn>
+                      <m:mo>+</m:mo>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mn>2</m:mn>
+                      </m:mfrac>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                    <m:mrow>
+                      <m:mn>2</m:mn>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                  </m:mfrac>
+                </m:msqrt>
+              </m:mfenced>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2259524">This optimization can be solved through a bottom-up pruning
+process (starting from a very large initial tree <m:math><m:msub><m:mi>T</m:mi><m:mn>0</m:mn></m:msub></m:math>) in
+<m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:mo>|</m:mo><m:msub><m:mi>T</m:mi><m:mn>0</m:mn></m:msub><m:msup><m:mo>|</m:mo><m:mn>2</m:mn></m:msup><m:mo>)</m:mo></m:mrow></m:math> operations, where <m:math><m:mrow><m:mrow><m:mo>|</m:mo></m:mrow><m:msub><m:mi>T</m:mi><m:mn>0</m:mn></m:msub><m:mrow><m:mo>|</m:mo></m:mrow></m:mrow></m:math> is the number of leafs in
+the initial tree. The complexity regularization theorem tells us
+that</para>
+        <equation id="uid16">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>E</m:mi>
+              <m:mrow>
+                <m:mo>[</m:mo>
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>f</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>]</m:mo>
+              </m:mrow>
+              <m:mo>≤</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:mi mathvariant="script">F</m:mi>
+                </m:mrow>
+              </m:munder>
+              <m:mfenced separators="" open="{" close="}">
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>+</m:mo>
+                <m:msqrt>
+                  <m:mfrac>
+                    <m:mrow>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mn>3</m:mn>
+                        <m:mi>k</m:mi>
+                        <m:mo>-</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mn>2</m:mn>
+                      <m:mo>+</m:mo>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mn>2</m:mn>
+                      </m:mfrac>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                    <m:mrow>
+                      <m:mn>2</m:mn>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                  </m:mfrac>
+                </m:msqrt>
+              </m:mfenced>
+              <m:mo>+</m:mo>
+              <m:mfrac>
+                <m:mn>1</m:mn>
+                <m:msqrt>
+                  <m:mi>n</m:mi>
+                </m:msqrt>
+              </m:mfrac>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+      </section>
+    </section>
+    <section id="uid17">
+      <title>Comparison between Histogram Classifiers and Classification
+Trees</title>
+      <para id="id2259750">In the following we will illustrate the idea behind complexity
+regularization by applying the basic theorem to histogram
+classifiers and classification trees (using our setup above).</para>
+      <para id="id2259756">Consider the classification setup described in
+<link target-id="uid3" class="cnxn">"Classification"</link>, with <m:math><m:mrow><m:mi mathvariant="script">X</m:mi><m:mo>=</m:mo><m:msup><m:mrow><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow><m:mn>2</m:mn></m:msup></m:mrow></m:math>.</para>
+      <section id="uid18">
+        <title>Histogram Risk Bound</title>
+        <para id="id2259804">Recall the setup and results of a previous lecture<footnote id="id9811136">The
+description here is slightly different than the one in the
+previous lecture.</footnote>. Let</para>
+        <equation id="id2259818">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msubsup>
+                <m:mi mathvariant="script">F</m:mi>
+                <m:mi>k</m:mi>
+                <m:mi>H</m:mi>
+              </m:msubsup>
+              <m:mo>=</m:mo>
+              <m:mrow>
+                <m:mo>{</m:mo>
+                <m:mtext>histogram</m:mtext>
+                <m:mspace width="4.pt"/>
+                <m:mtext>rules</m:mtext>
+                <m:mspace width="4.pt"/>
+                <m:mtext>with</m:mtext>
+                <m:mspace width="4.pt"/>
+                <m:msup>
+                  <m:mi>k</m:mi>
+                  <m:mn>2</m:mn>
+                </m:msup>
+                <m:mspace width="4.pt"/>
+                <m:mtext>bins</m:mtext>
+                <m:mo>}</m:mo>
+              </m:mrow>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2259881">Then
+<m:math><m:mrow><m:mrow><m:mo>|</m:mo></m:mrow><m:msubsup><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi><m:mi>H</m:mi></m:msubsup><m:mrow><m:mo>|</m:mo><m:mo>=</m:mo></m:mrow><m:msup><m:mn>2</m:mn><m:msup><m:mi>k</m:mi><m:mn>2</m:mn></m:msup></m:msup></m:mrow></m:math>. Let <m:math><m:mrow><m:msup><m:mrow><m:mi mathvariant="script">F</m:mi></m:mrow><m:mi>H</m:mi></m:msup><m:mo>=</m:mo><m:msub><m:mo>⋃</m:mo><m:mrow><m:mi>k</m:mi><m:mo>≥</m:mo><m:mn>1</m:mn></m:mrow></m:msub><m:msubsup><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi><m:mi>H</m:mi></m:msubsup></m:mrow></m:math>. We can
+encode each element <m:math><m:mi>f</m:mi></m:math> of <m:math><m:msup><m:mrow><m:mi mathvariant="script">F</m:mi></m:mrow><m:mi>H</m:mi></m:msup></m:math> with <m:math><m:mrow><m:msub><m:mi>c</m:mi><m:mi>H</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mi>k</m:mi><m:mo>+</m:mo><m:msup><m:mi>k</m:mi><m:mn>2</m:mn></m:msup></m:mrow></m:math> bits, where
+the first <m:math><m:mi>k</m:mi></m:math> bits indicate the smallest <m:math><m:mi>k</m:mi></m:math> such that
+<m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:msubsup><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi><m:mi>H</m:mi></m:msubsup></m:mrow></m:math> and the following <m:math><m:msup><m:mi>k</m:mi><m:mn>2</m:mn></m:msup></m:math> bits encode the labels of
+each bin. This is a prefix encoding of all the elements in <m:math><m:msup><m:mrow><m:mi mathvariant="script">F</m:mi></m:mrow><m:mi>H</m:mi></m:msup></m:math>.</para>
+        <para id="id2260119">We define our estimator as</para>
+        <equation id="id2260123">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msubsup>
+                <m:mover accent="true">
+                  <m:mi>f</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+                <m:mi>H</m:mi>
+              </m:msubsup>
+              <m:mo>=</m:mo>
+              <m:msubsup>
+                <m:mover accent="true">
+                  <m:mi>f</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+                <m:mover accent="true">
+                  <m:mi>k</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+              </m:msubsup>
+              <m:mo>,</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2260178">where</para>
+        <equation id="id2260184">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msubsup>
+                <m:mover accent="true">
+                  <m:mi>f</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>k</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:msubsup>
+              <m:mo>=</m:mo>
+              <m:mo form="prefix">arg</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:msubsup>
+                    <m:mi mathvariant="script">F</m:mi>
+                    <m:mi>k</m:mi>
+                    <m:mi>H</m:mi>
+                  </m:msubsup>
+                </m:mrow>
+              </m:munder>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>R</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>,</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2260276">and</para>
+        <equation id="id2260281">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mover accent="true">
+                <m:mi>k</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mo>=</m:mo>
+              <m:mo form="prefix">arg</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>k</m:mi>
+                  <m:mo>≥</m:mo>
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:munder>
+              <m:mfenced separators="" open="{" close="}">
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>R</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                </m:mrow>
+                <m:msubsup>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>k</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:msubsup>
+                <m:mo>+</m:mo>
+                <m:msqrt>
+                  <m:mfrac>
+                    <m:mrow>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>k</m:mi>
+                        <m:mo>+</m:mo>
+                        <m:msup>
+                          <m:mi>k</m:mi>
+                          <m:mn>2</m:mn>
+                        </m:msup>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mn>2</m:mn>
+                      <m:mo>+</m:mo>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mn>2</m:mn>
+                      </m:mfrac>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                    <m:mrow>
+                      <m:mn>2</m:mn>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                  </m:mfrac>
+                </m:msqrt>
+              </m:mfenced>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2260425">Therefore <m:math><m:msubsup><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi><m:mi>H</m:mi></m:msubsup></m:math> minimizes</para>
+        <equation id="id2260455">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>R</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>c</m:mi>
+                      <m:mi>H</m:mi>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo>+</m:mo>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+              <m:mo>,</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2260537">over
+all <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:msup><m:mrow><m:mi mathvariant="script">F</m:mi></m:mrow><m:mi>H</m:mi></m:msup></m:mrow></m:math>. We showed before that</para>
+        <equation id="id2260566">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>E</m:mi>
+              <m:mrow>
+                <m:mo>[</m:mo>
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msubsup>
+                    <m:mover accent="true">
+                      <m:mi>f</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                    <m:mi>H</m:mi>
+                  </m:msubsup>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>]</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:msup>
+                <m:mi>R</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mo>≤</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:msup>
+                    <m:mrow>
+                      <m:mi mathvariant="script">F</m:mi>
+                    </m:mrow>
+                    <m:mi>H</m:mi>
+                  </m:msup>
+                </m:mrow>
+              </m:munder>
+              <m:mfenced separators="" open="{" close="}">
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>-</m:mo>
+                <m:msup>
+                  <m:mi>R</m:mi>
+                  <m:mo>*</m:mo>
+                </m:msup>
+                <m:mo>+</m:mo>
+                <m:msqrt>
+                  <m:mfrac>
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>c</m:mi>
+                        <m:mi>H</m:mi>
+                      </m:msub>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>f</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mn>2</m:mn>
+                      <m:mo>+</m:mo>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mn>2</m:mn>
+                      </m:mfrac>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                    <m:mrow>
+                      <m:mn>2</m:mn>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                  </m:mfrac>
+                </m:msqrt>
+              </m:mfenced>
+              <m:mo>+</m:mo>
+              <m:mfrac>
+                <m:mn>1</m:mn>
+                <m:msqrt>
+                  <m:mi>n</m:mi>
+                </m:msqrt>
+              </m:mfrac>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2260734">To proceed with our analysis we need to make some assumptions on
+the intrinsic difficulty of the problem. We will assume that the
+Bayes decision boundary is a “well-behaved” 1-dimensional set,
+in the sense that it has box-counting dimension one (see
+Appendix <link target-id="uid23" class="cnxn">"Box Counting Dimension"</link>). This implies that, for an histogram
+with <m:math><m:msup><m:mi>k</m:mi><m:mn>2</m:mn></m:msup></m:math> bins, the Bayes decision boundary intersects less than
+<m:math><m:mrow><m:mi>C</m:mi><m:mi>k</m:mi></m:mrow></m:math> bins, where <m:math><m:mi>C</m:mi></m:math> is a constant that does not depend on <m:math><m:mi>k</m:mi></m:math>.
+Furthermore we assume that the marginal distribution of <m:math><m:mi>X</m:mi></m:math>
+satisfies <m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mi>X</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>A</m:mi><m:mo>)</m:mo></m:mrow><m:mo>≤</m:mo><m:mi>K</m:mi><m:mrow><m:mo>|</m:mo><m:mi>A</m:mi><m:mo>|</m:mo></m:mrow></m:mrow></m:math>, for any measurable subset <m:math><m:mrow><m:mi>A</m:mi><m:mo>⊆</m:mo><m:msup><m:mrow><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow><m:mn>2</m:mn></m:msup></m:mrow></m:math>. This means that the samples collected do not accumulate
+anywhere in the unit square.</para>
+        <para id="id2260875">Under the above assumptions we can conclude that</para>
+        <equation id="id2260879">
+          <m:math mode="display">
+            <m:mrow>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:msubsup>
+                    <m:mi mathvariant="script">F</m:mi>
+                    <m:mi>k</m:mi>
+                    <m:mi>H</m:mi>
+                  </m:msubsup>
+                </m:mrow>
+              </m:munder>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:msup>
+                <m:mi>R</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mspace width="4pt"/>
+              <m:mo>≤</m:mo>
+              <m:mspace width="4pt"/>
+              <m:mfrac>
+                <m:mi>K</m:mi>
+                <m:msup>
+                  <m:mi>k</m:mi>
+                  <m:mn>2</m:mn>
+                </m:msup>
+              </m:mfrac>
+              <m:mi>C</m:mi>
+              <m:mi>k</m:mi>
+              <m:mo>=</m:mo>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mi>C</m:mi>
+                  <m:mi>K</m:mi>
+                </m:mrow>
+                <m:mi>k</m:mi>
+              </m:mfrac>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2260975">Therefore</para>
+        <equation id="id2260980">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>E</m:mi>
+              <m:mrow>
+                <m:mo>[</m:mo>
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msubsup>
+                    <m:mover accent="true">
+                      <m:mi>f</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                    <m:mi>H</m:mi>
+                  </m:msubsup>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>]</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:msup>
+                <m:mi>R</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mspace width="4pt"/>
+              <m:mo>≤</m:mo>
+              <m:mspace width="4pt"/>
+              <m:mi>C</m:mi>
+              <m:mi>K</m:mi>
+              <m:mo>/</m:mo>
+              <m:mi>k</m:mi>
+              <m:mo>+</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>k</m:mi>
+                      <m:mo>+</m:mo>
+                      <m:msup>
+                        <m:mi>k</m:mi>
+                        <m:mn>2</m:mn>
+                      </m:msup>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo>+</m:mo>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+              <m:mo>+</m:mo>
+              <m:mfrac>
+                <m:mn>1</m:mn>
+                <m:msqrt>
+                  <m:mi>n</m:mi>
+                </m:msqrt>
+              </m:mfrac>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2261112">We can balance the terms in the
+right side of the above expression using <m:math><m:mrow><m:mi>k</m:mi><m:mo>=</m:mo><m:msup><m:mi>n</m:mi><m:mrow><m:mn>1</m:mn><m:mo>/</m:mo><m:mn>4</m:mn></m:mrow></m:msup></m:mrow></m:math> (for <m:math><m:mi>n</m:mi></m:math>
+large) therefore</para>
+        <equation id="id2261153">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>E</m:mi>
+              <m:mrow>
+                <m:mo>[</m:mo>
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msubsup>
+                    <m:mover accent="true">
+                      <m:mi>f</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                    <m:mi>H</m:mi>
+                  </m:msubsup>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>]</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:msup>
+                <m:mi>R</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mspace width="4pt"/>
+              <m:mo>=</m:mo>
+              <m:mspace width="4pt"/>
+              <m:mi>O</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msup>
+                  <m:mi>n</m:mi>
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:mn>1</m:mn>
+                    <m:mo>/</m:mo>
+                    <m:mn>4</m:mn>
+                  </m:mrow>
+                </m:msup>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>,</m:mo>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4.pt"/>
+              <m:mtext>as</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mrow>
+                <m:mi>n</m:mi>
+                <m:mo>→</m:mo>
+                <m:mi>∞</m:mi>
+              </m:mrow>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+      </section>
+      <section id="uid20">
+        <title>Dyadic Decision Trees</title>
+        <para id="id2261268">Now let's consider the dyadic decision trees, under the assumptions
+above, and contrast these with the histogram classifier. Let</para>
+        <equation id="id2261274">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msubsup>
+                <m:mi mathvariant="script">F</m:mi>
+                <m:mi>k</m:mi>
+                <m:mi>T</m:mi>
+              </m:msubsup>
+              <m:mo>=</m:mo>
+              <m:mrow>
+                <m:mo>{</m:mo>
+                <m:mtext>tree</m:mtext>
+                <m:mspace width="4.pt"/>
+                <m:mtext>classifiers</m:mtext>
+                <m:mspace width="4.pt"/>
+                <m:mtext>with</m:mtext>
+                <m:mspace width="4.pt"/>
+                <m:mi>k</m:mi>
+                <m:mspace width="4.pt"/>
+                <m:mtext>leafs</m:mtext>
+                <m:mo>}</m:mo>
+              </m:mrow>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2261332">Let <m:math><m:mrow><m:msup><m:mrow><m:mi mathvariant="script">F</m:mi></m:mrow><m:mi>T</m:mi></m:msup><m:mo>=</m:mo><m:msub><m:mo>⋃</m:mo><m:mrow><m:mi>k</m:mi><m:mo>≥</m:mo><m:mn>1</m:mn></m:mrow></m:msub><m:msubsup><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi><m:mi>T</m:mi></m:msubsup></m:mrow></m:math>.
+We can prefix encode each element <m:math><m:mi>f</m:mi></m:math> of <m:math><m:msup><m:mrow><m:mi mathvariant="script">F</m:mi></m:mrow><m:mi>T</m:mi></m:msup></m:math> with <m:math><m:mrow><m:msub><m:mi>c</m:mi><m:mi>T</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mn>3</m:mn><m:mi>k</m:mi><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:math>
+bits, as described before.</para>
+        <para id="id2261447">Let</para>
+        <equation id="id2261450">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msubsup>
+                <m:mover accent="true">
+                  <m:mi>f</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+                <m:mi>T</m:mi>
+              </m:msubsup>
+              <m:mo>=</m:mo>
+              <m:msubsup>
+                <m:mover accent="true">
+                  <m:mi>f</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mover accent="true">
+                    <m:mi>k</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:msubsup>
+              <m:mo>,</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2261511">where</para>
+        <equation id="id2261516">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msubsup>
+                <m:mover accent="true">
+                  <m:mi>f</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>k</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:msubsup>
+              <m:mo>=</m:mo>
+              <m:mo form="prefix">arg</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:msubsup>
+                    <m:mi mathvariant="script">F</m:mi>
+                    <m:mi>k</m:mi>
+                    <m:mi>T</m:mi>
+                  </m:msubsup>
+                </m:mrow>
+              </m:munder>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>R</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>,</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2261608">and</para>
+        <equation id="id2261614">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mover accent="true">
+                <m:mi>k</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mo>=</m:mo>
+              <m:mo form="prefix">arg</m:mo>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>k</m:mi>
+                  <m:mo>≥</m:mo>
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:munder>
+              <m:mfenced separators="" open="{" close="}">
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>R</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                </m:mrow>
+                <m:msubsup>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>k</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:msubsup>
+                <m:mo>+</m:mo>
+                <m:msqrt>
+                  <m:mfrac>
+                    <m:mrow>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mn>3</m:mn>
+                        <m:mi>k</m:mi>
+                        <m:mo>-</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mn>2</m:mn>
+                      <m:mo>+</m:mo>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mn>2</m:mn>
+                      </m:mfrac>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                    <m:mrow>
+                      <m:mn>2</m:mn>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                  </m:mfrac>
+                </m:msqrt>
+              </m:mfenced>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2261754">Hence <m:math><m:msubsup><m:mover accent="true"><m:mi>f</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi><m:mi>T</m:mi></m:msubsup></m:math> minimizes</para>
+        <equation id="id2261784">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>R</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>c</m:mi>
+                      <m:mi>T</m:mi>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo>+</m:mo>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+              <m:mo>,</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2261866">over
+all <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:msup><m:mrow><m:mi mathvariant="script">F</m:mi></m:mrow><m:mi>T</m:mi></m:msup></m:mrow></m:math>. Moreover</para>
+        <equation id="id2261895">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>E</m:mi>
+              <m:mrow>
+                <m:mo>[</m:mo>
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msubsup>
+                    <m:mover accent="true">
+                      <m:mi>f</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                    <m:mi>T</m:mi>
+                  </m:msubsup>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>]</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:msup>
+                <m:mi>R</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mspace width="4pt"/>
+              <m:mo>≤</m:mo>
+              <m:mspace width="4pt"/>
+              <m:munder>
+                <m:mo movablelimits="true" form="prefix">min</m:mo>
+                <m:mrow>
+                  <m:mi>f</m:mi>
+                  <m:mo>∈</m:mo>
+                  <m:msup>
+                    <m:mrow>
+                      <m:mi mathvariant="script">F</m:mi>
+                    </m:mrow>
+                    <m:mi>T</m:mi>
+                  </m:msup>
+                </m:mrow>
+              </m:munder>
+              <m:mfenced separators="" open="{" close="}">
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>-</m:mo>
+                <m:msup>
+                  <m:mi>R</m:mi>
+                  <m:mo>*</m:mo>
+                </m:msup>
+                <m:mo>+</m:mo>
+                <m:msqrt>
+                  <m:mfrac>
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>c</m:mi>
+                        <m:mi>T</m:mi>
+                      </m:msub>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>f</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mn>2</m:mn>
+                      <m:mo>+</m:mo>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mn>2</m:mn>
+                      </m:mfrac>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                    <m:mrow>
+                      <m:mn>2</m:mn>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                  </m:mfrac>
+                </m:msqrt>
+              </m:mfenced>
+              <m:mo>+</m:mo>
+              <m:mfrac>
+                <m:mn>1</m:mn>
+                <m:msqrt>
+                  <m:mi>n</m:mi>
+                </m:msqrt>
+              </m:mfrac>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2262069">If the Bayes decision boundary is a 1-dimensional set, as in
+<link target-id="uid18" class="cnxn">"Histogram Risk Bound"</link>, there exists a tree with at most <m:math><m:mrow><m:mn>8</m:mn><m:mi>C</m:mi><m:mi>k</m:mi></m:mrow></m:math>
+leafs such that the boundary is contained in at most <m:math><m:mrow><m:mi>C</m:mi><m:mi>k</m:mi></m:mrow></m:math> squares,
+each of volume <m:math><m:mrow><m:mn>1</m:mn><m:mo>/</m:mo><m:msup><m:mi>k</m:mi><m:mn>2</m:mn></m:msup></m:mrow></m:math>. To see this, start with a tree yielding
+the histogram partition with <m:math><m:msup><m:mi>k</m:mi><m:mn>2</m:mn></m:msup></m:math> boxes (<emphasis>i.e., </emphasis>the tree
+partitioning the unit square into <m:math><m:msup><m:mi>k</m:mi><m:mn>2</m:mn></m:msup></m:math> equal sized squares). Now
+prune all the nodes that do not intersect the boundary. In
+<link target-id="uid21" class="cnxn"/> we illustrate the procedure. If you
+carefully bound the number of leafs you need at each level you can
+show that you will have in total less than <m:math><m:mrow><m:mn>8</m:mn><m:mi>C</m:mi><m:mi>k</m:mi></m:mrow></m:math> leafs. We
+conclude then that there exists a tree with at most <m:math><m:mrow><m:mn>8</m:mn><m:mi>C</m:mi><m:mi>k</m:mi></m:mrow></m:math> leafs
+that has the same risk as a histogram with <m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:msup><m:mi>k</m:mi><m:mn>2</m:mn></m:msup><m:mo>)</m:mo></m:mrow></m:math> bins.
+Therefore, using <link target-id="uid16" class="cnxn"/> we have</para>
+        <equation id="id2262230">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>E</m:mi>
+              <m:mrow>
+                <m:mo>[</m:mo>
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msubsup>
+                    <m:mover accent="true">
+                      <m:mi>f</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                    <m:mi>T</m:mi>
+                  </m:msubsup>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>]</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:msup>
+                <m:mi>R</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mspace width="4pt"/>
+              <m:mo>≤</m:mo>
+              <m:mspace width="4pt"/>
+              <m:mi>C</m:mi>
+              <m:mi>K</m:mi>
+              <m:mo>/</m:mo>
+              <m:mi>k</m:mi>
+              <m:mo>+</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mn>3</m:mn>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mn>8</m:mn>
+                        <m:mi>C</m:mi>
+                        <m:mi>k</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>-</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo>+</m:mo>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+              <m:mo>+</m:mo>
+              <m:mfrac>
+                <m:mn>1</m:mn>
+                <m:msqrt>
+                  <m:mi>n</m:mi>
+                </m:msqrt>
+              </m:mfrac>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2262369">We can balance the terms in the
+right side of the above expression using <m:math><m:mrow><m:mi>k</m:mi><m:mo>=</m:mo><m:msup><m:mi>n</m:mi><m:mrow><m:mn>1</m:mn><m:mo>/</m:mo><m:mn>3</m:mn></m:mrow></m:msup></m:mrow></m:math> (for <m:math><m:mi>n</m:mi></m:math>
+large) therefore</para>
+        <equation id="id2262410">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>E</m:mi>
+              <m:mrow>
+                <m:mo>[</m:mo>
+                <m:mi>R</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msubsup>
+                    <m:mover accent="true">
+                      <m:mi>f</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                    <m:mi>T</m:mi>
+                  </m:msubsup>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>]</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:msup>
+                <m:mi>R</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mspace width="4pt"/>
+              <m:mo>=</m:mo>
+              <m:mspace width="4pt"/>
+              <m:mi>O</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msup>
+                  <m:mi>n</m:mi>
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:mn>1</m:mn>
+                    <m:mo>/</m:mo>
+                    <m:mn>3</m:mn>
+                  </m:mrow>
+                </m:msup>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>,</m:mo>
+              <m:mspace width="4pt"/>
+              <m:mspace width="4.pt"/>
+              <m:mtext>as</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mrow>
+                <m:mi>n</m:mi>
+                <m:mo>→</m:mo>
+                <m:mi>∞</m:mi>
+              </m:mrow>
+              <m:mo>.</m:mo>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <figure id="uid21" orient="vertical">
+          <subfigure id="id2262551">
+            <media id="id6393368" alt=""><image src="../../media/pruning_a.png" mime-type="image/png" width="644"/><image for="pdf" src="../../media/pruning_a.eps" mime-type="application/postscript" print-width="8cm"/></media>
+          </subfigure>
+          <subfigure id="id2262563">
+            <media id="id4411163" alt=""><image src="../../media/pruning_b.png" mime-type="image/png" width="562"/><image for="pdf" src="../../media/pruning_b.eps" mime-type="application/postscript" print-width="8cm"/></media>
+          </subfigure>
+          <caption>Illustration of the tree pruning procedure: (a) Histogram
+classification rule, for a partition with 16 bins, and
+corresponding binary tree representation (with 16 leafs). (b)
+Pruned version of the histogram tree, yielding exactly the same
+classification rule, but now requiring only 6 leafs. (<emphasis>Note:</emphasis>
+The trees where constructed using the procedure of
+Figure <!--references within titles or captions is not allowed.-->)</caption>
+        </figure>
+      </section>
+    </section>
+    <section id="uid22">
+      <title>Final Comments</title>
+      <para id="id2262593">Trees generally work much better than histogram classifiers. This is
+essentially because they provide much more efficient ways of
+approximating the Bayes decision boundary (as we saw in our example,
+under reasonable assumptions on the Bayes boundary, a tree encoded
+with <m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:mi>k</m:mi><m:mo>)</m:mo></m:mrow></m:math> bits can describe the same classifier as an histogram that
+requires <m:math><m:mrow><m:mi>O</m:mi><m:mo>(</m:mo><m:msup><m:mi>k</m:mi><m:mn>2</m:mn></m:msup><m:mo>)</m:mo></m:mrow></m:math> bits).</para>
+      <para id="id2262641">The dyadic decision trees studied here are different than classical
+tree rules, such as CART or
+C4.5. Those techniques select a tree
+according to</para>
+      <equation id="id2262658">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mover accent="true">
+              <m:mi>k</m:mi>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mo>=</m:mo>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:mo>≥</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:munder>
+            <m:mfenced separators="" open="{" close="}">
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>R</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msubsup>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>k</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:msubsup>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:mi>α</m:mi>
+              <m:mi>k</m:mi>
+            </m:mfenced>
+            <m:mo>,</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2262760">for some <m:math><m:mrow><m:mi>α</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math> whereas ours
+was roughly</para>
+      <equation id="id2262781">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mover accent="true">
+              <m:mi>k</m:mi>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mo>=</m:mo>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>k</m:mi>
+                <m:mo>≥</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:munder>
+            <m:mfenced separators="" open="{" close="}">
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>R</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msubsup>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>k</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:msubsup>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>+</m:mo>
+              <m:mi>α</m:mi>
+              <m:msqrt>
+                <m:mi>k</m:mi>
+              </m:msqrt>
+            </m:mfenced>
+            <m:mo>,</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2262884">for <m:math><m:mrow><m:mi>α</m:mi><m:mo>≈</m:mo><m:msqrt><m:mfrac><m:mrow><m:mn>3</m:mn><m:mo form="prefix">log</m:mo><m:mn>2</m:mn></m:mrow><m:mrow><m:mn>2</m:mn><m:mi>n</m:mi></m:mrow></m:mfrac></m:msqrt></m:mrow></m:math>. The square root penalty is essential for
+the risk bound. No such bound exists for CART
+ or
+C4.5
+. Moreover, recent experimental work has shown that the
+square root penalty often performs better in practice. Finally,
+recent results show that a slightly tighter
+bounding procedure for the estimation error can be used to show that
+dyadic decision trees (with a slightly different pruning procedure)
+achieve a rate of</para>
+      <equation id="id2262945">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msubsup>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                  <m:mi>T</m:mi>
+                </m:msubsup>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:msup>
+              <m:mi>R</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mspace width="4pt"/>
+            <m:mo>=</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mi>O</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>n</m:mi>
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>/</m:mo>
+                  <m:mn>2</m:mn>
+                </m:mrow>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>,</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4.pt"/>
+            <m:mtext>as</m:mtext>
+            <m:mspace width="4.pt"/>
+            <m:mrow>
+              <m:mi>n</m:mi>
+              <m:mo>→</m:mo>
+              <m:mi>∞</m:mi>
+            </m:mrow>
+            <m:mo>,</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2263052">which turns out to be the minimax optimal rate (i.e., under the boundary
+assumptions above, no method can achieve a faster rate of convergence to
+the Bayes error).</para>
+    </section>
+    <section id="uid23">
+      <title>Box Counting Dimension</title>
+      <para id="id2263076">The notion of dimension of a sets arises in many aspects of
+mathematics, and it is particularly relevant to the study of
+fractals (that besides some important applications make really
+cool t-shirts). The dimension somehow indicates how we should
+measure the contents of a set (length, area, volume, etc...). The
+box-counting dimension is a simple definition of the dimension of
+a set. The main idea is to cover the set with boxes with
+sidelength <m:math><m:mi>r</m:mi></m:math>. Let <m:math><m:mrow><m:mi>N</m:mi><m:mo>(</m:mo><m:mi>r</m:mi><m:mo>)</m:mo></m:mrow></m:math> denote the smallest number of such
+boxes, then the box counting dimension is defined as</para>
+      <equation id="id2263115">
+        <m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">lim</m:mo>
+              <m:mrow>
+                <m:mi>r</m:mi>
+                <m:mo>→</m:mo>
+                <m:mn>0</m:mn>
+              </m:mrow>
+            </m:munder>
+            <m:mfrac>
+              <m:mrow>
+                <m:mo form="prefix">log</m:mo>
+                <m:mi>N</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>r</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mo form="prefix">log</m:mo>
+                <m:mi>r</m:mi>
+              </m:mrow>
+            </m:mfrac>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2263170">Although the
+boxes considered above do not need to be aligned on a rectangular
+grid (and can in fact overlap) we can usually consider them over a
+grid and obtain an upper bound on the box-counting dimension. To
+illustrate the main ideas let's consider a simple example, and
+connect it to the classification scenario considered before.</para>
+      <para id="id2263182">Let <m:math><m:mrow><m:mi>f</m:mi><m:mo>:</m:mo><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo><m:mo>→</m:mo><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow></m:math> be a Lipschitz function, with
+Lipschitz constant <m:math><m:mi>L</m:mi></m:math> (<emphasis>i.e., </emphasis><m:math><m:mrow><m:mo>|</m:mo><m:mi>f</m:mi><m:mo>(</m:mo><m:mi>a</m:mi><m:mo>)</m:mo><m:mo>-</m:mo><m:mi>f</m:mi><m:mo>(</m:mo><m:mi>b</m:mi><m:mo>)</m:mo><m:mo>|</m:mo><m:mo>≤</m:mo><m:mi>L</m:mi><m:mo>|</m:mo><m:mi>a</m:mi><m:mo>-</m:mo><m:mi>b</m:mi><m:mo>|</m:mo><m:mo>,</m:mo><m:mspace width="4pt"/><m:mo>∀</m:mo><m:mi>a</m:mi><m:mo>,</m:mo><m:mi>b</m:mi><m:mo>∈</m:mo><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow></m:math>). Define the set</para>
+      <equation id="id2263310">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>A</m:mi>
+            <m:mo>=</m:mo>
+            <m:mo>{</m:mo>
+            <m:mi>x</m:mi>
+            <m:mo>=</m:mo>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>x</m:mi>
+                <m:mn>1</m:mn>
+              </m:msub>
+              <m:mo>,</m:mo>
+              <m:msub>
+                <m:mi>x</m:mi>
+                <m:mn>2</m:mn>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>:</m:mo>
+            <m:msub>
+              <m:mi>x</m:mi>
+              <m:mn>2</m:mn>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:mi>f</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>x</m:mi>
+                <m:mn>1</m:mn>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>}</m:mo>
+            <m:mo>,</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2263384">that is, the set <m:math><m:mi>A</m:mi></m:math> is the graphic of function <m:math><m:mi>f</m:mi></m:math>.</para>
+      <para id="id2263409">Consider a partition with <m:math><m:msup><m:mi>k</m:mi><m:mn>2</m:mn></m:msup></m:math> squared boxes (just like the ones
+we used in the histograms), the points in set <m:math><m:mi>A</m:mi></m:math> intersect at
+most <m:math><m:mrow><m:msup><m:mi>C</m:mi><m:mo>'</m:mo></m:msup><m:mi>k</m:mi></m:mrow></m:math> boxes, with <m:math><m:mrow><m:msup><m:mi>C</m:mi><m:mo>'</m:mo></m:msup><m:mo>=</m:mo><m:mrow><m:mo>(</m:mo><m:mn>1</m:mn><m:mo>+</m:mo><m:mrow><m:mo>⌈</m:mo><m:mi>L</m:mi><m:mo>⌉</m:mo></m:mrow><m:mo>)</m:mo></m:mrow></m:mrow></m:math> (and also the
+number of intersected boxes is greater than <m:math><m:mi>k</m:mi></m:math>). The sidelength
+of the boxes is <m:math><m:mrow><m:mn>1</m:mn><m:mo>/</m:mo><m:mi>k</m:mi></m:mrow></m:math> therefore the box-counting dimension of <m:math><m:mi>A</m:mi></m:math>
+satisfies</para>
+      <equation id="id2263525">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:msub>
+                    <m:mo form="prefix">dim</m:mo>
+                    <m:mi>B</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>A</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>≤</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">lim</m:mo>
+                    <m:mrow>
+                      <m:mn>1</m:mn>
+                      <m:mo>/</m:mo>
+                      <m:mi>k</m:mi>
+                      <m:mo>→</m:mo>
+                      <m:mn>0</m:mn>
+                    </m:mrow>
+                  </m:munder>
+                  <m:mfrac>
+                    <m:mrow>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:msup>
+                        <m:mi>C</m:mi>
+                        <m:mo>'</m:mo>
+                      </m:msup>
+                      <m:mi>k</m:mi>
+                    </m:mrow>
+                    <m:mrow>
+                      <m:mo>-</m:mo>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mo>(</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>/</m:mo>
+                      <m:mi>k</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                  </m:mfrac>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">lim</m:mo>
+                    <m:mrow>
+                      <m:mi>k</m:mi>
+                      <m:mo>→</m:mo>
+                      <m:mi>∞</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:mfrac>
+                    <m:mrow>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:msup>
+                        <m:mi>C</m:mi>
+                        <m:mo>'</m:mo>
+                      </m:msup>
+                      <m:mo>+</m:mo>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>k</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                    </m:mrow>
+                    <m:mrow>
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mo>(</m:mo>
+                      <m:mi>k</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                  </m:mfrac>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mn>1</m:mn>
+                  <m:mo>.</m:mo>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <para id="id2263708">The result above will hold for any “normal” set
+<m:math><m:mrow><m:mi>A</m:mi><m:mo>⊆</m:mo><m:msup><m:mrow><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow><m:mn>2</m:mn></m:msup></m:mrow></m:math> that does not occupy any area. For most sets
+the box-counting dimension is always going to be an integer, but
+for some “weird” sets (called fractal sets) it is not an
+integer. For example, the Koch curve
+has box-counting dimension
+<m:math><m:mrow><m:mo form="prefix">log</m:mo><m:mo>(</m:mo><m:mn>4</m:mn><m:mo>)</m:mo><m:mo>/</m:mo><m:mo form="prefix">log</m:mo><m:mo>(</m:mo><m:mn>3</m:mn><m:mo>)</m:mo><m:mo>=</m:mo><m:mn>1</m:mn><m:mo>.</m:mo><m:mn>26186</m:mn><m:mo>...</m:mo></m:mrow></m:math>. This means that it is not quite
+as small as a 1-dimensional curve, but not as big as a
+2-dimensional set (hence occupies no area).</para>
+      <para id="id2263798">To connect these concepts to our classification scenario consider
+a simple example. Let <m:math><m:mrow><m:mi>η</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo><m:mo>=</m:mo><m:mi>P</m:mi><m:mo>(</m:mo><m:mi>Y</m:mi><m:mo>=</m:mo><m:mn>1</m:mn><m:mo>|</m:mo><m:mi>X</m:mi><m:mo>=</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow></m:math> and assume <m:math><m:mrow><m:mi>η</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow></m:math>
+has the form</para>
+      <equation id="uid24">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>η</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:mn>2</m:mn>
+            </m:mfrac>
+            <m:mo>+</m:mo>
+            <m:msub>
+              <m:mi>x</m:mi>
+              <m:mn>2</m:mn>
+            </m:msub>
+            <m:mo>-</m:mo>
+            <m:mi>f</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>x</m:mi>
+                <m:mn>1</m:mn>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>,</m:mo>
+            <m:mspace width="1.em"/>
+            <m:mo>∀</m:mo>
+            <m:mi>x</m:mi>
+            <m:mo>≡</m:mo>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>x</m:mi>
+                <m:mn>1</m:mn>
+              </m:msub>
+              <m:mo>,</m:mo>
+              <m:msub>
+                <m:mi>x</m:mi>
+                <m:mn>2</m:mn>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>∈</m:mo>
+            <m:mi mathvariant="script">X</m:mi>
+            <m:mo>,</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2263961">where <m:math><m:mrow><m:mi>f</m:mi><m:mo>:</m:mo><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo><m:mo>→</m:mo><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow></m:math> is Lipschitz with Lipschitz
+constant <m:math><m:mi>L</m:mi></m:math>. The Bayes classifier is then given by</para>
+      <equation id="id2264013">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msup>
+              <m:mi>f</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:msub>
+              <m:mn mathvariant="bold">1</m:mn>
+              <m:mrow>
+                <m:mo>{</m:mo>
+                <m:mi>η</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>x</m:mi>
+                <m:mo>)</m:mo>
+                <m:mo>≥</m:mo>
+                <m:mn>1</m:mn>
+                <m:mo>/</m:mo>
+                <m:mn>2</m:mn>
+                <m:mo>}</m:mo>
+              </m:mrow>
+            </m:msub>
+            <m:mo>≡</m:mo>
+            <m:msub>
+              <m:mn mathvariant="bold">1</m:mn>
+              <m:mrow>
+                <m:mo>{</m:mo>
+                <m:msub>
+                  <m:mi>x</m:mi>
+                  <m:mn>2</m:mn>
+                </m:msub>
+                <m:mo>≥</m:mo>
+                <m:mi>f</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>x</m:mi>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>}</m:mo>
+              </m:mrow>
+            </m:msub>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2264114">This is
+depicted in <link target-id="uid25" class="cnxn"/>. Note that this is
+a special, restricted class of problems. That is, we are
+considering the subset of all classification problems such that
+the joint distribution <m:math><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mi>Y</m:mi></m:mrow></m:msub></m:math> satisfies
+<m:math><m:mrow><m:mi>P</m:mi><m:mrow><m:mo>(</m:mo><m:mi>Y</m:mi><m:mo>=</m:mo><m:mn>1</m:mn><m:mo>|</m:mo><m:mi>X</m:mi><m:mo>=</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mn>1</m:mn><m:mo>/</m:mo><m:mn>2</m:mn><m:mo>+</m:mo><m:msub><m:mi>x</m:mi><m:mn>2</m:mn></m:msub><m:mo>-</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>x</m:mi><m:mn>1</m:mn></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math> for some function <m:math><m:mi>f</m:mi></m:math> that is
+Lipschitz. The Bayes decision boundary is therefore given by</para>
+      <equation id="id2264222">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>A</m:mi>
+            <m:mo>=</m:mo>
+            <m:mo>{</m:mo>
+            <m:mi>x</m:mi>
+            <m:mo>=</m:mo>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>x</m:mi>
+                <m:mn>1</m:mn>
+              </m:msub>
+              <m:mo>,</m:mo>
+              <m:msub>
+                <m:mi>x</m:mi>
+                <m:mn>2</m:mn>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>:</m:mo>
+            <m:msub>
+              <m:mi>x</m:mi>
+              <m:mn>2</m:mn>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:mi>f</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>x</m:mi>
+                <m:mn>1</m:mn>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>}</m:mo>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2264296">Has we observed before this set
+has box-counting dimension 1.</para>
+      <figure id="uid25" orient="horizontal">
+        <media id="id8813998" alt=""><image src="../../media/bayes_B.png" mime-type="image/png" width="301"/><image for="pdf" src="../../media/bayes_B.eps" mime-type="application/postscript" print-width="6cm"/></media>
+        <caption>Bayes decision boundary for the setup described in
+Appendix <!--references within titles or captions is not allowed.-->.</caption>
+      </figure>
+    </section>
+  </content>
+</document>

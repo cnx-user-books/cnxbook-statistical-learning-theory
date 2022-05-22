@@ -1,0 +1,3741 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Maximum Likelihood Estimation</title>
+  <metadata>
+  <md:content-id>m16276</md:content-id><md:title>Maximum Likelihood Estimation</md:title>
+  <md:abstract/>
+  <md:uuid>8ba4fd85-b08d-4f90-8aa2-99a35b80c18e</md:uuid>
+</metadata>
+  <content>
+    <para id="id2255537">In the <link document="m16267" class="cnxn">last lecture</link> we derived a risk (MSE) bound for regression
+problems; i.e., select an <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math> so that <m:math><m:mrow><m:mi>E</m:mi><m:mrow><m:mo>[</m:mo><m:msup><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow><m:mo>-</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow><m:mn>2</m:mn></m:msup><m:mo>]</m:mo></m:mrow><m:mo>-</m:mo><m:mi>E</m:mi><m:mrow><m:mo>[</m:mo><m:msup><m:mrow><m:mo>(</m:mo><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup><m:mrow><m:mo>(</m:mo><m:mi>X</m:mi><m:mo>)</m:mo></m:mrow><m:mo>-</m:mo><m:mi>Y</m:mi><m:mo>)</m:mo></m:mrow><m:mn>2</m:mn></m:msup><m:mo>]</m:mo></m:mrow></m:mrow></m:math> is small, where <m:math><m:mrow><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mi>E</m:mi><m:mrow><m:mo>[</m:mo><m:mi>Y</m:mi><m:mo>|</m:mo><m:mi>X</m:mi><m:mo>=</m:mo><m:mi>x</m:mi><m:mo>]</m:mo></m:mrow></m:mrow></m:math>. The result is
+summarized below.</para>
+<rule id="theo1" type="Theorem"><label>Theorem</label>
+<title>Complexity Regularization with Squared Error Loss</title>
+<statement id="id13231564">
+    <para id="id2255693"> 
+
+Let <m:math><m:mrow><m:mi mathvariant="script">X</m:mi><m:mo>=</m:mo><m:msup><m:mi mathvariant="double-struck">R</m:mi><m:mi>d</m:mi></m:msup></m:mrow></m:math>, <m:math><m:mrow><m:mi mathvariant="script">Y</m:mi><m:mo>=</m:mo><m:mo>[</m:mo><m:mo>-</m:mo><m:mi>b</m:mi><m:mo>/</m:mo><m:mn>2</m:mn><m:mo>,</m:mo><m:mi>b</m:mi><m:mo>/</m:mo><m:mn>2</m:mn><m:mo>]</m:mo></m:mrow></m:math>, <m:math><m:msubsup><m:mrow><m:mo>{</m:mo><m:msub><m:mi>X</m:mi><m:mi>i</m:mi></m:msub><m:mo>,</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>}</m:mo></m:mrow><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup></m:math> iid, <m:math><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mi>Y</m:mi></m:mrow></m:msub></m:math> unknown, <m:math><m:mi mathvariant="script">F</m:mi></m:math> = {collection of candidate functions},</para>
+    <equation id="id2256070">
+      <m:math mode="display">
+        <m:mrow>
+          <m:mi>f</m:mi>
+          <m:mo>:</m:mo>
+          <m:msup>
+            <m:mi mathvariant="double-struck">R</m:mi>
+            <m:mi>d</m:mi>
+          </m:msup>
+          <m:mo>→</m:mo>
+          <m:mi mathvariant="script">Y</m:mi>
+          <m:mo>,</m:mo>
+          <m:mspace width="4pt"/>
+          <m:mspace width="4pt"/>
+          <m:mspace width="4pt"/>
+          <m:mi>R</m:mi>
+          <m:mrow>
+            <m:mo>(</m:mo>
+            <m:mi>f</m:mi>
+            <m:mo>)</m:mo>
+          </m:mrow>
+          <m:mo>=</m:mo>
+          <m:mi>E</m:mi>
+          <m:mrow>
+            <m:mo>[</m:mo>
+            <m:msup>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>X</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>-</m:mo>
+                <m:mi>Y</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mn>2</m:mn>
+            </m:msup>
+            <m:mo>]</m:mo>
+          </m:mrow>
+          <m:mo>.</m:mo>
+        </m:mrow>
+      </m:math>
+    </equation>
+    <para id="id2256157">Let <m:math><m:mrow><m:mi>c</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:math>, <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>, be positive numbers satisfying <m:math><m:mrow><m:msub><m:mo>∑</m:mo><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:msub><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:mi>c</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:msup><m:mo>≤</m:mo><m:mn>1</m:mn></m:mrow></m:math>, and select a function from <m:math><m:mi mathvariant="script">F</m:mi></m:math> according to</para>
+    <equation id="id2256250">
+      <m:math mode="display">
+        <m:mrow>
+          <m:msub>
+            <m:mover accent="true">
+              <m:mi>f</m:mi>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mi>n</m:mi>
+          </m:msub>
+          <m:mo>=</m:mo>
+          <m:mo form="prefix">arg</m:mo>
+          <m:mo movablelimits="true" form="prefix">min</m:mo>
+          <m:mfenced separators="" open="{" close="}">
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>+</m:mo>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:mi>ϵ</m:mi>
+            </m:mfrac>
+            <m:mspace width="0.166667em"/>
+            <m:mfrac>
+              <m:mrow>
+                <m:mi>c</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+                <m:mo form="prefix">log</m:mo>
+                <m:mn>2</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:mfrac>
+          </m:mfenced>
+          <m:mo>,</m:mo>
+        </m:mrow>
+      </m:math>
+    </equation>
+    <para id="id2256348">with <m:math><m:mrow><m:mi>ϵ</m:mi><m:mo>≤</m:mo><m:mfrac><m:mn>3</m:mn><m:mrow><m:mn>5</m:mn><m:msup><m:mi>b</m:mi><m:mn>2</m:mn></m:msup></m:mrow></m:mfrac></m:mrow></m:math> and <m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mfrac><m:mn>1</m:mn><m:mi>n</m:mi></m:mfrac><m:msubsup><m:mo>∑</m:mo><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup><m:msup><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>X</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mo>-</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mn>2</m:mn></m:msup></m:mrow></m:math>. Then,</para>
+    <equation id="id2256468">
+      <m:math mode="display">
+        <m:mrow>
+          <m:mi>E</m:mi>
+          <m:mrow>
+            <m:mo>[</m:mo>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>f</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>]</m:mo>
+          </m:mrow>
+          <m:mo>-</m:mo>
+          <m:mi>R</m:mi>
+          <m:mrow>
+            <m:mo>(</m:mo>
+            <m:msup>
+              <m:mi>f</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mo>)</m:mo>
+          </m:mrow>
+          <m:mspace width="4pt"/>
+          <m:mo>≤</m:mo>
+          <m:mspace width="4pt"/>
+          <m:mfenced separators="" open="(" close=")">
+            <m:mfrac>
+              <m:mrow>
+                <m:mn>1</m:mn>
+                <m:mo>+</m:mo>
+                <m:mi>α</m:mi>
+              </m:mrow>
+              <m:mrow>
+                <m:mn>1</m:mn>
+                <m:mo>-</m:mo>
+                <m:mi>α</m:mi>
+              </m:mrow>
+            </m:mfrac>
+          </m:mfenced>
+          <m:mspace width="0.166667em"/>
+          <m:munder>
+            <m:mo movablelimits="true" form="prefix">min</m:mo>
+            <m:mrow>
+              <m:mi>f</m:mi>
+              <m:mo>∈</m:mo>
+              <m:mi mathvariant="script">F</m:mi>
+            </m:mrow>
+          </m:munder>
+          <m:mfenced separators="" open="{" close="}">
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>f</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>+</m:mo>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:mi>ϵ</m:mi>
+            </m:mfrac>
+            <m:mspace width="0.166667em"/>
+            <m:mfrac>
+              <m:mrow>
+                <m:mi>c</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+                <m:mo form="prefix">log</m:mo>
+                <m:mn>2</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:mfrac>
+          </m:mfenced>
+          <m:mo>+</m:mo>
+          <m:mi>O</m:mi>
+          <m:mrow>
+            <m:mo>(</m:mo>
+            <m:msup>
+              <m:mi>n</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:msup>
+            <m:mo>)</m:mo>
+          </m:mrow>
+        </m:mrow>
+      </m:math>
+    </equation>
+    <para id="id2256664">where <m:math><m:mrow><m:mi>α</m:mi><m:mo>=</m:mo><m:mfrac><m:mrow><m:mi>ϵ</m:mi><m:msup><m:mi>b</m:mi><m:mn>2</m:mn></m:msup></m:mrow><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mn>2</m:mn><m:msup><m:mi>b</m:mi><m:mn>2</m:mn></m:msup><m:mi>ϵ</m:mi><m:mo>/</m:mo><m:mn>3</m:mn></m:mrow></m:mfrac></m:mrow></m:math>.</para>
+</statement>
+</rule>    
+<section id="uid2"><title>Maximum Likelihood Estimation</title>
+      
+      <para id="id2256721">The focus of this lecture is to consider another approach to learning
+based on maximum likelihood estimation. Consider the classical signal
+plus noise model:</para>
+      <equation id="id2256727">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>Y</m:mi>
+              <m:mi>i</m:mi>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:mi>f</m:mi>
+            <m:mfenced separators="" open="(" close=")">
+              <m:mfrac>
+                <m:mi>i</m:mi>
+                <m:mi>n</m:mi>
+              </m:mfrac>
+            </m:mfenced>
+            <m:mo>+</m:mo>
+            <m:msub>
+              <m:mi>W</m:mi>
+              <m:mi>i</m:mi>
+            </m:msub>
+            <m:mo>,</m:mo>
+            <m:mi>i</m:mi>
+            <m:mo>=</m:mo>
+            <m:mn>1</m:mn>
+            <m:mo>,</m:mo>
+            <m:mo>⋯</m:mo>
+            <m:mo>,</m:mo>
+            <m:mi>n</m:mi>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256788">where <m:math><m:msub><m:mi>W</m:mi><m:mi>i</m:mi></m:msub></m:math> are iid zero-mean noises. Furthermore, assume that <m:math><m:mrow><m:msub><m:mi>W</m:mi><m:mi>i</m:mi></m:msub><m:mo>∼</m:mo><m:mi>P</m:mi><m:mrow><m:mo>(</m:mo><m:mi>w</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> for some known density <m:math><m:mrow><m:mi>P</m:mi><m:mo>(</m:mo><m:mi>w</m:mi><m:mo>)</m:mo></m:mrow></m:math>. Then</para>
+      <equation id="id2256851">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>Y</m:mi>
+              <m:mi>i</m:mi>
+            </m:msub>
+            <m:mo>∼</m:mo>
+            <m:mi>P</m:mi>
+            <m:mfenced separators="" open="(" close=")">
+              <m:mi>y</m:mi>
+              <m:mo>-</m:mo>
+              <m:mi>f</m:mi>
+              <m:mfenced separators="" open="(" close=")">
+                <m:mfrac>
+                  <m:mi>i</m:mi>
+                  <m:mi>n</m:mi>
+                </m:mfrac>
+              </m:mfenced>
+            </m:mfenced>
+            <m:mo>≡</m:mo>
+            <m:msub>
+              <m:mi>P</m:mi>
+              <m:msub>
+                <m:mi>f</m:mi>
+                <m:mi>i</m:mi>
+              </m:msub>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>y</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256922">since <m:math><m:mrow><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>-</m:mo><m:mi>f</m:mi><m:mfenced separators="" open="(" close=")"><m:mfrac><m:mi>i</m:mi><m:mi>n</m:mi></m:mfrac></m:mfenced><m:mo>=</m:mo><m:msub><m:mi>W</m:mi><m:mi>i</m:mi></m:msub></m:mrow></m:math>.</para>
+      <para id="id2256969">A very common and useful loss function to consider is</para>
+      <equation id="id2256974">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:mi>n</m:mi>
+            </m:mfrac>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:munderover>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mo>-</m:mo>
+              <m:mo form="prefix">log</m:mo>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:msub>
+                  <m:mi>f</m:mi>
+                  <m:mi>i</m:mi>
+                </m:msub>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>Y</m:mi>
+                  <m:mi>i</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257068">Minimizing
+<m:math><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> with respect to <m:math><m:mi>f</m:mi></m:math> is equivalent to maximizing</para>
+      <equation id="id2257103">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:mi>n</m:mi>
+            </m:mfrac>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:munderover>
+            <m:mo form="prefix">log</m:mo>
+            <m:msub>
+              <m:mi>P</m:mi>
+              <m:msub>
+                <m:mi>f</m:mi>
+                <m:mi>i</m:mi>
+              </m:msub>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>Y</m:mi>
+                <m:mi>i</m:mi>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257164">or</para>
+      <equation id="id2257170">
+        <m:math mode="display">
+          <m:mrow>
+            <m:munderover>
+              <m:mo>∏</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:munderover>
+            <m:msub>
+              <m:mi>P</m:mi>
+              <m:msub>
+                <m:mi>f</m:mi>
+                <m:mi>i</m:mi>
+              </m:msub>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>Y</m:mi>
+                <m:mi>i</m:mi>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257223">Thus, using the negative log-likelihood as a loss
+function leads to maximum likelihood estimation. If the <m:math><m:msub><m:mi>W</m:mi><m:mi>i</m:mi></m:msub></m:math> are iid
+zero-mean Gaussian r.v.s then this is just the squared error loss we
+considered last time. If the <m:math><m:msub><m:mi>W</m:mi><m:mi>i</m:mi></m:msub></m:math> are Laplacian distributed e.g.
+<m:math><m:mrow><m:mi>P</m:mi><m:mrow><m:mo>(</m:mo><m:mi>w</m:mi><m:mo>)</m:mo></m:mrow><m:mo>∝</m:mo><m:msup><m:mi>e</m:mi><m:mrow><m:mo>-</m:mo><m:mo>|</m:mo><m:mi>w</m:mi><m:mo>|</m:mo></m:mrow></m:msup></m:mrow></m:math>, then we obtain the absolute error, or <m:math><m:msub><m:mi>L</m:mi><m:mn>1</m:mn></m:msub></m:math>,
+loss function. We can also handle non-additive models such as the
+Poisson model</para>
+      <equation id="id2257311"><m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>Y</m:mi>
+              <m:mi>i</m:mi>
+            </m:msub>
+            <m:mo>∼</m:mo>
+            <m:mi>P</m:mi>
+            <m:mfenced separators="" open="(" close=")">
+              <m:mrow>
+                <m:mi>y</m:mi>
+                <m:mo>|</m:mo>
+                <m:mi>f</m:mi>
+              </m:mrow>
+              <m:mfenced separators="" open="(" close=")">
+                <m:mi>i</m:mi>
+                <m:mo>/</m:mo>
+                <m:mi>n</m:mi>
+              </m:mfenced>
+            </m:mfenced>
+            <m:mo>=</m:mo>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>i</m:mi>
+                <m:mo>/</m:mo>
+                <m:mi>n</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:msup>
+            <m:mfrac>
+              <m:msup>
+                <m:mrow>
+                  <m:mo>[</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>i</m:mi>
+                    <m:mo>/</m:mo>
+                    <m:mi>n</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>]</m:mo>
+                </m:mrow>
+                <m:mi>y</m:mi>
+              </m:msup>
+              <m:mrow>
+                <m:mi>y</m:mi>
+                <m:mo>!</m:mo>
+              </m:mrow>
+            </m:mfrac>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2257416">In this case</para>
+      <equation id="id2257421">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mo>-</m:mo>
+            <m:mo form="prefix">log</m:mo>
+            <m:mi>P</m:mi>
+            <m:mfenced separators="" open="(" close=")">
+              <m:msub>
+                <m:mi>Y</m:mi>
+                <m:mi>i</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mi>f</m:mi>
+              </m:mrow>
+              <m:mfenced separators="" open="(" close=")">
+                <m:mi>i</m:mi>
+                <m:mo>/</m:mo>
+                <m:mi>n</m:mi>
+              </m:mfenced>
+            </m:mfenced>
+            <m:mspace width="4pt"/>
+            <m:mo>=</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mi>f</m:mi>
+            <m:mfenced separators="" open="(" close=")">
+              <m:mi>i</m:mi>
+              <m:mo>/</m:mo>
+              <m:mi>n</m:mi>
+            </m:mfenced>
+            <m:mo>-</m:mo>
+            <m:msub>
+              <m:mi>Y</m:mi>
+              <m:mi>i</m:mi>
+            </m:msub>
+            <m:mo form="prefix">log</m:mo>
+            <m:mfenced separators="" open="(" close=")">
+              <m:mi>f</m:mi>
+              <m:mfenced separators="" open="(" close=")">
+                <m:mi>i</m:mi>
+                <m:mo>/</m:mo>
+                <m:mi>n</m:mi>
+              </m:mfenced>
+            </m:mfenced>
+            <m:mo>+</m:mo>
+            <m:mi> constant </m:mi>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257537">which is a very different loss function, but quite appropriate for many imaging problems.</para>
+      <para id="id2257544">Before we investigate maximum likelihood estimation for model
+selection, let's review some of the basic concepts. Let <m:math><m:mi>Θ</m:mi></m:math>
+denote a parameter space (e.g., <m:math><m:mrow><m:mi>Θ</m:mi><m:mo>=</m:mo><m:mi>R</m:mi></m:mrow></m:math>), and assume we have
+observations</para>
+      <equation id="id2257573">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>Y</m:mi>
+              <m:mi>i</m:mi>
+            </m:msub>
+            <m:mover>
+              <m:mo>∼</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mi>i</m:mi>
+                <m:mi>d</m:mi>
+              </m:mrow>
+            </m:mover>
+            <m:msub>
+              <m:mi>P</m:mi>
+              <m:msup>
+                <m:mi>θ</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>y</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>,</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:mi>i</m:mi>
+            <m:mo>=</m:mo>
+            <m:mn>1</m:mn>
+            <m:mo>,</m:mo>
+            <m:mo>⋯</m:mo>
+            <m:mo>,</m:mo>
+            <m:mi>n</m:mi>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257645">where <m:math><m:mrow><m:msup><m:mi>θ</m:mi><m:mo>*</m:mo></m:msup><m:mo>∈</m:mo><m:mi>Θ</m:mi></m:mrow></m:math> is a parameter determining the
+density of the {<m:math><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub></m:math>}. The ML estimator of <m:math><m:msup><m:mi>θ</m:mi><m:mo>*</m:mo></m:msup></m:math> is</para>
+      <equation id="id2257699">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>θ</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">arg</m:mo>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">max</m:mo>
+                    <m:mrow>
+                      <m:mi>θ</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:mi>Θ</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:munderover>
+                    <m:mo>∏</m:mo>
+                    <m:mrow>
+                      <m:mi>i</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:munderover>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:mi>θ</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msub>
+                      <m:mi>Y</m:mi>
+                      <m:mi>i</m:mi>
+                    </m:msub>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">arg</m:mo>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">max</m:mo>
+                    <m:mrow>
+                      <m:mi>θ</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:mi>Θ</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:munderover>
+                    <m:mo>∑</m:mo>
+                    <m:mrow>
+                      <m:mi>i</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:munderover>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:mi>θ</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msub>
+                      <m:mi>Y</m:mi>
+                      <m:mi>i</m:mi>
+                    </m:msub>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">arg</m:mo>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">min</m:mo>
+                    <m:mrow>
+                      <m:mi>θ</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:mi>Θ</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:munderover>
+                    <m:mo>∑</m:mo>
+                    <m:mrow>
+                      <m:mi>i</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:munderover>
+                  <m:mo>-</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:mi>θ</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msub>
+                      <m:mi>Y</m:mi>
+                      <m:mi>i</m:mi>
+                    </m:msub>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>.</m:mo>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <para id="id2257945"><m:math><m:mover accent="true"><m:mi>θ</m:mi><m:mo>^</m:mo></m:mover></m:math> maximizes the expected log-likelihood. To see this, let's compare the expected log-likelihood of <m:math><m:msup><m:mi>θ</m:mi><m:mo>*</m:mo></m:msup></m:math> with any other <m:math><m:mrow><m:mi>θ</m:mi><m:mo>∈</m:mo><m:mi>Θ</m:mi></m:mrow></m:math>.</para>
+      <equation id="id2257995">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mi>E</m:mi>
+                  <m:mo>[</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>Y</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:mi>θ</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>Y</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>]</m:mo>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mi>E</m:mi>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:msup>
+                            <m:mi>θ</m:mi>
+                            <m:mo>*</m:mo>
+                          </m:msup>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>Y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:mi>θ</m:mi>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>Y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo>∫</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mfrac>
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>P</m:mi>
+                        <m:msup>
+                          <m:mi>θ</m:mi>
+                          <m:mo>*</m:mo>
+                        </m:msup>
+                      </m:msub>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>y</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                    </m:mrow>
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>P</m:mi>
+                        <m:mi>θ</m:mi>
+                      </m:msub>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>y</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                    </m:mrow>
+                  </m:mfrac>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>y</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mi>d</m:mi>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mi>K</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:mi>θ</m:mi>
+                  </m:msub>
+                  <m:mo>,</m:mo>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                  <m:mspace width="1.em"/>
+                  <m:mtext>the</m:mtext>
+                  <m:mspace width="4.pt"/>
+                  <m:mtext>KL</m:mtext>
+                  <m:mspace width="4.pt"/>
+                  <m:mtext>divergence</m:mtext>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>≥</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mn>0</m:mn>
+                  <m:mspace width="1.em"/>
+                  <m:mtext>with</m:mtext>
+                  <m:mspace width="4.pt"/>
+                  <m:mtext>equality</m:mtext>
+                  <m:mspace width="4.pt"/>
+                  <m:mtext>iff</m:mtext>
+                  <m:mspace width="0.166667em"/>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mo>=</m:mo>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:mi>θ</m:mi>
+                  </m:msub>
+                  <m:mo>.</m:mo>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <para id="id2258322">Why?</para>
+      <equation id="id2258328">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mi>E</m:mi>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:msup>
+                            <m:mi>θ</m:mi>
+                            <m:mo>*</m:mo>
+                          </m:msup>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:mi>θ</m:mi>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mi>E</m:mi>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:mi>θ</m:mi>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:msup>
+                            <m:mi>θ</m:mi>
+                            <m:mo>*</m:mo>
+                          </m:msup>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>≤</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mi>E</m:mi>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:mi>θ</m:mi>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:msup>
+                            <m:mi>θ</m:mi>
+                            <m:mo>*</m:mo>
+                          </m:msup>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mo>∫</m:mo>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:mi>θ</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>y</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mi>d</m:mi>
+                  <m:mi>y</m:mi>
+                  <m:mo>=</m:mo>
+                  <m:mn>0</m:mn>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>⇒</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mi>K</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:mi>θ</m:mi>
+                  </m:msub>
+                  <m:mo>,</m:mo>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                  <m:mo>≥</m:mo>
+                  <m:mn>0</m:mn>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <para id="id2258610">On the other hand, since <m:math><m:msub><m:mover accent="true"><m:mi>θ</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:math> maximizes the likelihood over <m:math><m:mrow><m:mi>θ</m:mi><m:mo>∈</m:mo><m:mi>Θ</m:mi></m:mrow></m:math>, we have</para>
+      <equation id="id2258654"><m:math mode="display">
+          <m:mrow>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:munderover>
+            <m:mo form="prefix">log</m:mo>
+            <m:mfrac>
+              <m:mrow>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msup>
+                    <m:mi>θ</m:mi>
+                    <m:mo>*</m:mo>
+                  </m:msup>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>Y</m:mi>
+                    <m:mi>i</m:mi>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mrow>
+              <m:mrow>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>θ</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>Y</m:mi>
+                    <m:mi>i</m:mi>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mrow>
+            </m:mfrac>
+            <m:mo>=</m:mo>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:munderover>
+            <m:mo form="prefix">log</m:mo>
+            <m:msub>
+              <m:mi>P</m:mi>
+              <m:msup>
+                <m:mi>θ</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>Y</m:mi>
+                <m:mi>i</m:mi>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:mo form="prefix">log</m:mo>
+            <m:msub>
+              <m:mi>P</m:mi>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>θ</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>Y</m:mi>
+                <m:mi>i</m:mi>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:mn>0</m:mn>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2258839">Therefore,</para>
+      <equation id="id2258845">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:mi>n</m:mi>
+            </m:mfrac>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:munderover>
+            <m:mo form="prefix">log</m:mo>
+            <m:mfrac>
+              <m:mrow>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msup>
+                    <m:mi>θ</m:mi>
+                    <m:mo>*</m:mo>
+                  </m:msup>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>Y</m:mi>
+                    <m:mi>i</m:mi>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mrow>
+              <m:mrow>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>θ</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>Y</m:mi>
+                    <m:mi>i</m:mi>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mrow>
+            </m:mfrac>
+            <m:mo>-</m:mo>
+            <m:mi>K</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>θ</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+              </m:msub>
+              <m:mo>,</m:mo>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:msup>
+                  <m:mi>θ</m:mi>
+                  <m:mo>*</m:mo>
+                </m:msup>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>+</m:mo>
+            <m:mi>K</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>θ</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+              </m:msub>
+              <m:mo>,</m:mo>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:msup>
+                  <m:mi>θ</m:mi>
+                  <m:mo>*</m:mo>
+                </m:msup>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:mn>0</m:mn>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259039">or re-arranging</para>
+      <equation id="id2259044"><m:math mode="display">
+          <m:mrow>
+            <m:mi>K</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>θ</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+              </m:msub>
+              <m:mo>,</m:mo>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:msup>
+                  <m:mi>θ</m:mi>
+                  <m:mo>*</m:mo>
+                </m:msup>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:mfenced separators="" open="|" close="|">
+              <m:mfrac>
+                <m:mn>1</m:mn>
+                <m:mi>n</m:mi>
+              </m:mfrac>
+              <m:munderover>
+                <m:mo>∑</m:mo>
+                <m:mrow>
+                  <m:mi>i</m:mi>
+                  <m:mo>=</m:mo>
+                  <m:mn>1</m:mn>
+                </m:mrow>
+                <m:mi>n</m:mi>
+              </m:munderover>
+              <m:mo form="prefix">log</m:mo>
+              <m:mfrac>
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msub>
+                      <m:mi>Y</m:mi>
+                      <m:mi>i</m:mi>
+                    </m:msub>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msub>
+                      <m:mover accent="true">
+                        <m:mi>θ</m:mi>
+                        <m:mo>^</m:mo>
+                      </m:mover>
+                      <m:mi>n</m:mi>
+                    </m:msub>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msub>
+                      <m:mi>Y</m:mi>
+                      <m:mi>i</m:mi>
+                    </m:msub>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mfrac>
+              <m:mo>-</m:mo>
+              <m:mi>K</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>θ</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msup>
+                    <m:mi>θ</m:mi>
+                    <m:mo>*</m:mo>
+                  </m:msup>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:mfenced>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2259242">Notice that the quantity</para>
+      <equation id="id2259248">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:mi>n</m:mi>
+            </m:mfrac>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:munderover>
+            <m:mo form="prefix">log</m:mo>
+            <m:mfrac>
+              <m:mrow>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msup>
+                    <m:mi>θ</m:mi>
+                    <m:mo>*</m:mo>
+                  </m:msup>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>Y</m:mi>
+                    <m:mi>i</m:mi>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mrow>
+              <m:mrow>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:mi>θ</m:mi>
+                </m:msub>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>Y</m:mi>
+                    <m:mi>i</m:mi>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mrow>
+            </m:mfrac>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259336">is an empirical average whose mean is <m:math><m:mrow><m:mi>K</m:mi><m:mo>(</m:mo><m:msub><m:mi>P</m:mi><m:mi>θ</m:mi></m:msub><m:mo>,</m:mo><m:msub><m:mi>P</m:mi><m:msup><m:mi>θ</m:mi><m:mo>*</m:mo></m:msup></m:msub><m:mo>)</m:mo></m:mrow></m:math>. By the law of large numbers, for each <m:math><m:mrow><m:mi>θ</m:mi><m:mo>∈</m:mo><m:mi>Θ</m:mi></m:mrow></m:math>,</para>
+      <equation id="id2259394"><m:math mode="display">
+          <m:mrow>
+            <m:mfenced separators="" open="|" close="|">
+              <m:mfrac>
+                <m:mn>1</m:mn>
+                <m:mi>n</m:mi>
+              </m:mfrac>
+              <m:munderover>
+                <m:mo>∑</m:mo>
+                <m:mrow>
+                  <m:mi>i</m:mi>
+                  <m:mo>=</m:mo>
+                  <m:mn>1</m:mn>
+                </m:mrow>
+                <m:mi>n</m:mi>
+              </m:munderover>
+              <m:mo form="prefix">log</m:mo>
+              <m:mfrac>
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msub>
+                      <m:mi>Y</m:mi>
+                      <m:mi>i</m:mi>
+                    </m:msub>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:mi>θ</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msub>
+                      <m:mi>Y</m:mi>
+                      <m:mi>i</m:mi>
+                    </m:msub>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mfrac>
+              <m:mo>-</m:mo>
+              <m:mi>K</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:mi>θ</m:mi>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msup>
+                    <m:mi>θ</m:mi>
+                    <m:mo>*</m:mo>
+                  </m:msup>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:mfenced>
+            <m:mover>
+              <m:mo>→</m:mo>
+              <m:mrow>
+                <m:mi>a</m:mi>
+                <m:mo>.</m:mo>
+                <m:mi>s</m:mi>
+                <m:mo>.</m:mo>
+              </m:mrow>
+            </m:mover>
+            <m:mn>0</m:mn>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2259538">If this also holds for the sequence <m:math><m:mrow><m:mo>{</m:mo><m:msub><m:mover accent="true"><m:mi>θ</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mo>}</m:mo></m:mrow></m:math>, then we have</para>
+      <equation id="id2259572">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>K</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>θ</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+              </m:msub>
+              <m:mo>,</m:mo>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:msup>
+                  <m:mi>θ</m:mi>
+                  <m:mo>*</m:mo>
+                </m:msup>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:mfenced separators="" open="|" close="|">
+              <m:mfrac>
+                <m:mn>1</m:mn>
+                <m:mi>n</m:mi>
+              </m:mfrac>
+              <m:mo>∑</m:mo>
+              <m:mo form="prefix">log</m:mo>
+              <m:mfrac>
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msub>
+                      <m:mi>Y</m:mi>
+                      <m:mi>i</m:mi>
+                    </m:msub>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msub>
+                      <m:mover accent="true">
+                        <m:mi>θ</m:mi>
+                        <m:mo>^</m:mo>
+                      </m:mover>
+                      <m:mi>n</m:mi>
+                    </m:msub>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msub>
+                      <m:mi>Y</m:mi>
+                      <m:mi>i</m:mi>
+                    </m:msub>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mfrac>
+              <m:mo>-</m:mo>
+              <m:mi>K</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>θ</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msup>
+                    <m:mi>θ</m:mi>
+                    <m:mo>*</m:mo>
+                  </m:msup>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:mfenced>
+            <m:mo>→</m:mo>
+            <m:mn>0</m:mn>
+            <m:mspace width="0.166667em"/>
+            <m:mi> as </m:mi>
+            <m:mspace width="0.166667em"/>
+            <m:mi>n</m:mi>
+            <m:mo>→</m:mo>
+            <m:mi>∞</m:mi>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259776">which implies that</para>
+      <equation id="id2259782">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>P</m:mi>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>θ</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+            </m:msub>
+            <m:mo>→</m:mo>
+            <m:msub>
+              <m:mi>P</m:mi>
+              <m:msup>
+                <m:mi>θ</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+            </m:msub>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259827">which often implies that</para>
+      <equation id="id2259833">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>θ</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mo>→</m:mo>
+            <m:msup>
+              <m:mi>θ</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259868">in some appropriate sense (e.g., point-wise or in norm).</para>
+<example id="exam79879">
+<title>Gaussian Distributions</title>
+      <equation id="id2259883">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>P</m:mi>
+              <m:msup>
+                <m:mi>θ</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>y</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:msqrt>
+                <m:mi>π</m:mi>
+              </m:msqrt>
+            </m:mfrac>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:msup>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>y</m:mi>
+                    <m:mo>-</m:mo>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mn>2</m:mn>
+                </m:msup>
+              </m:mrow>
+            </m:msup>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <equation id="id2259955">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>Θ</m:mi>
+            <m:mo>=</m:mo>
+            <m:mi mathvariant="double-struck">R</m:mi>
+            <m:mo>,</m:mo>
+            <m:mspace width="1.em"/>
+            <m:msubsup>
+              <m:mrow>
+                <m:mo>{</m:mo>
+                <m:msub>
+                  <m:mi>Y</m:mi>
+                  <m:mi>i</m:mi>
+                </m:msub>
+                <m:mo>}</m:mo>
+              </m:mrow>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:msubsup>
+            <m:mover>
+              <m:mo>∼</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mi>i</m:mi>
+                <m:mi>d</m:mi>
+              </m:mrow>
+            </m:mover>
+            <m:msub>
+              <m:mi>P</m:mi>
+              <m:msup>
+                <m:mi>θ</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>y</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <equation id="id2260038">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mi>K</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:mi>θ</m:mi>
+                  </m:msub>
+                  <m:mo>,</m:mo>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo>∫</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mfrac>
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>P</m:mi>
+                        <m:msup>
+                          <m:mi>θ</m:mi>
+                          <m:mo>*</m:mo>
+                        </m:msup>
+                      </m:msub>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>y</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                    </m:mrow>
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>P</m:mi>
+                        <m:mi>θ</m:mi>
+                      </m:msub>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>y</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                    </m:mrow>
+                  </m:mfrac>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>y</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mi>d</m:mi>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo>∫</m:mo>
+                  <m:mrow>
+                    <m:mo>[</m:mo>
+                    <m:msup>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>y</m:mi>
+                        <m:mo>-</m:mo>
+                        <m:mi>θ</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                    <m:mo>-</m:mo>
+                    <m:msup>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>y</m:mi>
+                        <m:mo>-</m:mo>
+                        <m:msup>
+                          <m:mi>θ</m:mi>
+                          <m:mo>*</m:mo>
+                        </m:msup>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                    <m:mo>]</m:mo>
+                  </m:mrow>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>y</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mi>d</m:mi>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>E</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>[</m:mo>
+                    <m:msup>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>y</m:mi>
+                        <m:mo>-</m:mo>
+                        <m:mi>θ</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                    <m:mo>]</m:mo>
+                  </m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:msub>
+                    <m:mi>E</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>[</m:mo>
+                    <m:msup>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>y</m:mi>
+                        <m:mo>-</m:mo>
+                        <m:msup>
+                          <m:mi>θ</m:mi>
+                          <m:mo>*</m:mo>
+                        </m:msup>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                    <m:mo>]</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>E</m:mi>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>[</m:mo>
+                    <m:msup>
+                      <m:mi>Y</m:mi>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                    <m:mo>-</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mi>Y</m:mi>
+                    <m:mi>θ</m:mi>
+                    <m:mo>+</m:mo>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                    <m:mo>]</m:mo>
+                  </m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>/</m:mo>
+                  <m:mn>2</m:mn>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:msup>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:msup>
+                        <m:mi>θ</m:mi>
+                        <m:mo>*</m:mo>
+                      </m:msup>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mn>2</m:mn>
+                  </m:msup>
+                  <m:mo>+</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>/</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mo>-</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:msup>
+                    <m:mi>θ</m:mi>
+                    <m:mo>*</m:mo>
+                  </m:msup>
+                  <m:mi>θ</m:mi>
+                  <m:mo>+</m:mo>
+                  <m:msup>
+                    <m:mi>θ</m:mi>
+                    <m:mn>2</m:mn>
+                  </m:msup>
+                  <m:mo>-</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>/</m:mo>
+                  <m:mn>2</m:mn>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:msup>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msup>
+                      <m:mi>θ</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                    <m:mo>-</m:mo>
+                    <m:mi>θ</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mn>2</m:mn>
+                </m:msup>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <equation id="id2260502">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mo>⇒</m:mo>
+            <m:msup>
+              <m:mi>θ</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mspace width="0.166667em"/>
+            <m:mtext>maximizes</m:mtext>
+            <m:mspace width="0.166667em"/>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mo form="prefix">log</m:mo>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:mi>θ</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>Y</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mspace width="0.166667em"/>
+            <m:mtext>wrt</m:mtext>
+            <m:mspace width="0.166667em"/>
+            <m:mi>θ</m:mi>
+            <m:mo>∈</m:mo>
+            <m:mi>Θ</m:mi>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <equation id="id2260574">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>θ</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">arg</m:mo>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">max</m:mo>
+                    <m:mi>θ</m:mi>
+                  </m:munder>
+                  <m:mrow>
+                    <m:mo>{</m:mo>
+                    <m:mo>-</m:mo>
+                    <m:mo>∑</m:mo>
+                    <m:msup>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:msub>
+                          <m:mi>Y</m:mi>
+                          <m:mi>i</m:mi>
+                        </m:msub>
+                        <m:mo>-</m:mo>
+                        <m:mi>θ</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                    <m:mo>}</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">arg</m:mo>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">min</m:mo>
+                    <m:mi>θ</m:mi>
+                  </m:munder>
+                  <m:mrow>
+                    <m:mo>{</m:mo>
+                    <m:mo>∑</m:mo>
+                    <m:msup>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:msub>
+                          <m:mi>Y</m:mi>
+                          <m:mi>i</m:mi>
+                        </m:msub>
+                        <m:mo>-</m:mo>
+                        <m:mi>θ</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                    <m:mo>}</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mfrac>
+                    <m:mn>1</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mfrac>
+                  <m:munderover>
+                    <m:mo>∑</m:mo>
+                    <m:mrow>
+                      <m:mi>i</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:munderover>
+                  <m:msub>
+                    <m:mi>Y</m:mi>
+                    <m:mi>i</m:mi>
+                  </m:msub>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+</example>      
+<section id="uid4"><title>Hellinger Distance</title>
+        
+        <para id="id2260767">The KL divergence is not a distance function.</para>
+        <equation id="id2260771">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>K</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>2</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≠</m:mo>
+              <m:mi>K</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>2</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2260855">Therefore, it is often more convenient to work with the Hellinger metric,</para>
+        <equation id="id2260862"><m:math mode="display">
+            <m:mrow>
+              <m:mi>H</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>2</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>=</m:mo>
+              <m:msup>
+                <m:mfenced separators="" open="(" close=")">
+                  <m:mo>∫</m:mo>
+                  <m:msup>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:msubsup>
+                        <m:mi>P</m:mi>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>θ</m:mi>
+                            <m:mn>1</m:mn>
+                          </m:msub>
+                        </m:mrow>
+                        <m:mfrac>
+                          <m:mn>1</m:mn>
+                          <m:mn>2</m:mn>
+                        </m:mfrac>
+                      </m:msubsup>
+                      <m:mo>-</m:mo>
+                      <m:msubsup>
+                        <m:mi>P</m:mi>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>θ</m:mi>
+                            <m:mn>2</m:mn>
+                          </m:msub>
+                        </m:mrow>
+                        <m:mfrac>
+                          <m:mn>1</m:mn>
+                          <m:mn>2</m:mn>
+                        </m:mfrac>
+                      </m:msubsup>
+                    </m:mfenced>
+                    <m:mn>2</m:mn>
+                  </m:msup>
+                  <m:mi>d</m:mi>
+                  <m:mi>y</m:mi>
+                </m:mfenced>
+                <m:mfrac>
+                  <m:mn>1</m:mn>
+                  <m:mn>2</m:mn>
+                </m:mfrac>
+              </m:msup>
+            </m:mrow>
+<m:mo>.</m:mo>        
+  </m:math>
+        </equation>
+        <para id="id2260991">The Hellinger metric is symmetric, non-negative and</para>
+        <equation id="id2260997">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>H</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>2</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>=</m:mo>
+              <m:mi>H</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>2</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2261081">and therefore it is a distance measure. Furthermore, the squared Hellinger distance lower bounds the KL divergence, so convergence in KL divergence implies convergence of the Hellinger distance.</para>
+        
+
+<para id="id2261090"><title>Proposition 1</title>
+ 
+
+        <equation id="id2261096">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msup>
+                <m:mi>H</m:mi>
+                <m:mn>2</m:mn>
+              </m:msup>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>2</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≤</m:mo>
+              <m:mi>K</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>2</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:mrow>
+          </m:math>
+        </equation>
+</para>      
+  <para id="id2261194"><title>Proof:</title>
+
+
+        <equation id="id2261201">
+          <m:math mode="display">
+            <m:mtable displaystyle="true">
+              <m:mtr>
+                <m:mtd columnalign="right">
+                  <m:mrow>
+                    <m:mi>H</m:mi>
+                    <m:mo>(</m:mo>
+                    <m:msub>
+                      <m:mi>P</m:mi>
+                      <m:msub>
+                        <m:mi>θ</m:mi>
+                        <m:mn>1</m:mn>
+                      </m:msub>
+                    </m:msub>
+                    <m:mo>,</m:mo>
+                    <m:msub>
+                      <m:mi>P</m:mi>
+                      <m:msub>
+                        <m:mi>θ</m:mi>
+                        <m:mn>2</m:mn>
+                      </m:msub>
+                    </m:msub>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mtd>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mo>∫</m:mo>
+                    <m:msup>
+                      <m:mfenced separators="" open="(" close=")">
+                        <m:msqrt>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>P</m:mi>
+                              <m:msub>
+                                <m:mi>θ</m:mi>
+                                <m:mn>1</m:mn>
+                              </m:msub>
+                            </m:msub>
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+                              <m:mi>y</m:mi>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:msqrt>
+                        <m:mo>-</m:mo>
+                        <m:msqrt>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>P</m:mi>
+                              <m:msub>
+                                <m:mi>θ</m:mi>
+                                <m:mn>2</m:mn>
+                              </m:msub>
+                            </m:msub>
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+                              <m:mi>y</m:mi>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:msqrt>
+                      </m:mfenced>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                    <m:mi>d</m:mi>
+                    <m:mi>y</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mo>∫</m:mo>
+                    <m:msub>
+                      <m:mi>P</m:mi>
+                      <m:msub>
+                        <m:mi>θ</m:mi>
+                        <m:mn>1</m:mn>
+                      </m:msub>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>y</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mi>d</m:mi>
+                    <m:mi>y</m:mi>
+                    <m:mo>+</m:mo>
+                    <m:mo>∫</m:mo>
+                    <m:msub>
+                      <m:mi>P</m:mi>
+                      <m:msub>
+                        <m:mi>θ</m:mi>
+                        <m:mn>2</m:mn>
+                      </m:msub>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>y</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mi>d</m:mi>
+                    <m:mi>y</m:mi>
+                    <m:mo>-</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo>∫</m:mo>
+                    <m:msqrt>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:msub>
+                            <m:mi>θ</m:mi>
+                            <m:mn>1</m:mn>
+                          </m:msub>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:msqrt>
+                    <m:msqrt>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:msub>
+                            <m:mi>θ</m:mi>
+                            <m:mn>2</m:mn>
+                          </m:msub>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:msqrt>
+                    <m:mi>d</m:mi>
+                    <m:mi>y</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mo>-</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo>∫</m:mo>
+                    <m:msqrt>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:msub>
+                            <m:mi>θ</m:mi>
+                            <m:mn>1</m:mn>
+                          </m:msub>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:msqrt>
+                    <m:msqrt>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:msub>
+                            <m:mi>θ</m:mi>
+                            <m:mn>2</m:mn>
+                          </m:msub>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:msqrt>
+                    <m:mi>d</m:mi>
+                    <m:mi>y</m:mi>
+                    <m:mo>,</m:mo>
+                    <m:mspace width="1.em"/>
+                    <m:mtext>since</m:mtext>
+                    <m:mspace width="0.166667em"/>
+                    <m:mo>∫</m:mo>
+                    <m:msub>
+                      <m:mi>P</m:mi>
+                      <m:mi>θ</m:mi>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>y</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mi>d</m:mi>
+                    <m:mi>y</m:mi>
+                    <m:mo>=</m:mo>
+                    <m:mn>1</m:mn>
+                    <m:mspace width="0.166667em"/>
+                    <m:mo>∀</m:mo>
+                    <m:mi>θ</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:mn>1</m:mn>
+                      <m:mo>-</m:mo>
+                      <m:msub>
+                        <m:mi>E</m:mi>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>2</m:mn>
+                        </m:msub>
+                      </m:msub>
+                      <m:mfenced open="[" close="]">
+                        <m:msqrt>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>P</m:mi>
+                              <m:msub>
+                                <m:mi>θ</m:mi>
+                                <m:mn>1</m:mn>
+                              </m:msub>
+                            </m:msub>
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+                              <m:mi>Y</m:mi>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                            <m:mo>/</m:mo>
+                            <m:msub>
+                              <m:mi>P</m:mi>
+                              <m:msub>
+                                <m:mi>θ</m:mi>
+                                <m:mn>2</m:mn>
+                              </m:msub>
+                            </m:msub>
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+                              <m:mi>Y</m:mi>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:msqrt>
+                      </m:mfenced>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>≤</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:msub>
+                        <m:mi>E</m:mi>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>2</m:mn>
+                        </m:msub>
+                      </m:msub>
+                      <m:mfenced open="[" close="]">
+                        <m:msqrt>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>P</m:mi>
+                              <m:msub>
+                                <m:mi>θ</m:mi>
+                                <m:mn>2</m:mn>
+                              </m:msub>
+                            </m:msub>
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+                              <m:mi>Y</m:mi>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                            <m:mo>/</m:mo>
+                            <m:msub>
+                              <m:mi>P</m:mi>
+                              <m:msub>
+                                <m:mi>θ</m:mi>
+                                <m:mn>1</m:mn>
+                              </m:msub>
+                            </m:msub>
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+                              <m:mi>Y</m:mi>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:msqrt>
+                      </m:mfenced>
+                    </m:mfenced>
+                    <m:mo>,</m:mo>
+                    <m:mspace width="1.em"/>
+                    <m:mtext>since</m:mtext>
+                    <m:mspace width="0.166667em"/>
+                    <m:mn>1</m:mn>
+                    <m:mo>-</m:mo>
+                    <m:mi>x</m:mi>
+                    <m:mo>≤</m:mo>
+                    <m:mo>-</m:mo>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>x</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>≤</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:msub>
+                      <m:mi>E</m:mi>
+                      <m:msub>
+                        <m:mi>θ</m:mi>
+                        <m:mn>2</m:mn>
+                      </m:msub>
+                    </m:msub>
+                    <m:mfenced separators="" open="[" close="]">
+                      <m:mo form="prefix">log</m:mo>
+                      <m:msqrt>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>P</m:mi>
+                            <m:msub>
+                              <m:mi>θ</m:mi>
+                              <m:mn>2</m:mn>
+                            </m:msub>
+                          </m:msub>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+                            <m:mi>Y</m:mi>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                          <m:mo>/</m:mo>
+                          <m:msub>
+                            <m:mi>P</m:mi>
+                            <m:msub>
+                              <m:mi>θ</m:mi>
+                              <m:mn>1</m:mn>
+                            </m:msub>
+                          </m:msub>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+                            <m:mi>Y</m:mi>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:msqrt>
+                    </m:mfenced>
+                    <m:mo>,</m:mo>
+                    <m:mspace width="1.em"/>
+                    <m:mtext>by</m:mtext>
+                    <m:mspace width="4.pt"/>
+                    <m:mtext>Jensen's</m:mtext>
+                    <m:mspace width="4.pt"/>
+                    <m:mtext>inequality</m:mtext>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>E</m:mi>
+                      <m:msub>
+                        <m:mi>θ</m:mi>
+                        <m:mn>2</m:mn>
+                      </m:msub>
+                    </m:msub>
+                    <m:mfenced separators="" open="[" close="]">
+                      <m:mo form="prefix">log</m:mo>
+                      <m:mo>(</m:mo>
+                      <m:msub>
+                        <m:mi>P</m:mi>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>2</m:mn>
+                        </m:msub>
+                      </m:msub>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>Y</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>/</m:mo>
+                      <m:msub>
+                        <m:mi>P</m:mi>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>1</m:mn>
+                        </m:msub>
+                      </m:msub>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>Y</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>)</m:mo>
+                    </m:mfenced>
+                    <m:mspace width="4pt"/>
+                    <m:mo>≡</m:mo>
+                    <m:mspace width="4pt"/>
+                    <m:mi>K</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:msub>
+                        <m:mi>P</m:mi>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>1</m:mn>
+                        </m:msub>
+                      </m:msub>
+                      <m:mo>,</m:mo>
+                      <m:msub>
+                        <m:mi>P</m:mi>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>2</m:mn>
+                        </m:msub>
+                      </m:msub>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+            </m:mtable>
+          </m:math>
+        </equation>
+</para>        
+        <para id="id2262014">Note that in the proof we also showed that</para>
+        <equation id="id2262017">
+          <m:math mode="display">
+            <m:mrow>
+              <m:mi>H</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>2</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>=</m:mo>
+              <m:mn>2</m:mn>
+              <m:mfenced separators="" open="(" close=")">
+                <m:mn>1</m:mn>
+                <m:mo>-</m:mo>
+                <m:mo>∫</m:mo>
+                <m:msqrt>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>P</m:mi>
+                      <m:msub>
+                        <m:mi>θ</m:mi>
+                        <m:mn>1</m:mn>
+                      </m:msub>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>y</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                  </m:mrow>
+                </m:msqrt>
+                <m:msqrt>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>P</m:mi>
+                      <m:msub>
+                        <m:mi>θ</m:mi>
+                        <m:mn>2</m:mn>
+                      </m:msub>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>y</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                  </m:mrow>
+                </m:msqrt>
+                <m:mi>d</m:mi>
+                <m:mi>y</m:mi>
+              </m:mfenced>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <para id="id2262131">and using the fact <m:math><m:mrow><m:mo form="prefix">log</m:mo><m:mi>x</m:mi><m:mo>≤</m:mo><m:mi>x</m:mi><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:math> again, we have</para>
+        <equation id="id2262160"><m:math mode="display">
+            <m:mrow>
+              <m:mi>H</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>2</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≤</m:mo>
+              <m:mo>-</m:mo>
+              <m:mn>2</m:mn>
+              <m:mo form="prefix">log</m:mo>
+              <m:mfenced separators="" open="(" close=")">
+                <m:mo>∫</m:mo>
+                <m:msqrt>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>P</m:mi>
+                      <m:msub>
+                        <m:mi>θ</m:mi>
+                        <m:mn>1</m:mn>
+                      </m:msub>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>y</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                  </m:mrow>
+                </m:msqrt>
+                <m:msqrt>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>P</m:mi>
+                      <m:msub>
+                        <m:mi>θ</m:mi>
+                        <m:mn>2</m:mn>
+                      </m:msub>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>y</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                  </m:mrow>
+                </m:msqrt>
+                <m:mi>d</m:mi>
+                <m:mi>y</m:mi>
+              </m:mfenced>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+        <para id="id2262276">The quantity inside the log is called the <emphasis>affinity</emphasis> between <m:math><m:msub><m:mi>P</m:mi><m:msub><m:mi>θ</m:mi><m:mn>1</m:mn></m:msub></m:msub></m:math> and <m:math><m:msub><m:mi>P</m:mi><m:msub><m:mi>θ</m:mi><m:mn>2</m:mn></m:msub></m:msub></m:math>:</para>
+        <equation id="id2262329"><m:math mode="display">
+            <m:mrow>
+              <m:mi>A</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>2</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>=</m:mo>
+              <m:mo>∫</m:mo>
+              <m:msqrt>
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msub>
+                      <m:mi>θ</m:mi>
+                      <m:mn>1</m:mn>
+                    </m:msub>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>y</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:msqrt>
+              <m:msqrt>
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>P</m:mi>
+                    <m:msub>
+                      <m:mi>θ</m:mi>
+                      <m:mn>2</m:mn>
+                    </m:msub>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>y</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:msqrt>
+              <m:mi>d</m:mi>
+              <m:mi>y</m:mi>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+        <para id="id2262428">This is another measure of closeness between <m:math><m:msub><m:mi>P</m:mi><m:msub><m:mi>θ</m:mi><m:mn>1</m:mn></m:msub></m:msub></m:math> and <m:math><m:msub><m:mi>P</m:mi><m:msub><m:mi>θ</m:mi><m:mn>2</m:mn></m:msub></m:msub></m:math>.</para>
+<example id="exam9879234">
+ <title>Gaussian Distributions</title>
+        <equation id="id2262483">
+          <m:math mode="display">
+            <m:mrow>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:mi>θ</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>y</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>=</m:mo>
+              <m:mfrac>
+                <m:mn>1</m:mn>
+                <m:mi>π</m:mi>
+              </m:mfrac>
+              <m:msup>
+                <m:mi>e</m:mi>
+                <m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:msup>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>y</m:mi>
+                      <m:mo>-</m:mo>
+                      <m:mi>θ</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mn>2</m:mn>
+                  </m:msup>
+                </m:mrow>
+              </m:msup>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <equation id="id2262543">
+          <m:math mode="display">
+            <m:mtable displaystyle="true">
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd/>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mo>∫</m:mo>
+                    <m:msqrt>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:msub>
+                            <m:mi>θ</m:mi>
+                            <m:mn>1</m:mn>
+                          </m:msub>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:msqrt>
+                    <m:msqrt>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>P</m:mi>
+                          <m:msub>
+                            <m:mi>θ</m:mi>
+                            <m:mn>2</m:mn>
+                          </m:msub>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:msqrt>
+                    <m:mi>d</m:mi>
+                    <m:mi>y</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mo>∫</m:mo>
+                    <m:msup>
+                      <m:mfenced separators="" open="(" close=")">
+                        <m:mfrac>
+                          <m:mn>1</m:mn>
+                          <m:msqrt>
+                            <m:mi>π</m:mi>
+                          </m:msqrt>
+                        </m:mfrac>
+                        <m:msup>
+                          <m:mi>e</m:mi>
+                          <m:mrow>
+                            <m:mo>-</m:mo>
+                            <m:msup>
+                              <m:mrow>
+                                <m:mo>(</m:mo>
+                                <m:mi>y</m:mi>
+                                <m:mo>-</m:mo>
+                                <m:msub>
+                                  <m:mi>θ</m:mi>
+                                  <m:mn>1</m:mn>
+                                </m:msub>
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+                              <m:mn>2</m:mn>
+                            </m:msup>
+                          </m:mrow>
+                        </m:msup>
+                      </m:mfenced>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mn>2</m:mn>
+                      </m:mfrac>
+                    </m:msup>
+                    <m:msup>
+                      <m:mfenced separators="" open="(" close=")">
+                        <m:mfrac>
+                          <m:mn>1</m:mn>
+                          <m:msqrt>
+                            <m:mi>π</m:mi>
+                          </m:msqrt>
+                        </m:mfrac>
+                        <m:msup>
+                          <m:mi>e</m:mi>
+                          <m:mrow>
+                            <m:mo>-</m:mo>
+                            <m:msup>
+                              <m:mrow>
+                                <m:mo>(</m:mo>
+                                <m:mi>y</m:mi>
+                                <m:mo>-</m:mo>
+                                <m:msub>
+                                  <m:mi>θ</m:mi>
+                                  <m:mn>2</m:mn>
+                                </m:msub>
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+                              <m:mn>2</m:mn>
+                            </m:msup>
+                          </m:mrow>
+                        </m:msup>
+                      </m:mfenced>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mn>2</m:mn>
+                      </m:mfrac>
+                    </m:msup>
+                    <m:mi>d</m:mi>
+                    <m:mi>y</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:mo>∫</m:mo>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:msqrt>
+                          <m:mi>π</m:mi>
+                        </m:msqrt>
+                      </m:mfrac>
+                      <m:msup>
+                        <m:mi>e</m:mi>
+                        <m:mrow>
+                          <m:mo>-</m:mo>
+                          <m:mfenced separators="" open="[" close="]">
+                            <m:mfrac>
+                              <m:msup>
+                                <m:mrow>
+                                  <m:mo>(</m:mo>
+                                  <m:mi>y</m:mi>
+                                  <m:mo>-</m:mo>
+                                  <m:msub>
+                                    <m:mi>θ</m:mi>
+                                    <m:mn>1</m:mn>
+                                  </m:msub>
+                                  <m:mo>)</m:mo>
+                                </m:mrow>
+                                <m:mn>2</m:mn>
+                              </m:msup>
+                              <m:mn>2</m:mn>
+                            </m:mfrac>
+                            <m:mo>+</m:mo>
+                            <m:mfrac>
+                              <m:msup>
+                                <m:mrow>
+                                  <m:mo>(</m:mo>
+                                  <m:mi>y</m:mi>
+                                  <m:mo>-</m:mo>
+                                  <m:msub>
+                                    <m:mi>θ</m:mi>
+                                    <m:mn>2</m:mn>
+                                  </m:msub>
+                                  <m:mo>)</m:mo>
+                                </m:mrow>
+                                <m:mn>2</m:mn>
+                              </m:msup>
+                              <m:mn>2</m:mn>
+                            </m:mfrac>
+                          </m:mfenced>
+                        </m:mrow>
+                      </m:msup>
+                      <m:mi>d</m:mi>
+                      <m:mi>y</m:mi>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:mo>∫</m:mo>
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:msqrt>
+                          <m:mi>π</m:mi>
+                        </m:msqrt>
+                      </m:mfrac>
+                      <m:msup>
+                        <m:mi>e</m:mi>
+                        <m:mrow>
+                          <m:mo>-</m:mo>
+                          <m:mfenced separators="" open="[" close="]">
+                            <m:msup>
+                              <m:mfenced separators="" open="(" close=")">
+                                <m:mi>y</m:mi>
+                                <m:mo>-</m:mo>
+                                <m:mo>(</m:mo>
+                                <m:mfrac>
+                                  <m:mrow>
+                                    <m:msub>
+                                      <m:mi>θ</m:mi>
+                                      <m:mn>1</m:mn>
+                                    </m:msub>
+                                    <m:mo>+</m:mo>
+                                    <m:msub>
+                                      <m:mi>θ</m:mi>
+                                      <m:mn>2</m:mn>
+                                    </m:msub>
+                                  </m:mrow>
+                                  <m:mn>2</m:mn>
+                                </m:mfrac>
+                                <m:mo>)</m:mo>
+                              </m:mfenced>
+                              <m:mn>2</m:mn>
+                            </m:msup>
+                            <m:mo>+</m:mo>
+                            <m:msup>
+                              <m:mrow>
+                                <m:mo>(</m:mo>
+                                <m:mfrac>
+                                  <m:mrow>
+                                    <m:msub>
+                                      <m:mi>θ</m:mi>
+                                      <m:mn>1</m:mn>
+                                    </m:msub>
+                                    <m:mo>-</m:mo>
+                                    <m:msub>
+                                      <m:mi>θ</m:mi>
+                                      <m:mn>2</m:mn>
+                                    </m:msub>
+                                  </m:mrow>
+                                  <m:mn>2</m:mn>
+                                </m:mfrac>
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+                              <m:mn>2</m:mn>
+                            </m:msup>
+                          </m:mfenced>
+                        </m:mrow>
+                      </m:msup>
+                      <m:mi>d</m:mi>
+                      <m:mi>y</m:mi>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:msup>
+                      <m:mi>e</m:mi>
+                      <m:mrow>
+                        <m:mo>-</m:mo>
+                        <m:msup>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+                            <m:mfrac>
+                              <m:mrow>
+                                <m:msub>
+                                  <m:mi>θ</m:mi>
+                                  <m:mn>1</m:mn>
+                                </m:msub>
+                                <m:mo>-</m:mo>
+                                <m:msub>
+                                  <m:mi>θ</m:mi>
+                                  <m:mn>2</m:mn>
+                                </m:msub>
+                              </m:mrow>
+                              <m:mn>2</m:mn>
+                            </m:mfrac>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                          <m:mn>2</m:mn>
+                        </m:msup>
+                      </m:mrow>
+                    </m:msup>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>=</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:msup>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>1</m:mn>
+                        </m:msub>
+                        <m:mo>-</m:mo>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>2</m:mn>
+                        </m:msub>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+            </m:mtable>
+          </m:math>
+        </equation>
+        <equation id="id2263111">
+          <m:math mode="display">
+            <m:mtable displaystyle="true">
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>⇒</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:mn>2</m:mn>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mi>A</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:msub>
+                        <m:mi>P</m:mi>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>1</m:mn>
+                        </m:msub>
+                      </m:msub>
+                      <m:mo>,</m:mo>
+                      <m:msub>
+                        <m:mi>P</m:mi>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>2</m:mn>
+                        </m:msub>
+                      </m:msub>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>=</m:mo>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:msup>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>1</m:mn>
+                        </m:msub>
+                        <m:mo>-</m:mo>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>2</m:mn>
+                        </m:msub>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                    <m:mspace width="1.em"/>
+                    <m:mtext>for</m:mtext>
+                    <m:mspace width="4.pt"/>
+                    <m:mtext>Gaussian</m:mtext>
+                    <m:mspace width="4.pt"/>
+                    <m:mtext>distributions</m:mtext>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+              <m:mtr>
+                <m:mtd/>
+                <m:mtd>
+                  <m:mo>⇒</m:mo>
+                </m:mtd>
+                <m:mtd columnalign="left">
+                  <m:mrow>
+                    <m:mi>H</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:msub>
+                        <m:mi>P</m:mi>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>1</m:mn>
+                        </m:msub>
+                      </m:msub>
+                      <m:mo>,</m:mo>
+                      <m:msub>
+                        <m:mi>P</m:mi>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>2</m:mn>
+                        </m:msub>
+                      </m:msub>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>≤</m:mo>
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mn>2</m:mn>
+                    </m:mfrac>
+                    <m:msup>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>1</m:mn>
+                        </m:msub>
+                        <m:mo>-</m:mo>
+                        <m:msub>
+                          <m:mi>θ</m:mi>
+                          <m:mn>2</m:mn>
+                        </m:msub>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                    <m:mspace width="1.em"/>
+                    <m:mtext>for</m:mtext>
+                    <m:mspace width="4.pt"/>
+                    <m:mtext>Gaussian</m:mtext>
+                    <m:mo>.</m:mo>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+            </m:mtable>
+          </m:math>
+        </equation>
+</example>
+<example id="id987982374">
+<title>Poisson Distributions</title>
+        <para id="id2263336">If <m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mi>θ</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>y</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:msup><m:mi>e</m:mi><m:mrow><m:mo>-</m:mo><m:mi>θ</m:mi></m:mrow></m:msup><m:mfrac><m:msup><m:mi>θ</m:mi><m:mi>y</m:mi></m:msup><m:mrow><m:mi>y</m:mi><m:mo>!</m:mo></m:mrow></m:mfrac><m:mo>,</m:mo><m:mi>θ</m:mi><m:mo>≥</m:mo><m:mn>0</m:mn></m:mrow></m:math>, then</para>
+        <equation id="id2263402"><m:math mode="display">
+            <m:mrow>
+              <m:mo>-</m:mo>
+              <m:mn>2</m:mn>
+              <m:mo form="prefix">log</m:mo>
+              <m:mi>A</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>,</m:mo>
+                <m:msub>
+                  <m:mi>P</m:mi>
+                  <m:msub>
+                    <m:mi>θ</m:mi>
+                    <m:mn>2</m:mn>
+                  </m:msub>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>=</m:mo>
+              <m:msup>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:msqrt>
+                    <m:msub>
+                      <m:mi>θ</m:mi>
+                      <m:mn>1</m:mn>
+                    </m:msub>
+                  </m:msqrt>
+                  <m:mo>-</m:mo>
+                  <m:msqrt>
+                    <m:msub>
+                      <m:mi>θ</m:mi>
+                      <m:mn>2</m:mn>
+                    </m:msub>
+                  </m:msqrt>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mn>2</m:mn>
+              </m:msup>
+            </m:mrow>
+<m:mo>.</m:mo>
+          </m:math>
+        </equation>
+        
+        
+        <equation id="id2263507"><title>Summary</title><m:math>
+            <m:mrow>
+              <m:msub>
+                <m:mi>Y</m:mi>
+                <m:mi>i</m:mi>
+              </m:msub>
+              <m:mover>
+                <m:mo>∼</m:mo>
+                <m:mrow>
+                  <m:mi>i</m:mi>
+                  <m:mi>i</m:mi>
+                  <m:mi>d</m:mi>
+                </m:mrow>
+              </m:mover>
+              <m:msub>
+                <m:mi>P</m:mi>
+                <m:msup>
+                  <m:mi>θ</m:mi>
+                  <m:mo>*</m:mo>
+                </m:msup>
+              </m:msub>
+            </m:mrow>
+          </m:math>
+        </equation>
+        <list id="id2263551" list-type="enumerated">
+          <item id="uid8">Maximum likelihood estimator maximizes the empirical average
+<equation id="id2263565"><m:math mode="display"><m:mrow><m:mfrac><m:mn>1</m:mn><m:mi>n</m:mi></m:mfrac><m:munderover><m:mo>∑</m:mo><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:munderover><m:mo form="prefix">log</m:mo><m:msub><m:mi>P</m:mi><m:mi>θ</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math></equation>
+(our empirical risk is negative log-likelihood)
+</item>
+          <item id="uid9"><m:math><m:msup><m:mi>θ</m:mi><m:mo>*</m:mo></m:msup></m:math> maximizes the expectation
+<equation id="id2263653"><m:math mode="display"><m:mrow><m:mi>E</m:mi><m:mfenced separators="" open="[" close="]"><m:mfrac><m:mn>1</m:mn><m:mi>n</m:mi></m:mfrac><m:munderover><m:mo>∑</m:mo><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:munderover><m:mo form="prefix">log</m:mo><m:msub><m:mi>P</m:mi><m:mi>θ</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mfenced></m:mrow></m:math></equation>
+(the risk is the expected negative log-likelihood)
+</item>
+          <item id="uid10"><equation id="id2263732"><m:math mode="display"><m:mrow><m:mfrac><m:mn>1</m:mn><m:mi>n</m:mi></m:mfrac><m:munderover><m:mo>∑</m:mo><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:munderover><m:mo form="prefix">log</m:mo><m:msub><m:mi>P</m:mi><m:mi>θ</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow><m:mover><m:mo>→</m:mo><m:mrow><m:mi>a</m:mi><m:mo>.</m:mo><m:mi>s</m:mi><m:mo>.</m:mo></m:mrow></m:mover><m:mi>E</m:mi><m:mfenced separators="" open="[" close="]"><m:mfrac><m:mn>1</m:mn><m:mi>n</m:mi></m:mfrac><m:munderover><m:mo>∑</m:mo><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:munderover><m:mo form="prefix">log</m:mo><m:msub><m:mi>P</m:mi><m:mi>θ</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mfenced></m:mrow></m:math></equation>
+so we expect some sort of concentration of measure.
+</item>
+          <item id="uid11">In particular, since
+<equation id="id2263877"><m:math mode="display"><m:mrow><m:mfrac><m:mn>1</m:mn><m:mi>n</m:mi></m:mfrac><m:munderover><m:mo>∑</m:mo><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:munderover><m:mo form="prefix">log</m:mo><m:mfrac><m:mrow><m:msub><m:mi>P</m:mi><m:msup><m:mi>θ</m:mi><m:mo>*</m:mo></m:msup></m:msub><m:mrow><m:mo>(</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow><m:mrow><m:msub><m:mi>P</m:mi><m:mi>θ</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:mfrac><m:mover><m:mo>→</m:mo><m:mrow><m:mi>a</m:mi><m:mo>.</m:mo><m:mi>s</m:mi><m:mo>.</m:mo></m:mrow></m:mover><m:mi>K</m:mi><m:mrow><m:mo>(</m:mo><m:msub><m:mi>P</m:mi><m:mi>θ</m:mi></m:msub><m:mo>,</m:mo><m:msub><m:mi>P</m:mi><m:msup><m:mi>θ</m:mi><m:mo>*</m:mo></m:msup></m:msub><m:mo>)</m:mo></m:mrow></m:mrow></m:math></equation>
+we might expect that <m:math><m:mrow><m:mi>K</m:mi><m:mo>(</m:mo><m:msub><m:mi>P</m:mi><m:msub><m:mover accent="true"><m:mi>θ</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:msub><m:mo>,</m:mo><m:msub><m:mi>P</m:mi><m:msup><m:mi>θ</m:mi><m:mo>*</m:mo></m:msup></m:msub><m:mo>)</m:mo><m:mo>→</m:mo><m:mn>0</m:mn></m:mrow></m:math> for the sequence of estimates
+<m:math><m:msubsup><m:mrow><m:mo>{</m:mo><m:msub><m:mi>P</m:mi><m:msub><m:mover accent="true"><m:mi>θ</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub></m:msub><m:mo>}</m:mo></m:mrow><m:mrow><m:mi>n</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>∞</m:mi></m:msubsup></m:math>.
+</item>
+        </list>
+        <para id="id2264117">So, the point is that maximum likelihood estimator is just a special
+case of a loss function in learning. Due to its special structure, we
+are naturally led to consider KL divergences, Hellinger distances, and
+Affinities.</para>
+</example>
+      </section>
+    </section>
+  </content>
+</document>

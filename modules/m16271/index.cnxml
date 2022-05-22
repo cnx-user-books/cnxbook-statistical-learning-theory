@@ -1,0 +1,1678 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Error Bounds in Countably Infinite Spaces</title>
+  <metadata>
+  <md:content-id>m16271</md:content-id><md:title>Error Bounds in Countably Infinite Spaces</md:title>
+  <md:abstract/>
+  <md:uuid>589aa5e5-dadd-44df-bda3-71ccd18b4c3c</md:uuid>
+</metadata>
+  <content>
+    <section id="uid1"><title>Introduction</title>
+      
+      <para id="id2255547">In the <link document="m16265" class="cnxn">last lecture</link>, we studied bounds of the following form: for any <m:math><m:mrow><m:mi>δ</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math>, with probability at least <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>δ</m:mi></m:mrow></m:math>,</para>
+      <equation id="id2255583">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>+</m:mo>
+            <m:msqrt>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mo>|</m:mo>
+                    <m:mi mathvariant="script">F</m:mi>
+                    <m:mo>|</m:mo>
+                  </m:mrow>
+                  <m:mo>+</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mi>δ</m:mi>
+                    </m:mfrac>
+                  </m:mfenced>
+                </m:mrow>
+                <m:mrow>
+                  <m:mn>2</m:mn>
+                  <m:mi>n</m:mi>
+                </m:mrow>
+              </m:mfrac>
+            </m:msqrt>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:mo>,</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:mo>∀</m:mo>
+            <m:mi>f</m:mi>
+            <m:mo>∈</m:mo>
+            <m:mi mathvariant="script">F</m:mi>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2255709">which led to upper bounds on the
+estimation error of the form</para>
+      <equation id="id2255716"><m:math mode="display">
+          <m:mrow>
+            <m:mi>E</m:mi>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>-</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi>F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mspace width="4pt"/>
+            <m:mo>≤</m:mo>
+            <m:mspace width="4pt"/>
+            <m:msqrt>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mo>|</m:mo>
+                  <m:mi mathvariant="script">F</m:mi>
+                  <m:mo>|</m:mo>
+                  <m:mo>+</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mo>(</m:mo>
+                  <m:mi>n</m:mi>
+                  <m:mo>)</m:mo>
+                  <m:mo>+</m:mo>
+                  <m:mn>2</m:mn>
+                </m:mrow>
+                <m:mi>n</m:mi>
+              </m:mfrac>
+            </m:msqrt>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2255828">The key assumptions made
+in deriving the error bounds were:
+<list id="list-23423" list-type="labeled-item">
+     <item><label>(i)</label> bounded loss function</item>
+      <item><label>(ii)</label> finite collection of candidate functions</item>
+</list></para>
+      <para id="id2255842">The bounds are valid for every <m:math><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mi>Y</m:mi></m:mrow></m:msub></m:math> and are called
+distribution-free
+.</para>
+    </section>
+    <section id="uid2"><title>Deriving Bounds for Countably Infinite Spaces</title>
+      
+      <para id="id2254911">In this lecture we will generalize the previous results in a
+powerful way by developing bounds applicable to possibly infinite
+collections of candidates. To start let us suppose that <m:math><m:mi mathvariant="script">F</m:mi></m:math> is a
+countable, possibly infinite, collection of candidate functions.
+Assign a positive number c(<m:math><m:mi>f</m:mi></m:math>) to each <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>, such that</para>
+      <equation id="id2256159"><m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mi>c</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:msup>
+            <m:mo>&lt;</m:mo>
+            <m:mi>∞</m:mi>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2256205">The numbers c(<m:math><m:mi>f</m:mi></m:math>) can be interpreted as
+<list id="list-23489879" list-type="labeled-item">
+      <item><label>(i)</label> measures of complexity</item>
+      <item><label>(ii)</label> -log of prior probabilities</item>
+      <item><label>(iii)</label> codelengths</item>
+</list>
+</para>
+      
+      <para id="id2256238">In particular, if P(<m:math><m:mi>f</m:mi></m:math>) is the prior
+probability of <m:math><m:mi>f</m:mi></m:math> then</para>
+      <equation id="id2256262">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mfenced separators="" open="(" close=")">
+                  <m:mo>-</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mi>p</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mfenced>
+              </m:mrow>
+            </m:msup>
+            <m:mo>=</m:mo>
+            <m:mi>p</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256313">so <m:math><m:mrow><m:mi>c</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo><m:mo>≡</m:mo><m:mo>-</m:mo><m:mo form="prefix">log</m:mo><m:mi>p</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:math> produces</para>
+      <equation id="id2256351"><m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mi>c</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:msup>
+            <m:mo>=</m:mo>
+            <m:munder>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:mi>p</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mn>1</m:mn>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2256424">Now recall Hoeffding's inequality. For each <m:math><m:mi>f</m:mi></m:math> and every
+<m:math><m:mrow><m:mi>ϵ</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math></para>
+      <equation id="id2256451">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>P</m:mi>
+            <m:mfenced separators="" open="(" close=")">
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>R</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≥</m:mo>
+              <m:mi>ϵ</m:mi>
+            </m:mfenced>
+            <m:mo>≤</m:mo>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mn>2</m:mn>
+                <m:mi>n</m:mi>
+                <m:msup>
+                  <m:mi>ϵ</m:mi>
+                  <m:mn>2</m:mn>
+                </m:msup>
+              </m:mrow>
+            </m:msup>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256529">or for every <m:math><m:mrow><m:mi>δ</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math></para>
+      <equation id="id2256547"><m:math mode="display">
+          <m:mrow>
+            <m:mi>P</m:mi>
+            <m:mfenced separators="" open="(" close=")">
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>R</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≥</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mi>δ</m:mi>
+                      </m:mfrac>
+                    </m:mfenced>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+            </m:mfenced>
+            <m:mo>≤</m:mo>
+            <m:mi>δ</m:mi>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2256632">Suppose <m:math><m:mrow><m:mi>δ</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math> is specified. Using the values c(<m:math><m:mi>f</m:mi></m:math>) for
+<m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>, define</para>
+      <equation id="id2256677"><m:math mode="display">
+          <m:mrow>
+            <m:mi>δ</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mi>c</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:msup>
+            <m:mi>δ</m:mi>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2256717">Then we have</para>
+      <equation id="id2256722"><m:math mode="display">
+          <m:mrow>
+            <m:mi>P</m:mi>
+            <m:mfenced separators="" open="(" close=")">
+              <m:mi>R</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>-</m:mo>
+              <m:msub>
+                <m:mover accent="true">
+                  <m:mi>R</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mi>n</m:mi>
+              </m:msub>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≥</m:mo>
+              <m:msqrt>
+                <m:mfrac>
+                  <m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:mfrac>
+                        <m:mn>1</m:mn>
+                        <m:mrow>
+                          <m:mi>δ</m:mi>
+                          <m:mo>(</m:mo>
+                          <m:mi>f</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mfrac>
+                    </m:mfenced>
+                  </m:mrow>
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mfrac>
+              </m:msqrt>
+            </m:mfenced>
+            <m:mo>≤</m:mo>
+            <m:mi>δ</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      
+      <para id="id2256831">Furthermore we can apply the union bound as
+follows</para>
+      <equation id="id2256837"><m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mi>P</m:mi>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:munder>
+                      <m:mo movablelimits="true" form="prefix">sup</m:mo>
+                      <m:mrow>
+                        <m:mi>f</m:mi>
+                        <m:mo>∈</m:mo>
+                        <m:mi mathvariant="script">F</m:mi>
+                      </m:mrow>
+                    </m:munder>
+                    <m:mfenced separators="" open="{" close="}">
+                      <m:mi>R</m:mi>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>f</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>-</m:mo>
+                      <m:msub>
+                        <m:mover accent="true">
+                          <m:mi>R</m:mi>
+                          <m:mo>^</m:mo>
+                        </m:mover>
+                        <m:mi>n</m:mi>
+                      </m:msub>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>f</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>-</m:mo>
+                      <m:msqrt>
+                        <m:mfrac>
+                          <m:mrow>
+                            <m:mo form="prefix">log</m:mo>
+                            <m:mo>(</m:mo>
+                            <m:mn>1</m:mn>
+                            <m:mo>/</m:mo>
+                            <m:mi>δ</m:mi>
+                            <m:mo>(</m:mo>
+                            <m:mi>f</m:mi>
+                            <m:mo>)</m:mo>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                          <m:mrow>
+                            <m:mn>2</m:mn>
+                            <m:mi>n</m:mi>
+                          </m:mrow>
+                        </m:mfrac>
+                      </m:msqrt>
+                    </m:mfenced>
+                    <m:mo>≥</m:mo>
+                    <m:mn>0</m:mn>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>≤</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mi>P</m:mi>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:munder>
+                      <m:mo>⋃</m:mo>
+                      <m:mrow>
+                        <m:mi>f</m:mi>
+                        <m:mo>∈</m:mo>
+                        <m:mi mathvariant="script">F</m:mi>
+                      </m:mrow>
+                    </m:munder>
+                    <m:mi>R</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:msub>
+                      <m:mover accent="true">
+                        <m:mi>R</m:mi>
+                        <m:mo>^</m:mo>
+                      </m:mover>
+                      <m:mi>n</m:mi>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>≥</m:mo>
+                    <m:msqrt>
+                      <m:mfrac>
+                        <m:mrow>
+                          <m:mo form="prefix">log</m:mo>
+                          <m:mfenced separators="" open="(" close=")">
+                            <m:mfrac>
+                              <m:mn>1</m:mn>
+                              <m:mrow>
+                                <m:mi>δ</m:mi>
+                                <m:mo>(</m:mo>
+                                <m:mi>f</m:mi>
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+                            </m:mfrac>
+                          </m:mfenced>
+                        </m:mrow>
+                        <m:mrow>
+                          <m:mn>2</m:mn>
+                          <m:mi>n</m:mi>
+                        </m:mrow>
+                      </m:mfrac>
+                    </m:msqrt>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>≤</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:munder>
+                    <m:mo>∑</m:mo>
+                    <m:mrow>
+                      <m:mi>f</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:mi mathvariant="script">F</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:mi>P</m:mi>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:mi>R</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:msub>
+                      <m:mover accent="true">
+                        <m:mi>R</m:mi>
+                        <m:mo>^</m:mo>
+                      </m:mover>
+                      <m:mi>n</m:mi>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>≥</m:mo>
+                    <m:msqrt>
+                      <m:mfrac>
+                        <m:mrow>
+                          <m:mo form="prefix">log</m:mo>
+                          <m:mfenced separators="" open="(" close=")">
+                            <m:mfrac>
+                              <m:mn>1</m:mn>
+                              <m:mrow>
+                                <m:mi>δ</m:mi>
+                                <m:mo>(</m:mo>
+                                <m:mi>f</m:mi>
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+                            </m:mfrac>
+                          </m:mfenced>
+                        </m:mrow>
+                        <m:mrow>
+                          <m:mn>2</m:mn>
+                          <m:mi>n</m:mi>
+                        </m:mrow>
+                      </m:mfrac>
+                    </m:msqrt>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>≤</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:munder>
+                    <m:mo>∑</m:mo>
+                    <m:mrow>
+                      <m:mi>f</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:mi mathvariant="script">F</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:mi>δ</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>f</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>=</m:mo>
+                  <m:munder>
+                    <m:mo>∑</m:mo>
+                    <m:mrow>
+                      <m:mi>f</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:mi mathvariant="script">F</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:msup>
+                    <m:mi>e</m:mi>
+                    <m:mrow>
+                      <m:mo>-</m:mo>
+                      <m:mi>c</m:mi>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                  </m:msup>
+                  <m:mi>δ</m:mi>
+                  <m:mo>=</m:mo>
+                  <m:mi>δ</m:mi>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2257238">So for any <m:math><m:mrow><m:mi>δ</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math> with probability at least <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>δ</m:mi></m:mrow></m:math>, we have that <m:math><m:mrow><m:mo>∀</m:mo><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math></para>
+      <equation id="id2257291"><m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mi>R</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>≤</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>R</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>f</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>+</m:mo>
+                  <m:msqrt>
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:mo form="prefix">log</m:mo>
+                        <m:mfenced separators="" open="(" close=")">
+                          <m:mfrac>
+                            <m:mn>1</m:mn>
+                            <m:mrow>
+                              <m:mi>δ</m:mi>
+                              <m:mo>(</m:mo>
+                              <m:mi>f</m:mi>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                          </m:mfrac>
+                        </m:mfenced>
+                      </m:mrow>
+                      <m:mrow>
+                        <m:mn>2</m:mn>
+                        <m:mi>n</m:mi>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:msqrt>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>R</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>f</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>+</m:mo>
+                  <m:msqrt>
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:mi>c</m:mi>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>f</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>+</m:mo>
+                        <m:mo form="prefix">log</m:mo>
+                        <m:mfenced separators="" open="(" close=")">
+                          <m:mfrac>
+                            <m:mn>1</m:mn>
+                            <m:mi>δ</m:mi>
+                          </m:mfrac>
+                        </m:mfenced>
+                      </m:mrow>
+                      <m:mrow>
+                        <m:mn>2</m:mn>
+                        <m:mi>n</m:mi>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:msqrt>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      
+      <para id="id2257466"><title>Special Case</title>Suppose <m:math><m:mi mathvariant="script">F</m:mi></m:math> is finite and <m:math><m:mrow><m:mi>c</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo><m:mo>=</m:mo><m:mo form="prefix">log</m:mo><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo><m:mspace width="1.em"/><m:mo>∀</m:mo><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>. Then</para>
+      <equation id="id2257529">
+        <m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mi>c</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:msup>
+            <m:mo>=</m:mo>
+            <m:munder>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mo form="prefix">log</m:mo>
+                <m:mo>|</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+                <m:mo>|</m:mo>
+              </m:mrow>
+            </m:msup>
+            <m:mo>=</m:mo>
+            <m:munder>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+                <m:mo>|</m:mo>
+              </m:mrow>
+            </m:mfrac>
+            <m:mo>=</m:mo>
+            <m:mn>1</m:mn>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257647">and</para>
+      <equation id="id2257652">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>δ</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mfrac>
+              <m:mi>δ</m:mi>
+              <m:mrow>
+                <m:mo>|</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+                <m:mo>|</m:mo>
+              </m:mrow>
+            </m:mfrac>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2257689">which implies that for any <m:math><m:mrow><m:mi>δ</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math> with probability
+at least <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>δ</m:mi></m:mrow></m:math>, we have</para>
+      <equation id="id2257724"><m:math mode="display">
+          <m:mrow>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>+</m:mo>
+            <m:msqrt>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mrow>
+                    <m:mo form="prefix">log</m:mo>
+                    <m:mo>|</m:mo>
+                    <m:mi mathvariant="script">F</m:mi>
+                    <m:mo>|</m:mo>
+                  </m:mrow>
+                  <m:mo>+</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mrow>
+                        <m:mi>δ</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>f</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:mfenced>
+                </m:mrow>
+                <m:mrow>
+                  <m:mn>2</m:mn>
+                  <m:mi>n</m:mi>
+                </m:mrow>
+              </m:mfrac>
+            </m:msqrt>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:mo>,</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:mo>∀</m:mo>
+            <m:mi>f</m:mi>
+            <m:mo>∈</m:mo>
+            <m:mi mathvariant="script">F</m:mi>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2257853">Note that this is precisely the bound we derived in the <link document="m16265" class="cnxn">last
+lecture</link>.</para>
+      <para id="id2257861">Choosing c(<m:math><m:mi>f</m:mi></m:math>)
+</para>
+      <para id="id2257879">The generalized bounds allow us to handle countably infinite
+collections of candidate functions, but we require that</para>
+      <equation id="id2257887"><m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mi>c</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:msup>
+            <m:mo>&lt;</m:mo>
+            <m:mi>∞</m:mi>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2257934">Of course, if <m:math><m:mrow><m:mi>c</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo><m:mo>=</m:mo><m:mo>-</m:mo><m:mo form="prefix">log</m:mo><m:mi>p</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:math> where <m:math><m:mrow><m:mi>p</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:math> is a proper prior
+probability distribution then we have</para>
+      <equation id="id2257991"><m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mi>c</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:msup>
+            <m:mo>=</m:mo>
+            <m:mn>1</m:mn>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2258037">However, it may be difficult to design a probability distribution
+over an infinite class of candidates. The coding perspective
+provides a very practical means to this end.</para>
+      <para id="id2258046">Assume that we have assigned a uniquely decodable binary code to
+each <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>, and let c(<m:math><m:mi>f</m:mi></m:math>) denote the codelength for <m:math><m:mi>f</m:mi></m:math>. That
+is, the code for <m:math><m:mi>f</m:mi></m:math> is c(<m:math><m:mi>f</m:mi></m:math>) bits long. A very useful class of
+uniquely decodable codes are called prefix codes
+.</para>
+      <definition id="prefix">
+<term>Prefix Code</term>
+<meaning id="id12227984"> 
+A code is called a prefix code
+ if no codeword is a
+prefix of any other codeword.</meaning>
+<example id="exam987987234"><title>  From Cover &amp; Thomas '91</title><para id="id2258144">Consider an alphabet of symbols, say <m:math><m:mrow><m:mi>A</m:mi><m:mo>,</m:mo><m:mi>B</m:mi><m:mo>,</m:mo><m:mi>C</m:mi></m:mrow></m:math>, and <m:math><m:mi>D</m:mi></m:math> and the
+codebooks below</para>
+      <figure id="uid5" orient="horizontal">
+        <media id="id12228055" alt=""><image src="../../media/Figure1.png" mime-type="image/png" width="412"/><image for="pdf" src="../../media/Figure1.eps" mime-type="application/postscript"/></media>
+      </figure>
+      <para id="id2258185">In the singular codebook we assign the same codeword to each
+symbol - a system that is obviously flawed! In the second case,
+the codes are not singular but the codeword 010 could represent B
+or CA or AD. Hence it is not a uniquely decodable codebook.</para>
+      <para id="id2258193">The third and fourth cases are both examples of uniquely decodable
+codebooks, but the fourth has the added feature that no codeword
+is a prefix of another. Prefix codes can be decoded from left to
+right since each codeword is “self-punctuating" - in this case
+with a zero to indicate the end of each word.</para>
+      <para id="id2258206">To design a uniquely decodable codebook in general is as
+challenging as the problem of selecting c(<m:math><m:mi>f</m:mi></m:math>) to satisfy</para>
+      <equation id="id2258221"><m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:msup>
+              <m:mi>e</m:mi>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mi>c</m:mi>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+            </m:msup>
+            <m:mo>&lt;</m:mo>
+            <m:mi>∞</m:mi>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2258268">However, prefix codes can often be
+easily designed or specified and they are inherently decodable.
+Moreover, prefix codes satisfy an important inequality called the Kraft Inequality
+.</para>
+    </example>
+</definition></section>
+    <section id="uid6"><title>The Kraft Inequality</title>
+      
+      <para id="id2258291">For any binary prefix code, the codeword lengths <m:math><m:msub><m:mi>c</m:mi><m:mn>1</m:mn></m:msub></m:math>, <m:math><m:msub><m:mi>c</m:mi><m:mn>2</m:mn></m:msub></m:math>, ...
+satisfy</para>
+      <equation id="id2258325"><m:math mode="display">
+          <m:mrow>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>∞</m:mi>
+            </m:munderover>
+            <m:msup>
+              <m:mn>2</m:mn>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:msub>
+                  <m:mi>c</m:mi>
+                  <m:mi>i</m:mi>
+                </m:msub>
+              </m:mrow>
+            </m:msup>
+            <m:mo>≤</m:mo>
+            <m:mn>1</m:mn>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2258372">Conversely, given any <m:math><m:msub><m:mi>c</m:mi><m:mn>1</m:mn></m:msub></m:math>, <m:math><m:msub><m:mi>c</m:mi><m:mn>2</m:mn></m:msub></m:math>, ... satisfying the inequality
+above we can construct a prefix code with these codeword lengths.
+We will prove this result a bit later, but now let's see how this
+is useful in our learning problem.</para>
+      <para id="id2258410">Assume that we have assigned a binary prefix codeword to each
+<m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math>, and let c(<m:math><m:mi>f</m:mi></m:math>) denote the bit-length of the codeword for
+<m:math><m:mi>f</m:mi></m:math>. Set <m:math><m:mrow><m:mi>δ</m:mi><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:mi>c</m:mi><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow></m:msup><m:mi>δ</m:mi></m:mrow></m:math>. Then</para>
+      <equation id="id2258490"><m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mi>P</m:mi>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:munder>
+                      <m:mo>⋃</m:mo>
+                      <m:mrow>
+                        <m:mi>f</m:mi>
+                        <m:mo>∈</m:mo>
+                        <m:mi mathvariant="script">F</m:mi>
+                      </m:mrow>
+                    </m:munder>
+                    <m:mi>R</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:msub>
+                      <m:mover accent="true">
+                        <m:mi>R</m:mi>
+                        <m:mo>^</m:mo>
+                      </m:mover>
+                      <m:mi>n</m:mi>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>≥</m:mo>
+                    <m:msqrt>
+                      <m:mfrac>
+                        <m:mrow>
+                          <m:mo form="prefix">log</m:mo>
+                          <m:mfenced separators="" open="(" close=")">
+                            <m:mfrac>
+                              <m:mn>1</m:mn>
+                              <m:mrow>
+                                <m:mi>δ</m:mi>
+                                <m:mo>(</m:mo>
+                                <m:mi>f</m:mi>
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+                            </m:mfrac>
+                          </m:mfenced>
+                        </m:mrow>
+                        <m:mrow>
+                          <m:mn>2</m:mn>
+                          <m:mi>n</m:mi>
+                        </m:mrow>
+                      </m:mfrac>
+                    </m:msqrt>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>≤</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:munder>
+                    <m:mo>∑</m:mo>
+                    <m:mrow>
+                      <m:mi>f</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:mi mathvariant="script">F</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:mi>P</m:mi>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:mi>R</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>-</m:mo>
+                    <m:msub>
+                      <m:mover accent="true">
+                        <m:mi>R</m:mi>
+                        <m:mo>^</m:mo>
+                      </m:mover>
+                      <m:mi>n</m:mi>
+                    </m:msub>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>≥</m:mo>
+                    <m:msqrt>
+                      <m:mfrac>
+                        <m:mrow>
+                          <m:mo form="prefix">log</m:mo>
+                          <m:mfenced separators="" open="(" close=")">
+                            <m:mfrac>
+                              <m:mn>1</m:mn>
+                              <m:mrow>
+                                <m:mi>δ</m:mi>
+                                <m:mo>(</m:mo>
+                                <m:mi>f</m:mi>
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+                            </m:mfrac>
+                          </m:mfenced>
+                        </m:mrow>
+                        <m:mrow>
+                          <m:mn>2</m:mn>
+                          <m:mi>n</m:mi>
+                        </m:mrow>
+                      </m:mfrac>
+                    </m:msqrt>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>≤</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:munder>
+                    <m:mo>∑</m:mo>
+                    <m:mrow>
+                      <m:mi>f</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:mi mathvariant="script">F</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:mi>δ</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>f</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>=</m:mo>
+                  <m:munder>
+                    <m:mo>∑</m:mo>
+                    <m:mrow>
+                      <m:mi>f</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:mi mathvariant="script">F</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:msup>
+                    <m:mn>2</m:mn>
+                    <m:mrow>
+                      <m:mo>-</m:mo>
+                      <m:mi>c</m:mi>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                  </m:msup>
+                  <m:mi>δ</m:mi>
+                  <m:mo>=</m:mo>
+                  <m:mi>δ</m:mi>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2258784">This implies that for any <m:math><m:mrow><m:mi>δ</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math> with probability at least <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>δ</m:mi></m:mrow></m:math>
+we have <m:math><m:mrow><m:mo>∀</m:mo><m:mi>f</m:mi><m:mo>∈</m:mo><m:mi mathvariant="script">F</m:mi></m:mrow></m:math></para>
+      <equation id="id2258838"><m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mi>R</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>≤</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>R</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>f</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>+</m:mo>
+                  <m:msqrt>
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:mo form="prefix">log</m:mo>
+                        <m:mfenced separators="" open="(" close=")">
+                          <m:mfrac>
+                            <m:mn>1</m:mn>
+                            <m:mrow>
+                              <m:mi>δ</m:mi>
+                              <m:mo>(</m:mo>
+                              <m:mi>f</m:mi>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                          </m:mfrac>
+                        </m:mfenced>
+                      </m:mrow>
+                      <m:mrow>
+                        <m:mn>2</m:mn>
+                        <m:mi>n</m:mi>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:msqrt>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>R</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>f</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>+</m:mo>
+                  <m:msqrt>
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:mi>c</m:mi>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>f</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo form="prefix">log</m:mo>
+                        <m:mn>2</m:mn>
+                        <m:mo>+</m:mo>
+                        <m:mo form="prefix">log</m:mo>
+                        <m:mfenced separators="" open="(" close=")">
+                          <m:mfrac>
+                            <m:mn>1</m:mn>
+                            <m:mi>δ</m:mi>
+                          </m:mfrac>
+                        </m:mfenced>
+                      </m:mrow>
+                      <m:mrow>
+                        <m:mn>2</m:mn>
+                        <m:mi>n</m:mi>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:msqrt>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      
+      
+      <para id="id2259040"><title>Application</title>
+
+Let <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mn>1</m:mn></m:msub></m:math>, <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mn>1</m:mn></m:msub></m:math>, ... be a sequence of finite sets of candidate
+functions with <m:math><m:mrow><m:mrow><m:mo>|</m:mo></m:mrow><m:msub><m:mi mathvariant="script">F</m:mi><m:mn>1</m:mn></m:msub><m:mrow><m:mo>|</m:mo><m:mo>&lt;</m:mo><m:mo>|</m:mo></m:mrow><m:msub><m:mi mathvariant="script">F</m:mi><m:mn>1</m:mn></m:msub><m:mrow><m:mo>|</m:mo><m:mo>&lt;</m:mo><m:mo>.</m:mo><m:mo>.</m:mo><m:mo>.</m:mo></m:mrow></m:mrow></m:math> We can design prefix codes
+as follows. Use the codes 0, 10, 110, 1110, ... to encode the
+subscript <m:math><m:mi>i</m:mi></m:math> in <m:math><m:mrow><m:mrow><m:mo>|</m:mo></m:mrow><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>i</m:mi></m:msub><m:mrow><m:mo>|</m:mo></m:mrow></m:mrow></m:math>. For each class <m:math><m:mrow><m:mrow><m:mo>|</m:mo></m:mrow><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>i</m:mi></m:msub><m:mrow><m:mo>|</m:mo></m:mrow></m:mrow></m:math>, construct a
+set of binary codewords of length <m:math><m:mrow><m:mo>⌈</m:mo><m:msub><m:mo form="prefix">log</m:mo><m:mn>2</m:mn></m:msub><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo><m:mo>⌉</m:mo></m:mrow></m:math> to
+uniquely encode each function in <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>i</m:mi></m:msub></m:math>. Then, encode any given
+function <m:math><m:mi>f</m:mi></m:math> by first using the code for <m:math><m:mi>i</m:mi></m:math> corresponding to the
+smallest <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>i</m:mi></m:msub></m:math> that <m:math><m:mi>f</m:mi></m:math> belongs to, followed by the length
+<m:math><m:mrow><m:mo>⌈</m:mo><m:msub><m:mo form="prefix">log</m:mo><m:mn>2</m:mn></m:msub><m:mo>|</m:mo><m:mi mathvariant="script">F</m:mi><m:mo>|</m:mo><m:mo>⌉</m:mo></m:mrow></m:math> codeword for <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>i</m:mi></m:msub></m:mrow></m:math>. This is a
+prefix code.</para>
+<example id="exam0990987686234"><title>Histogram Classifiers</title><para id="id2259347">X=[0,1]<m:math><m:msup><m:mrow/><m:mi>d</m:mi></m:msup></m:math>, Y={0,1}. Let <m:math><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi></m:msub></m:math>, k=1, 2, ... denote the
+collection of histogram classification rules with k equal volume
+bins. We can use the following codebook for the index k.</para>
+      <figure id="uid8" orient="horizontal">
+        <media id="id25492554" alt=""><image src="../../media/Figure2.png" mime-type="image/png" width="129"/><image for="pdf" src="../../media/Figure2.eps" mime-type="application/postscript"/></media>
+      </figure>
+      <para id="id2259390">And follow this codeword with <m:math><m:mrow><m:mi>k</m:mi><m:mo>=</m:mo><m:msub><m:mo form="prefix">log</m:mo><m:mn>2</m:mn></m:msub></m:mrow></m:math><m:math><m:mrow><m:mrow><m:mo>|</m:mo></m:mrow><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi></m:msub><m:mrow><m:mo>|</m:mo></m:mrow></m:mrow></m:math> bits to indicate
+which of the 2<m:math><m:msup><m:mrow/><m:mi>k</m:mi></m:msup></m:math> possible histogram rules is under
+consideration. Thus for any <m:math><m:mrow><m:mi>f</m:mi><m:mo>∈</m:mo><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi></m:msub></m:mrow></m:math> for some k <m:math><m:mo>≥</m:mo></m:math> 1 there
+is a prefix code of length</para>
+      <equation id="id2259487"><m:math mode="display">
+          <m:mrow>
+            <m:mi>c</m:mi>
+            <m:mo>(</m:mo>
+            <m:mi>f</m:mi>
+            <m:mo>)</m:mo>
+            <m:mo>=</m:mo>
+            <m:mi>k</m:mi>
+            <m:mo>+</m:mo>
+            <m:mi>k</m:mi>
+            <m:mo>=</m:mo>
+            <m:mn>2</m:mn>
+            <m:mi>k</m:mi>
+            <m:mspace width="1.em"/>
+            <m:mi>b</m:mi>
+            <m:mi>i</m:mi>
+            <m:mi>t</m:mi>
+            <m:mi>s</m:mi>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2259532">It follows that for any <m:math><m:mrow><m:mi>δ</m:mi><m:mo>&gt;</m:mo><m:mn>0</m:mn></m:mrow></m:math> with probability at least <m:math><m:mrow><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>δ</m:mi></m:mrow></m:math>
+we have <m:math><m:mrow><m:mo>∀</m:mo><m:mi>f</m:mi><m:mo>∈</m:mo><m:msub><m:mo>⋃</m:mo><m:mrow><m:mi>k</m:mi><m:mo>≥</m:mo><m:mn>1</m:mn></m:mrow></m:msub><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>k</m:mi></m:msub></m:mrow></m:math></para>
+      <equation id="id2259605">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>+</m:mo>
+            <m:msqrt>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mn>2</m:mn>
+                  <m:msub>
+                    <m:mi>k</m:mi>
+                    <m:mi>f</m:mi>
+                  </m:msub>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mo>+</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mi>δ</m:mi>
+                    </m:mfrac>
+                  </m:mfenced>
+                </m:mrow>
+                <m:mrow>
+                  <m:mn>2</m:mn>
+                  <m:mi>n</m:mi>
+                </m:mrow>
+              </m:mfrac>
+            </m:msqrt>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259697">where <m:math><m:msub><m:mi>k</m:mi><m:mi>f</m:mi></m:msub></m:math> is the
+number of bins in histogram corresponding to <m:math><m:mi>f</m:mi></m:math>. Contrast with the
+bound we had for the class of m bin histograms alone: with probability
+<m:math><m:mrow><m:mo>≥</m:mo><m:mn>1</m:mn><m:mo>-</m:mo><m:mi>δ</m:mi></m:mrow></m:math>, <m:math><m:mrow><m:mo>∀</m:mo><m:mi>f</m:mi><m:mo>∈</m:mo><m:msub><m:mi mathvariant="script">F</m:mi><m:mi>m</m:mi></m:msub></m:mrow></m:math></para>
+      <equation id="id2259768"><m:math mode="display">
+          <m:mrow>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≤</m:mo>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>+</m:mo>
+            <m:msqrt>
+              <m:mfrac>
+                <m:mrow>
+                  <m:mi>m</m:mi>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mo>+</m:mo>
+                  <m:mo form="prefix">log</m:mo>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:mfrac>
+                      <m:mn>1</m:mn>
+                      <m:mrow>
+                        <m:mi>δ</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>f</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:mfenced>
+                </m:mrow>
+                <m:mrow>
+                  <m:mn>2</m:mn>
+                  <m:mi>n</m:mi>
+                </m:mrow>
+              </m:mfrac>
+            </m:msqrt>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2259861">Notice the bound for all histograms rules is almost as good as the
+bound for only the <m:math><m:mi>m</m:mi></m:math>-bin rules. That is, when <m:math><m:mrow><m:msub><m:mi>k</m:mi><m:mi>f</m:mi></m:msub><m:mo>=</m:mo><m:mi>m</m:mi></m:mrow></m:math> the bounds
+are within a factor of <m:math><m:msqrt><m:mn>2</m:mn></m:msqrt></m:math>. On the other hand, the new bound
+is a big improvement, since it also gives us a guide for selecting the
+number of bins.</para>
+      
+      <rule id="id-4523446" type="Proof"><label>Proof</label>
+<title>Proof of the Kraft Inequality</title>
+<statement id="id25493238">
+      <para id="id2259937">We will prove that for any binary prefix code, the codeword
+lengths <m:math><m:msub><m:mi>c</m:mi><m:mn>1</m:mn></m:msub></m:math>, <m:math><m:msub><m:mi>c</m:mi><m:mn>2</m:mn></m:msub></m:math>, ... satisfy <m:math><m:mrow><m:msub><m:mo>∑</m:mo><m:mrow><m:mi>k</m:mi><m:mo>≥</m:mo><m:mn>1</m:mn></m:mrow></m:msub><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:msub><m:mi>c</m:mi><m:mi>k</m:mi></m:msub></m:mrow></m:msup><m:mo>≤</m:mo><m:mn>1</m:mn></m:mrow></m:math>.
+The converse is easy to prove also, but it not central to our
+purposes here (for a proof, see Cover <m:math><m:mo>&amp;</m:mo></m:math> Thomas '91). Consider
+a binary tree like the one shown below.</para>
+      <figure id="uid9" orient="horizontal">
+        <media id="id25493331" alt=""><image src="../../media/Figure3.png" mime-type="image/png" width="375"/><image for="pdf" src="../../media/Figure3.eps" mime-type="application/postscript" print-width="10cm"/></media>
+      </figure>
+      <para id="id2260035">The sequence of bit values leading from the root to a leaf of the
+tree represents a codeword. The prefix condition implies that no
+codeword is a descendant of any other codeword in the tree. Let
+c<m:math><m:msub><m:mrow/><m:mrow><m:mi>m</m:mi><m:mi>a</m:mi><m:mi>x</m:mi></m:mrow></m:msub></m:math> be the length of the longest codeword (also the number
+of branches to the deepest leaf) in the tree.</para>
+      <para id="id2260063">Consider a leaf <m:math><m:mi>i</m:mi></m:math> in the tree at level c<m:math><m:msub><m:mrow/><m:mi>i</m:mi></m:msub></m:math>. This leaf would have
+2<m:math><m:msup><m:mrow/><m:mrow><m:msub><m:mi>c</m:mi><m:mrow><m:mi>m</m:mi><m:mi>a</m:mi><m:mi>x</m:mi></m:mrow></m:msub><m:mo>-</m:mo><m:msub><m:mi>c</m:mi><m:mi>i</m:mi></m:msub></m:mrow></m:msup></m:math> descendants at level c<m:math><m:msub><m:mrow/><m:mrow><m:mi>m</m:mi><m:mi>a</m:mi><m:mi>x</m:mi></m:mrow></m:msub></m:math>. Furthermore, for
+each leaf the set of possible descendants at level c<m:math><m:msub><m:mrow/><m:mrow><m:mi>m</m:mi><m:mi>a</m:mi><m:mi>x</m:mi></m:mrow></m:msub></m:math> is
+disjoint (since no codeword can be a prefix of another). Therefore,
+since the total number of possible leafs at level c<m:math><m:msub><m:mrow/><m:mrow><m:mi>m</m:mi><m:mi>a</m:mi><m:mi>x</m:mi></m:mrow></m:msub></m:math> is <m:math><m:msup><m:mn>2</m:mn><m:msub><m:mi>c</m:mi><m:mrow><m:mi>m</m:mi><m:mi>a</m:mi><m:mi>x</m:mi></m:mrow></m:msub></m:msup></m:math>,
+we have</para>
+      <equation id="id2260209">
+        <m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mtext>leafs</m:mtext>
+              </m:mrow>
+            </m:munder>
+            <m:msup>
+              <m:mn>2</m:mn>
+              <m:mrow>
+                <m:msub>
+                  <m:mi>c</m:mi>
+                  <m:mrow>
+                    <m:mi>m</m:mi>
+                    <m:mi>a</m:mi>
+                    <m:mi>x</m:mi>
+                  </m:mrow>
+                </m:msub>
+                <m:mo>-</m:mo>
+                <m:msub>
+                  <m:mi>c</m:mi>
+                  <m:mi>i</m:mi>
+                </m:msub>
+              </m:mrow>
+            </m:msup>
+            <m:mo>≤</m:mo>
+            <m:msup>
+              <m:mn>2</m:mn>
+              <m:msub>
+                <m:mi>c</m:mi>
+                <m:mrow>
+                  <m:mi>m</m:mi>
+                  <m:mi>a</m:mi>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:msub>
+            </m:msup>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:mo>⇒</m:mo>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:mspace width="4pt"/>
+            <m:munder>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mtext>leafs</m:mtext>
+              </m:mrow>
+            </m:munder>
+            <m:msup>
+              <m:mn>2</m:mn>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:msub>
+                  <m:mi>c</m:mi>
+                  <m:mi>i</m:mi>
+                </m:msub>
+              </m:mrow>
+            </m:msup>
+            <m:mo>≤</m:mo>
+            <m:mn>1</m:mn>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2260336">which proves the case when the number of
+codewords is finite.</para>
+      <para id="id2260343">Suppose now that we have a countably infinite number of codewords.
+Let b<m:math><m:msub><m:mrow/><m:mn>1</m:mn></m:msub></m:math> b<m:math><m:msub><m:mrow/><m:mn>2</m:mn></m:msub></m:math> ... b<m:math><m:msub><m:mrow/><m:msub><m:mi>c</m:mi><m:mi>i</m:mi></m:msub></m:msub></m:math> be the ith
+ codeword and let</para>
+      <equation id="id2260398">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mi>r</m:mi>
+              <m:mi>i</m:mi>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>j</m:mi>
+                <m:mo>=</m:mo>
+                <m:mi>i</m:mi>
+              </m:mrow>
+              <m:msub>
+                <m:mi>c</m:mi>
+                <m:mi>i</m:mi>
+              </m:msub>
+            </m:munderover>
+            <m:msub>
+              <m:mi>b</m:mi>
+              <m:mi>j</m:mi>
+            </m:msub>
+            <m:msup>
+              <m:mn>2</m:mn>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mi>j</m:mi>
+              </m:mrow>
+            </m:msup>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2260458">be the real number
+corresponding to the binary expansion of the codeword. We can
+associate the interval <m:math><m:mrow><m:mo>[</m:mo><m:msub><m:mi>r</m:mi><m:mi>i</m:mi></m:msub><m:mo>,</m:mo><m:msub><m:mi>r</m:mi><m:mi>i</m:mi></m:msub><m:mo>+</m:mo><m:msup><m:mn>2</m:mn><m:mrow><m:mo>-</m:mo><m:msub><m:mi>c</m:mi><m:mi>i</m:mi></m:msub></m:mrow></m:msup><m:mo>)</m:mo></m:mrow></m:math> with the ith
+
+codeword. This is the set of all real numbers whose binary
+expansion begins with b<m:math><m:msub><m:mrow/><m:mn>1</m:mn></m:msub></m:math> b<m:math><m:msub><m:mrow/><m:mn>2</m:mn></m:msub></m:math> ... b<m:math><m:msub><m:mrow/><m:msub><m:mi>c</m:mi><m:mi>i</m:mi></m:msub></m:msub></m:math>. Since this is a
+subinterval of <m:math><m:mrow><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow></m:math>, and all such subintervals corresponding to
+prefix codewords are disjoint, the sum of their lengths must be
+less than or equal to 1. This proves the case where the number of
+codewords is infinite.</para>
+</statement>
+</rule></example></section>
+  </content>
+</document>

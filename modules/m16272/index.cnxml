@@ -1,0 +1,3081 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  <title>Introduction to Classification and Regression</title>
+  <metadata>
+  <md:content-id>m16272</md:content-id><md:title>Introduction to Classification and Regression</md:title>
+  <md:abstract/>
+  <md:uuid>d255e38c-9cbd-4f55-ac9a-88f47990f2b7</md:uuid>
+</metadata>
+  <content>
+    <section id="uid1"><title>Pattern Classification</title>
+      
+      <para id="id2255548">Recall that the goal of classification is to learn a mapping from the feature space, <m:math><m:mi mathvariant="script">X</m:mi></m:math>, to a label space, <m:math><m:mi mathvariant="script">Y</m:mi></m:math>. This mapping, <m:math><m:mi>f</m:mi></m:math>, is called a <emphasis>classifier</emphasis>. For example, we might have</para>
+      <equation id="id2255591">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mi mathvariant="script">X</m:mi>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:msup>
+                  <m:mrow>
+                    <m:mi mathvariant="bold">R</m:mi>
+                  </m:mrow>
+                  <m:mi>d</m:mi>
+                </m:msup>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mi mathvariant="script">Y</m:mi>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo>{</m:mo>
+                  <m:mn>0</m:mn>
+                  <m:mo>,</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>}</m:mo>
+                  <m:mo>.</m:mo>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <para id="id2255662">We can measure the loss of our classifier using <m:math><m:mrow><m:mn>0</m:mn><m:mo>-</m:mo><m:mn>1</m:mn></m:mrow></m:math> loss; <emphasis>i.e.,</emphasis></para>
+      <equation id="id2255687"><m:math>
+          <m:mrow>
+            <m:mi>ℓ</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mover accent="true">
+                <m:mi>y</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mo>,</m:mo>
+              <m:mi>y</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:msub>
+              <m:mn mathvariant="bold">1</m:mn>
+              <m:mrow>
+                <m:mo>{</m:mo>
+                <m:mover accent="true">
+                  <m:mi>y</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mo>≠</m:mo>
+                <m:mi>y</m:mi>
+                <m:mo>}</m:mo>
+              </m:mrow>
+            </m:msub>
+            <m:mo>=</m:mo>
+
+            <m:mo>{</m:mo>
+     
+              <m:mtable>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mn>1</m:mn>
+                      <m:mo>,</m:mo>
+                      <m:mspace width="0.277778em"/>
+                      <m:mspace width="0.277778em"/>
+                    </m:mrow>
+                  </m:mtd>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mover accent="true">
+                        <m:mi>y</m:mi>
+                        <m:mo>^</m:mo>
+                      </m:mover>
+                      <m:mo>≠</m:mo>
+                      <m:mi>y</m:mi>
+                    </m:mrow>
+                  </m:mtd>
+                </m:mtr>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+                      <m:mo>,</m:mo>
+                      <m:mspace width="0.277778em"/>
+                      <m:mspace width="0.277778em"/>
+                    </m:mrow>
+                  </m:mtd>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mover accent="true">
+                        <m:mi>y</m:mi>
+                        <m:mo>^</m:mo>
+                      </m:mover>
+                      <m:mo>=</m:mo>
+                      <m:mi>y</m:mi>
+                    </m:mrow>
+                  </m:mtd>
+                </m:mtr>
+              </m:mtable>
+
+      
+ 
+          </m:mrow>
+
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2256061">Recalling that risk is defined to be the expected value of the loss function, we have</para>
+      <equation id="id2256068">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:msub>
+              <m:mi>E</m:mi>
+              <m:mrow>
+                <m:mi>X</m:mi>
+                <m:mi>Y</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mfenced separators="" open="[" close="]">
+              <m:mi>ℓ</m:mi>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>(</m:mo>
+              <m:mi>X</m:mi>
+              <m:mo>)</m:mo>
+              <m:mo>,</m:mo>
+              <m:mi>Y</m:mi>
+              <m:mo>)</m:mo>
+            </m:mfenced>
+            <m:mo>=</m:mo>
+            <m:msub>
+              <m:mi>E</m:mi>
+              <m:mrow>
+                <m:mi>X</m:mi>
+                <m:mi>Y</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mfenced separators="" open="[" close="]">
+              <m:msub>
+                <m:mn mathvariant="bold">1</m:mn>
+                <m:mrow>
+                  <m:mo>{</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:mi>X</m:mi>
+                  <m:mo>)</m:mo>
+                  <m:mo>≠</m:mo>
+                  <m:mi>Y</m:mi>
+                  <m:mo>}</m:mo>
+                </m:mrow>
+              </m:msub>
+            </m:mfenced>
+            <m:mo>=</m:mo>
+            <m:msub>
+              <m:mi>P</m:mi>
+              <m:mrow>
+                <m:mi>X</m:mi>
+                <m:mi>Y</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mfenced separators="" open="(" close=")">
+              <m:mi>f</m:mi>
+              <m:mo>(</m:mo>
+              <m:mi>X</m:mi>
+              <m:mo>)</m:mo>
+              <m:mo>≠</m:mo>
+              <m:mi>Y</m:mi>
+            </m:mfenced>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256205">The performance of a given classifier can be evaluated in terms of how close its risk is to the Bayes' risk.</para>
+<definition id="bayes">
+<term>(Bayes' Risk)</term>
+<meaning id="id15025856">
+The Bayes' risk is the infimum of the risk for all classifiers:
+      <equation id="id2256220">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msup>
+              <m:mi>R</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mo>=</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">inf</m:mo>
+              <m:mi>f</m:mi>
+            </m:munder>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      We can prove that the Bayes risk is achieved by the Bayes classifier.</meaning>
+</definition>
+      <definition id="bayesclassifier">
+<term>Bayes Classifier</term>
+<meaning id="id15025949"> 
+The Bayes classifier is the following mapping:
+      <equation id="id2256276">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msup>
+              <m:mi>f</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mfenced separators="" open="{" close="">
+              <m:mtable>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mn>1</m:mn>
+                      <m:mo>,</m:mo>
+                      <m:mspace width="0.277778em"/>
+                      <m:mspace width="0.277778em"/>
+                    </m:mrow>
+                  </m:mtd>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mi>η</m:mi>
+                      <m:mo>(</m:mo>
+                      <m:mi>x</m:mi>
+                      <m:mo>)</m:mo>
+                      <m:mo>≥</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>/</m:mo>
+                      <m:mn>2</m:mn>
+                    </m:mrow>
+                  </m:mtd>
+                </m:mtr>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+                      <m:mo>,</m:mo>
+                      <m:mspace width="0.277778em"/>
+                      <m:mspace width="0.277778em"/>
+                    </m:mrow>
+                  </m:mtd>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mi>o</m:mi>
+                      <m:mi>t</m:mi>
+                      <m:mi>h</m:mi>
+                      <m:mi>e</m:mi>
+                      <m:mi>r</m:mi>
+                      <m:mi>w</m:mi>
+                      <m:mi>i</m:mi>
+                      <m:mi>s</m:mi>
+                      <m:mi>e</m:mi>
+                    </m:mrow>
+                  </m:mtd>
+                </m:mtr>
+              </m:mtable>
+            </m:mfenced>
+          </m:mrow>
+        </m:math>
+      </equation>
+      where
+      <equation id="id2256392">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>η</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≡</m:mo>
+            <m:msub>
+              <m:mi>P</m:mi>
+              <m:mrow>
+                <m:mi>Y</m:mi>
+                <m:mo>|</m:mo>
+                <m:mi>X</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>Y</m:mi>
+              <m:mo>=</m:mo>
+              <m:mn>1</m:mn>
+              <m:mo>|</m:mo>
+              <m:mi>X</m:mi>
+              <m:mo>=</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      Note that for any <m:math><m:mi>x</m:mi></m:math>, <m:math><m:mrow><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math> is the value of <m:math><m:mrow><m:mi>y</m:mi><m:mo>∈</m:mo><m:mo>{</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>}</m:mo></m:mrow></m:math> that maximizes <m:math><m:mrow><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mi>Y</m:mi></m:mrow></m:msub><m:mrow><m:mo>(</m:mo><m:mi>Y</m:mi><m:mo>=</m:mo><m:mi>y</m:mi><m:mo>|</m:mo><m:mi>X</m:mi><m:mo>=</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>.</meaning></definition>
+      <rule id="riskofthebayesclassifier" type="Theorem"><label>Theorem</label>
+<title>Risk of the Bayes Classifier</title> 
+<statement id="id12640708">
+      <equation id="id2256551">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>f</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:msup>
+              <m:mi>R</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+</statement>
+<proof id="id12640776">
+      <para id="id2256596">
+
+Let <m:math><m:mrow><m:mi>g</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow></m:math> be any classifier. We will show that</para>
+      <equation id="id2256620">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>P</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>g</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>X</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≠</m:mo>
+              <m:mi>Y</m:mi>
+              <m:mo>|</m:mo>
+              <m:mi>X</m:mi>
+              <m:mo>=</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≥</m:mo>
+            <m:mi>P</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>f</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>x</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≠</m:mo>
+              <m:mi>Y</m:mi>
+              <m:mo>|</m:mo>
+              <m:mi>X</m:mi>
+              <m:mo>=</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2256700">For any <m:math><m:mi>g</m:mi></m:math>,</para>
+      <equation id="id2256714"><m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mi>P</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:mi>g</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:mi>X</m:mi>
+                  <m:mo>)</m:mo>
+                  <m:mo>≠</m:mo>
+                  <m:mi>Y</m:mi>
+                  <m:mo>|</m:mo>
+                  <m:mi>X</m:mi>
+                  <m:mo>=</m:mo>
+                  <m:mi>x</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mn>1</m:mn>
+                  <m:mo>-</m:mo>
+                  <m:mi>P</m:mi>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:mi>Y</m:mi>
+                    <m:mo>=</m:mo>
+                    <m:mi>g</m:mi>
+                    <m:mo>(</m:mo>
+                    <m:mi>X</m:mi>
+                    <m:mo>)</m:mo>
+                    <m:mo>|</m:mo>
+                    <m:mi>X</m:mi>
+                    <m:mo>=</m:mo>
+                    <m:mi>x</m:mi>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mn>1</m:mn>
+                  <m:mo>-</m:mo>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:mi>P</m:mi>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:mi>Y</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>,</m:mo>
+                      <m:mi>g</m:mi>
+                      <m:mo>(</m:mo>
+                      <m:mi>X</m:mi>
+                      <m:mo>)</m:mo>
+                      <m:mo>=</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>|</m:mo>
+                      <m:mi>X</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mi>x</m:mi>
+                    </m:mfenced>
+                    <m:mo>+</m:mo>
+                    <m:mi>P</m:mi>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:mi>Y</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mn>0</m:mn>
+                      <m:mo>,</m:mo>
+                      <m:mi>g</m:mi>
+                      <m:mo>(</m:mo>
+                      <m:mi>X</m:mi>
+                      <m:mo>)</m:mo>
+                      <m:mo>=</m:mo>
+                      <m:mn>0</m:mn>
+                      <m:mo>|</m:mo>
+                      <m:mi>X</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mi>x</m:mi>
+                    </m:mfenced>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mn>1</m:mn>
+                  <m:mo>-</m:mo>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:mi>E</m:mi>
+                    <m:mrow>
+                      <m:mo>[</m:mo>
+                      <m:msub>
+                        <m:mn mathvariant="bold">1</m:mn>
+                        <m:mrow>
+                          <m:mo>{</m:mo>
+                          <m:mi>Y</m:mi>
+                          <m:mo>=</m:mo>
+                          <m:mn>1</m:mn>
+                          <m:mo>}</m:mo>
+                        </m:mrow>
+                      </m:msub>
+                      <m:msub>
+                        <m:mn mathvariant="bold">1</m:mn>
+                        <m:mrow>
+                          <m:mo>{</m:mo>
+                          <m:mi>g</m:mi>
+                          <m:mo>(</m:mo>
+                          <m:mi>X</m:mi>
+                          <m:mo>)</m:mo>
+                          <m:mo>=</m:mo>
+                          <m:mn>1</m:mn>
+                          <m:mo>}</m:mo>
+                        </m:mrow>
+                      </m:msub>
+                      <m:mo>|</m:mo>
+                      <m:mi>X</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mi>x</m:mi>
+                      <m:mo>]</m:mo>
+                    </m:mrow>
+                    <m:mo>+</m:mo>
+                    <m:mi>E</m:mi>
+                    <m:mrow>
+                      <m:mo>[</m:mo>
+                      <m:msub>
+                        <m:mn mathvariant="bold">1</m:mn>
+                        <m:mrow>
+                          <m:mo>{</m:mo>
+                          <m:mi>Y</m:mi>
+                          <m:mo>=</m:mo>
+                          <m:mn>0</m:mn>
+                          <m:mo>}</m:mo>
+                        </m:mrow>
+                      </m:msub>
+                      <m:msub>
+                        <m:mn mathvariant="bold">1</m:mn>
+                        <m:mrow>
+                          <m:mo>{</m:mo>
+                          <m:mi>g</m:mi>
+                          <m:mo>(</m:mo>
+                          <m:mi>X</m:mi>
+                          <m:mo>)</m:mo>
+                          <m:mo>=</m:mo>
+                          <m:mn>0</m:mn>
+                          <m:mo>}</m:mo>
+                        </m:mrow>
+                      </m:msub>
+                      <m:mo>|</m:mo>
+                      <m:mi>X</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mi>x</m:mi>
+                      <m:mo>]</m:mo>
+                    </m:mrow>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mn>1</m:mn>
+                  <m:mo>-</m:mo>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>g</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mi>E</m:mi>
+                    <m:mrow>
+                      <m:mo>[</m:mo>
+                      <m:msub>
+                        <m:mn mathvariant="bold">1</m:mn>
+                        <m:mrow>
+                          <m:mo>{</m:mo>
+                          <m:mi>Y</m:mi>
+                          <m:mo>=</m:mo>
+                          <m:mn>1</m:mn>
+                          <m:mo>}</m:mo>
+                        </m:mrow>
+                      </m:msub>
+                      <m:mo>|</m:mo>
+                      <m:mi>X</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mi>x</m:mi>
+                      <m:mo>]</m:mo>
+                    </m:mrow>
+                    <m:mo>+</m:mo>
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>g</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                        <m:mo>=</m:mo>
+                        <m:mn>0</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mi>E</m:mi>
+                    <m:mrow>
+                      <m:mo>[</m:mo>
+                      <m:msub>
+                        <m:mn mathvariant="bold">1</m:mn>
+                        <m:mrow>
+                          <m:mo>{</m:mo>
+                          <m:mi>Y</m:mi>
+                          <m:mo>=</m:mo>
+                          <m:mn>0</m:mn>
+                          <m:mo>}</m:mo>
+                        </m:mrow>
+                      </m:msub>
+                      <m:mo>|</m:mo>
+                      <m:mi>X</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mi>x</m:mi>
+                      <m:mo>]</m:mo>
+                    </m:mrow>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mn>1</m:mn>
+                  <m:mo>-</m:mo>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>g</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mi>P</m:mi>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:mi>Y</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>|</m:mo>
+                      <m:mi>X</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mi>x</m:mi>
+                    </m:mfenced>
+                    <m:mo>+</m:mo>
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>g</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                        <m:mo>=</m:mo>
+                        <m:mn>0</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mi>P</m:mi>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:mi>Y</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mn>0</m:mn>
+                      <m:mo>|</m:mo>
+                      <m:mi>X</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mi>x</m:mi>
+                    </m:mfenced>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mn>1</m:mn>
+                  <m:mo>-</m:mo>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>g</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mi>η</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>x</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>+</m:mo>
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>g</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                        <m:mo>=</m:mo>
+                        <m:mn>0</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mfenced separators="" open="(" close=")">
+                      <m:mn>1</m:mn>
+                      <m:mo>-</m:mo>
+                      <m:mi>η</m:mi>
+                      <m:mo>(</m:mo>
+                      <m:mi>x</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mfenced>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2257415">Next consider the difference
+</para>
+      <equation id="id2257428">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mi>P</m:mi>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:mi>g</m:mi>
+                    <m:mo>(</m:mo>
+                    <m:mi>x</m:mi>
+                    <m:mo>)</m:mo>
+                    <m:mo>≠</m:mo>
+                    <m:mi>Y</m:mi>
+                    <m:mo>|</m:mo>
+                    <m:mi>X</m:mi>
+                    <m:mo>=</m:mo>
+                    <m:mi>x</m:mi>
+                  </m:mfenced>
+                  <m:mo>-</m:mo>
+                  <m:mi>P</m:mi>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:msup>
+                      <m:mi>f</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                    <m:mrow>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>≠</m:mo>
+                      <m:mi>Y</m:mi>
+                      <m:mo>|</m:mo>
+                      <m:mi>X</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mi>x</m:mi>
+                    </m:mrow>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mi>η</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>x</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:msup>
+                          <m:mi>f</m:mi>
+                          <m:mo>*</m:mo>
+                        </m:msup>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>x</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mo>-</m:mo>
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>g</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mfenced>
+                  <m:mo>+</m:mo>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mn>1</m:mn>
+                    <m:mo>-</m:mo>
+                    <m:mi>η</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>x</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:msup>
+                          <m:mi>f</m:mi>
+                          <m:mo>*</m:mo>
+                        </m:msup>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>x</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>=</m:mo>
+                        <m:mn>0</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mo>-</m:mo>
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>g</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                        <m:mo>=</m:mo>
+                        <m:mn>0</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mi>η</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>x</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:msup>
+                          <m:mi>f</m:mi>
+                          <m:mo>*</m:mo>
+                        </m:msup>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>x</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mo>-</m:mo>
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>g</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mfenced>
+                  <m:mo>-</m:mo>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mn>1</m:mn>
+                    <m:mo>-</m:mo>
+                    <m:mi>η</m:mi>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>x</m:mi>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:msup>
+                          <m:mi>f</m:mi>
+                          <m:mo>*</m:mo>
+                        </m:msup>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>x</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mo>-</m:mo>
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>g</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:mn>2</m:mn>
+                    <m:mi>η</m:mi>
+                    <m:mo>(</m:mo>
+                    <m:mi>x</m:mi>
+                    <m:mo>)</m:mo>
+                    <m:mo>-</m:mo>
+                    <m:mn>1</m:mn>
+                  </m:mfenced>
+                  <m:mfenced separators="" open="(" close=")">
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:msup>
+                          <m:mi>f</m:mi>
+                          <m:mo>*</m:mo>
+                        </m:msup>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>x</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mo>-</m:mo>
+                    <m:msub>
+                      <m:mn mathvariant="bold">1</m:mn>
+                      <m:mrow>
+                        <m:mo>{</m:mo>
+                        <m:mi>g</m:mi>
+                        <m:mo>(</m:mo>
+                        <m:mi>x</m:mi>
+                        <m:mo>)</m:mo>
+                        <m:mo>=</m:mo>
+                        <m:mn>1</m:mn>
+                        <m:mo>}</m:mo>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mfenced>
+                  <m:mo>,</m:mo>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <para id="id2257969">where the second equality follows by noting that <m:math><m:mrow><m:msub><m:mn mathvariant="bold">1</m:mn><m:mrow><m:mo>{</m:mo><m:mi>g</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo><m:mo>=</m:mo><m:mn>0</m:mn><m:mo>}</m:mo></m:mrow></m:msub><m:mo>=</m:mo><m:mn>1</m:mn><m:mo>-</m:mo><m:msub><m:mn mathvariant="bold">1</m:mn><m:mrow><m:mo>{</m:mo><m:mi>g</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo><m:mo>=</m:mo><m:mn>1</m:mn><m:mo>}</m:mo></m:mrow></m:msub></m:mrow></m:math>.
+Next recall</para>
+      <equation id="id2258043"><m:math mode="display">
+          <m:mrow>
+            <m:msup>
+              <m:mi>f</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mfenced separators="" open="{" close="">
+              <m:mtable>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mn>1</m:mn>
+                      <m:mo>,</m:mo>
+                      <m:mspace width="0.277778em"/>
+                      <m:mspace width="0.277778em"/>
+                    </m:mrow>
+                  </m:mtd>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mi>η</m:mi>
+                      <m:mo>(</m:mo>
+                      <m:mi>x</m:mi>
+                      <m:mo>)</m:mo>
+                      <m:mo>≥</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>/</m:mo>
+                      <m:mn>2</m:mn>
+                    </m:mrow>
+                  </m:mtd>
+                </m:mtr>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+                      <m:mo>,</m:mo>
+                      <m:mspace width="0.277778em"/>
+                      <m:mspace width="0.277778em"/>
+                    </m:mrow>
+                  </m:mtd>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mi>o</m:mi>
+                      <m:mi>t</m:mi>
+                      <m:mi>h</m:mi>
+                      <m:mi>e</m:mi>
+                      <m:mi>r</m:mi>
+                      <m:mi>w</m:mi>
+                      <m:mi>i</m:mi>
+                      <m:mi>s</m:mi>
+                      <m:mi>e</m:mi>
+                    </m:mrow>
+                  </m:mtd>
+                </m:mtr>
+              </m:mtable>
+            </m:mfenced>
+          </m:mrow>
+<m:mo>.</m:mo>
+        </m:math>
+      </equation>
+      <para id="id2258157">For <m:math><m:mi>x</m:mi></m:math> such that <m:math><m:mrow><m:mi>η</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo><m:mo>≥</m:mo><m:mn>1</m:mn><m:mo>/</m:mo><m:mn>2</m:mn></m:mrow></m:math>, we have</para>
+      <equation id="id2258198">
+        <m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:munder accentunder="true">
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mi>η</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:mi>x</m:mi>
+                  <m:mo>)</m:mo>
+                  <m:mo>-</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>︸</m:mo>
+              </m:munder>
+              <m:mrow>
+                <m:mo>≥</m:mo>
+                <m:mn>0</m:mn>
+              </m:mrow>
+            </m:munder>
+            <m:munder>
+              <m:munder accentunder="true">
+                <m:mfenced separators="" open="(" close=")">
+                  <m:msub>
+                    <m:munder accentunder="true">
+                      <m:msub>
+                        <m:mn mathvariant="bold">1</m:mn>
+                        <m:mrow>
+                          <m:mo>{</m:mo>
+                          <m:msup>
+                            <m:mi>f</m:mi>
+                            <m:mo>*</m:mo>
+                          </m:msup>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+                            <m:mi>x</m:mi>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                          <m:mo>=</m:mo>
+                          <m:mn>1</m:mn>
+                          <m:mo>}</m:mo>
+                        </m:mrow>
+                      </m:msub>
+                      <m:mo>︸</m:mo>
+                    </m:munder>
+                    <m:mn>1</m:mn>
+                  </m:msub>
+                  <m:mo>-</m:mo>
+                  <m:msub>
+                    <m:munder accentunder="true">
+                      <m:msub>
+                        <m:mn mathvariant="bold">1</m:mn>
+                        <m:mrow>
+                          <m:mo>{</m:mo>
+                          <m:mi>g</m:mi>
+                          <m:mo>(</m:mo>
+                          <m:mi>x</m:mi>
+                          <m:mo>)</m:mo>
+                          <m:mo>=</m:mo>
+                          <m:mn>1</m:mn>
+                          <m:mo>}</m:mo>
+                        </m:mrow>
+                      </m:msub>
+                      <m:mo>︸</m:mo>
+                    </m:munder>
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+                      <m:mi>o</m:mi>
+                      <m:mi>r</m:mi>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                  </m:msub>
+                </m:mfenced>
+                <m:mo>︸</m:mo>
+              </m:munder>
+              <m:mrow>
+                <m:mo>≥</m:mo>
+                <m:mn>0</m:mn>
+              </m:mrow>
+            </m:munder>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2258359">and for <m:math><m:mi>x</m:mi></m:math> such that <m:math><m:mrow><m:mi>η</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo><m:mo>&lt;</m:mo><m:mn>1</m:mn><m:mo>/</m:mo><m:mn>2</m:mn></m:mrow></m:math>, we have</para>
+      <equation id="id2258400">
+        <m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:munder accentunder="true">
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mn>2</m:mn>
+                  <m:mi>η</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:mi>x</m:mi>
+                  <m:mo>)</m:mo>
+                  <m:mo>-</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>︸</m:mo>
+              </m:munder>
+              <m:mrow>
+                <m:mo>&lt;</m:mo>
+                <m:mn>0</m:mn>
+              </m:mrow>
+            </m:munder>
+            <m:munder>
+              <m:munder accentunder="true">
+                <m:mfenced separators="" open="(" close=")">
+                  <m:msub>
+                    <m:munder accentunder="true">
+                      <m:msub>
+                        <m:mn mathvariant="bold">1</m:mn>
+                        <m:mrow>
+                          <m:mo>{</m:mo>
+                          <m:msup>
+                            <m:mi>f</m:mi>
+                            <m:mo>*</m:mo>
+                          </m:msup>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+                            <m:mi>x</m:mi>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                          <m:mo>=</m:mo>
+                          <m:mn>1</m:mn>
+                          <m:mo>}</m:mo>
+                        </m:mrow>
+                      </m:msub>
+                      <m:mo>︸</m:mo>
+                    </m:munder>
+                    <m:mn>0</m:mn>
+                  </m:msub>
+                  <m:mo>-</m:mo>
+                  <m:msub>
+                    <m:munder accentunder="true">
+                      <m:msub>
+                        <m:mn mathvariant="bold">1</m:mn>
+                        <m:mrow>
+                          <m:mo>{</m:mo>
+                          <m:mi>g</m:mi>
+                          <m:mo>(</m:mo>
+                          <m:mi>x</m:mi>
+                          <m:mo>)</m:mo>
+                          <m:mo>=</m:mo>
+                          <m:mn>1</m:mn>
+                          <m:mo>}</m:mo>
+                        </m:mrow>
+                      </m:msub>
+                      <m:mo>︸</m:mo>
+                    </m:munder>
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+                      <m:mi>o</m:mi>
+                      <m:mi>r</m:mi>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                  </m:msub>
+                </m:mfenced>
+                <m:mo>︸</m:mo>
+              </m:munder>
+              <m:mrow>
+                <m:mo>≤</m:mo>
+                <m:mn>0</m:mn>
+              </m:mrow>
+            </m:munder>
+            <m:mo>,</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2258564">which implies</para>
+      <equation id="id2258569">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mfenced separators="" open="(" close=")">
+              <m:mn>2</m:mn>
+              <m:mi>η</m:mi>
+              <m:mo>(</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+              <m:mo>-</m:mo>
+              <m:mn>1</m:mn>
+            </m:mfenced>
+            <m:mfenced separators="" open="(" close=")">
+              <m:msub>
+                <m:mn mathvariant="bold">1</m:mn>
+                <m:mrow>
+                  <m:mo>{</m:mo>
+                  <m:msup>
+                    <m:mi>f</m:mi>
+                    <m:mo>*</m:mo>
+                  </m:msup>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>x</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>=</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>}</m:mo>
+                </m:mrow>
+              </m:msub>
+              <m:mo>-</m:mo>
+              <m:msub>
+                <m:mn mathvariant="bold">1</m:mn>
+                <m:mrow>
+                  <m:mo>{</m:mo>
+                  <m:mi>g</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:mi>x</m:mi>
+                  <m:mo>)</m:mo>
+                  <m:mo>=</m:mo>
+                  <m:mn>1</m:mn>
+                  <m:mo>}</m:mo>
+                </m:mrow>
+              </m:msub>
+            </m:mfenced>
+            <m:mo>≥</m:mo>
+            <m:mn>0</m:mn>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2258675">or</para>
+      <equation id="id2258680">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>P</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>g</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>X</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≠</m:mo>
+              <m:mi>Y</m:mi>
+              <m:mo>|</m:mo>
+              <m:mi>X</m:mi>
+              <m:mo>=</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>≥</m:mo>
+            <m:mi>P</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>f</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>x</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>≠</m:mo>
+              <m:mi>Y</m:mi>
+              <m:mo>|</m:mo>
+              <m:mi>X</m:mi>
+              <m:mo>=</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+    </proof>
+</rule>  
+      <para id="id2258783">Note that while the Bayes classifier achieves the Bayes risk, in practice this classifier is not realizable because we do not know the distribution <m:math><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mi>Y</m:mi></m:mrow></m:msub></m:math> and so cannot construct <m:math><m:mrow><m:mi>η</m:mi><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow></m:math>.</para>
+    </section>
+    <section id="uid5"><title>Regression</title>
+      
+      <para id="id2258831">The goal of regression is to learn a mapping from the input space, <m:math><m:mi mathvariant="script">X</m:mi></m:math>,
+to the output space, <m:math><m:mi mathvariant="script">Y</m:mi></m:math>. This mapping, <m:math><m:mi>f</m:mi></m:math>, is called a <emphasis>estimator</emphasis>. For example, we might have</para>
+      <equation id="id2258874">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mi mathvariant="script">X</m:mi>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:msup>
+                  <m:mrow>
+                    <m:mi mathvariant="bold">R</m:mi>
+                  </m:mrow>
+                  <m:mi>d</m:mi>
+                </m:msup>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mi mathvariant="script">Y</m:mi>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mi mathvariant="bold">R</m:mi>
+                  <m:mo>.</m:mo>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <para id="id2258936">We can measure the loss of our estimator using squared error loss; <emphasis>i.e.,</emphasis></para>
+      <equation id="id2258947">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>ℓ</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mover accent="true">
+                <m:mi>y</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mo>,</m:mo>
+              <m:mi>y</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:msup>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>y</m:mi>
+                <m:mo>-</m:mo>
+                <m:mover accent="true">
+                  <m:mi>y</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mn>2</m:mn>
+            </m:msup>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259006">Recalling that risk is defined to be the expected value of the loss function, we have</para>
+      <equation id="id2259013">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:msub>
+              <m:mi>E</m:mi>
+              <m:mrow>
+                <m:mi>X</m:mi>
+                <m:mi>Y</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:mi>ℓ</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:mi>f</m:mi>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>X</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mo>,</m:mo>
+                <m:mi>Y</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:msub>
+              <m:mi>E</m:mi>
+              <m:mrow>
+                <m:mi>X</m:mi>
+                <m:mi>Y</m:mi>
+              </m:mrow>
+            </m:msub>
+            <m:mrow>
+              <m:mo>[</m:mo>
+              <m:msup>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>X</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>-</m:mo>
+                  <m:mi>Y</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+                <m:mn>2</m:mn>
+              </m:msup>
+              <m:mo>]</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2259117">The performance of a given estimator can be evaluated in terms of how close the risk is to the infimum of the risk for all estimator under consideration:</para>
+      <equation id="id2259125">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msup>
+              <m:mi>R</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mo>=</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">inf</m:mo>
+              <m:mi>f</m:mi>
+            </m:munder>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+<rule id="minimumriskundersquarederrorloss" type="Theorem"><label>Theorem</label>
+<title>Minimum Risk under Squared Error Loss (MSE)</title>
+<statement id="id16560993">      
+<para id="id2259168">Let <m:math><m:mrow><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:msub><m:mi>E</m:mi><m:mrow><m:mi>Y</m:mi><m:mo>|</m:mo><m:mi>X</m:mi></m:mrow></m:msub><m:mrow><m:mo>[</m:mo><m:mi>Y</m:mi><m:mo>|</m:mo><m:mi>X</m:mi><m:mo>=</m:mo><m:mi>x</m:mi><m:mo>]</m:mo></m:mrow></m:mrow></m:math></para>
+      <equation id="id2259231">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>R</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:msup>
+                <m:mi>f</m:mi>
+                <m:mo>*</m:mo>
+              </m:msup>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:msup>
+              <m:mi>R</m:mi>
+              <m:mo>*</m:mo>
+            </m:msup>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+</statement>
+<proof id="id16561118">
+      <equation id="id2259282">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mrow>
+                  <m:mi>R</m:mi>
+                  <m:mo>(</m:mo>
+                  <m:mi>f</m:mi>
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>E</m:mi>
+                    <m:mrow>
+                      <m:mi>X</m:mi>
+                      <m:mi>Y</m:mi>
+                    </m:mrow>
+                  </m:msub>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:msup>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>f</m:mi>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>X</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>-</m:mo>
+                        <m:mi>Y</m:mi>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mspace width="4pt"/>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>E</m:mi>
+                    <m:mi>X</m:mi>
+                  </m:msub>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:msub>
+                      <m:mi>E</m:mi>
+                      <m:mrow>
+                        <m:mi>Y</m:mi>
+                        <m:mo>|</m:mo>
+                        <m:mi>X</m:mi>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mfenced separators="" open="[" close="]">
+                      <m:msup>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>f</m:mi>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+                            <m:mi>X</m:mi>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                          <m:mo>-</m:mo>
+                          <m:mi>Y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mn>2</m:mn>
+                      </m:msup>
+                      <m:mrow>
+                        <m:mo>|</m:mo>
+                        <m:mi>X</m:mi>
+                      </m:mrow>
+                    </m:mfenced>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mspace width="4pt"/>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>E</m:mi>
+                    <m:mi>X</m:mi>
+                  </m:msub>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:msub>
+                      <m:mi>E</m:mi>
+                      <m:mrow>
+                        <m:mi>Y</m:mi>
+                        <m:mo>|</m:mo>
+                        <m:mi>X</m:mi>
+                      </m:mrow>
+                    </m:msub>
+                    <m:mfenced separators="" open="[" close="]">
+                      <m:msup>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>f</m:mi>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+                            <m:mi>X</m:mi>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                          <m:mo>-</m:mo>
+                          <m:msub>
+                            <m:mi>E</m:mi>
+                            <m:mrow>
+                              <m:mi>Y</m:mi>
+                              <m:mo>|</m:mo>
+                              <m:mi>X</m:mi>
+                            </m:mrow>
+                          </m:msub>
+                          <m:mrow>
+                            <m:mo>[</m:mo>
+                            <m:mi>Y</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>X</m:mi>
+                            <m:mo>]</m:mo>
+                          </m:mrow>
+                          <m:mo>+</m:mo>
+                          <m:msub>
+                            <m:mi>E</m:mi>
+                            <m:mrow>
+                              <m:mi>Y</m:mi>
+                              <m:mo>|</m:mo>
+                              <m:mi>X</m:mi>
+                            </m:mrow>
+                          </m:msub>
+                          <m:mrow>
+                            <m:mo>[</m:mo>
+                            <m:mi>Y</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>X</m:mi>
+                            <m:mo>]</m:mo>
+                          </m:mrow>
+                          <m:mo>-</m:mo>
+                          <m:mi>Y</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mn>2</m:mn>
+                      </m:msup>
+                      <m:mrow>
+                        <m:mo>|</m:mo>
+                        <m:mi>X</m:mi>
+                      </m:mrow>
+                    </m:mfenced>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mspace width="4pt"/>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mtable>
+                  <m:mtr>
+                    <m:mtd columnalign="left">
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>E</m:mi>
+                          <m:mi>X</m:mi>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>[</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mtd>
+                    <m:mtd columnalign="left">
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>E</m:mi>
+                          <m:mrow>
+                            <m:mi>Y</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>X</m:mi>
+                          </m:mrow>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>[</m:mo>
+                          <m:msup>
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+                              <m:mi>f</m:mi>
+                              <m:mrow>
+                                <m:mo>(</m:mo>
+                                <m:mi>X</m:mi>
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+                              <m:mo>-</m:mo>
+                              <m:msub>
+                                <m:mi>E</m:mi>
+                                <m:mrow>
+                                  <m:mi>Y</m:mi>
+                                  <m:mo>|</m:mo>
+                                  <m:mi>X</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                              <m:mrow>
+                                <m:mo>[</m:mo>
+                                <m:mi>Y</m:mi>
+                                <m:mo>|</m:mo>
+                                <m:mi>X</m:mi>
+                                <m:mo>]</m:mo>
+                              </m:mrow>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                            <m:mn>2</m:mn>
+                          </m:msup>
+                          <m:mo>|</m:mo>
+                          <m:mi>X</m:mi>
+                          <m:mo>]</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mtd>
+                  </m:mtr>
+                  <m:mtr>
+                    <m:mtd/>
+                    <m:mtd columnalign="left">
+                      <m:mrow>
+                        <m:mo>+</m:mo>
+                        <m:mn>2</m:mn>
+                        <m:msub>
+                          <m:mi>E</m:mi>
+                          <m:mrow>
+                            <m:mi>Y</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>X</m:mi>
+                          </m:mrow>
+                        </m:msub>
+                        <m:mfenced separators="" open="[" close="]">
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+                            <m:mi>f</m:mi>
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+                              <m:mi>X</m:mi>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                            <m:mo>-</m:mo>
+                            <m:msub>
+                              <m:mi>E</m:mi>
+                              <m:mrow>
+                                <m:mi>Y</m:mi>
+                                <m:mo>|</m:mo>
+                                <m:mi>X</m:mi>
+                              </m:mrow>
+                            </m:msub>
+                            <m:mrow>
+                              <m:mo>[</m:mo>
+                              <m:mi>Y</m:mi>
+                              <m:mo>|</m:mo>
+                              <m:mi>X</m:mi>
+                              <m:mo>]</m:mo>
+                            </m:mrow>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+                            <m:msub>
+                              <m:mi>E</m:mi>
+                              <m:mrow>
+                                <m:mi>Y</m:mi>
+                                <m:mo>|</m:mo>
+                                <m:mi>X</m:mi>
+                              </m:mrow>
+                            </m:msub>
+                            <m:mrow>
+                              <m:mo>[</m:mo>
+                              <m:mi>Y</m:mi>
+                              <m:mo>|</m:mo>
+                              <m:mi>X</m:mi>
+                              <m:mo>]</m:mo>
+                            </m:mrow>
+                            <m:mo>-</m:mo>
+                            <m:mi>Y</m:mi>
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                          <m:mrow>
+                            <m:mo>|</m:mo>
+                            <m:mi>X</m:mi>
+                          </m:mrow>
+                        </m:mfenced>
+                      </m:mrow>
+                    </m:mtd>
+                  </m:mtr>
+                  <m:mtr>
+                    <m:mtd/>
+                    <m:mtd columnalign="left">
+                      <m:mrow>
+                        <m:mo>+</m:mo>
+                        <m:msub>
+                          <m:mi>E</m:mi>
+                          <m:mrow>
+                            <m:mi>Y</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>X</m:mi>
+                          </m:mrow>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>[</m:mo>
+                          <m:msup>
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+                              <m:msub>
+                                <m:mi>E</m:mi>
+                                <m:mrow>
+                                  <m:mi>Y</m:mi>
+                                  <m:mo>|</m:mo>
+                                  <m:mi>X</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                              <m:mrow>
+                                <m:mo>[</m:mo>
+                                <m:mi>Y</m:mi>
+                                <m:mo>|</m:mo>
+                                <m:mi>X</m:mi>
+                                <m:mo>]</m:mo>
+                              </m:mrow>
+                              <m:mo>-</m:mo>
+                              <m:mi>Y</m:mi>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                            <m:mn>2</m:mn>
+                          </m:msup>
+                          <m:mo>|</m:mo>
+                          <m:mi>X</m:mi>
+                          <m:mo>]</m:mo>
+                        </m:mrow>
+                        <m:mrow>
+                          <m:mo>]</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mtd>
+                  </m:mtr>
+                </m:mtable>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mspace width="4pt"/>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mtable>
+                  <m:mtr>
+                    <m:mtd columnalign="left">
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>E</m:mi>
+                          <m:mi>X</m:mi>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>[</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mtd>
+                    <m:mtd columnalign="left">
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>E</m:mi>
+                          <m:mrow>
+                            <m:mi>Y</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>X</m:mi>
+                          </m:mrow>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>[</m:mo>
+                          <m:msup>
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+                              <m:mi>f</m:mi>
+                              <m:mrow>
+                                <m:mo>(</m:mo>
+                                <m:mi>X</m:mi>
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+                              <m:mo>-</m:mo>
+                              <m:msub>
+                                <m:mi>E</m:mi>
+                                <m:mrow>
+                                  <m:mi>Y</m:mi>
+                                  <m:mo>|</m:mo>
+                                  <m:mi>X</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                              <m:mrow>
+                                <m:mo>[</m:mo>
+                                <m:mi>Y</m:mi>
+                                <m:mo>|</m:mo>
+                                <m:mi>X</m:mi>
+                                <m:mo>]</m:mo>
+                              </m:mrow>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                            <m:mn>2</m:mn>
+                          </m:msup>
+                          <m:mo>|</m:mo>
+                          <m:mi>X</m:mi>
+                          <m:mo>]</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mtd>
+                  </m:mtr>
+                  <m:mtr>
+                    <m:mtd/>
+                    <m:mtd columnalign="left">
+                      <m:mrow>
+                        <m:mo>+</m:mo>
+                        <m:mn>2</m:mn>
+                        <m:mo>(</m:mo>
+                        <m:mi>f</m:mi>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>X</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>-</m:mo>
+                        <m:msub>
+                          <m:mi>E</m:mi>
+                          <m:mrow>
+                            <m:mi>Y</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>X</m:mi>
+                          </m:mrow>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>[</m:mo>
+                          <m:mi>Y</m:mi>
+                          <m:mo>|</m:mo>
+                          <m:mi>X</m:mi>
+                          <m:mo>]</m:mo>
+                        </m:mrow>
+                        <m:mo>)</m:mo>
+                        <m:mo>×</m:mo>
+                        <m:mn>0</m:mn>
+                      </m:mrow>
+                    </m:mtd>
+                  </m:mtr>
+                  <m:mtr>
+                    <m:mtd/>
+                    <m:mtd columnalign="left">
+                      <m:mrow>
+                        <m:mo>+</m:mo>
+                        <m:msub>
+                          <m:mi>E</m:mi>
+                          <m:mrow>
+                            <m:mi>Y</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>X</m:mi>
+                          </m:mrow>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>[</m:mo>
+                          <m:msup>
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+                              <m:msub>
+                                <m:mi>E</m:mi>
+                                <m:mrow>
+                                  <m:mi>Y</m:mi>
+                                  <m:mo>|</m:mo>
+                                  <m:mi>X</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                              <m:mrow>
+                                <m:mo>[</m:mo>
+                                <m:mi>Y</m:mi>
+                                <m:mo>|</m:mo>
+                                <m:mi>X</m:mi>
+                                <m:mo>]</m:mo>
+                              </m:mrow>
+                              <m:mo>-</m:mo>
+                              <m:mi>Y</m:mi>
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                            <m:mn>2</m:mn>
+                          </m:msup>
+                          <m:mo>|</m:mo>
+                          <m:mi>X</m:mi>
+                          <m:mo>]</m:mo>
+                        </m:mrow>
+                        <m:mrow>
+                          <m:mo>]</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mtd>
+                  </m:mtr>
+                </m:mtable>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mspace width="4pt"/>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>E</m:mi>
+                    <m:mrow>
+                      <m:mi>X</m:mi>
+                      <m:mi>Y</m:mi>
+                    </m:mrow>
+                  </m:msub>
+                  <m:mfenced separators="" open="[" close="]">
+                    <m:msup>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:mi>f</m:mi>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+                          <m:mi>X</m:mi>
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                        <m:mo>-</m:mo>
+                        <m:msub>
+                          <m:mi>E</m:mi>
+                          <m:mrow>
+                            <m:mi>Y</m:mi>
+                            <m:mo>|</m:mo>
+                            <m:mi>X</m:mi>
+                          </m:mrow>
+                        </m:msub>
+                        <m:mrow>
+                          <m:mo>[</m:mo>
+                          <m:mi>Y</m:mi>
+                          <m:mo>|</m:mo>
+                          <m:mi>X</m:mi>
+                          <m:mo>]</m:mo>
+                        </m:mrow>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                  </m:mfenced>
+                  <m:mo>+</m:mo>
+                  <m:mi>R</m:mi>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:msup>
+                      <m:mi>f</m:mi>
+                      <m:mo>*</m:mo>
+                    </m:msup>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                  <m:mo>.</m:mo>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+</proof>
+<example id="id15291332">    
+  <para id="id2260204">Thus if <m:math><m:mrow><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:msub><m:mi>E</m:mi><m:mrow><m:mi>Y</m:mi><m:mo>|</m:mo><m:mi>X</m:mi></m:mrow></m:msub><m:mrow><m:mo>[</m:mo><m:mi>Y</m:mi><m:mo>|</m:mo><m:mi>X</m:mi><m:mo>=</m:mo><m:mi>x</m:mi><m:mo>]</m:mo></m:mrow></m:mrow></m:math>, then <m:math><m:mrow><m:mi>R</m:mi><m:mrow><m:mo>(</m:mo><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:msup><m:mi>R</m:mi><m:mo>*</m:mo></m:msup></m:mrow></m:math>, as desired.
+ </para>
+    </example>
+</rule></section>
+    <section id="uid7"><title>Empirical Risk Minimization</title>
+      <definition id="empiricalrisk"> 
+<term>Empirical Risk</term>
+<meaning id="id15291461">
+      
+
+Let <m:math><m:mrow><m:msubsup><m:mrow><m:mo>{</m:mo><m:msub><m:mi>X</m:mi><m:mi>i</m:mi></m:msub><m:mo>,</m:mo><m:msub><m:mi>Y</m:mi><m:mi>i</m:mi></m:msub><m:mo>}</m:mo></m:mrow><m:mrow><m:mi>i</m:mi><m:mo>=</m:mo><m:mn>1</m:mn></m:mrow><m:mi>n</m:mi></m:msubsup><m:mover><m:mo>∼</m:mo><m:mrow><m:mi>i</m:mi><m:mi>i</m:mi><m:mi>d</m:mi></m:mrow></m:mover><m:msub><m:mi>P</m:mi><m:mrow><m:mi>X</m:mi><m:mi>Y</m:mi></m:mrow></m:msub></m:mrow></m:math> be a collection of training data.
+Then the empirical risk is defined as
+      <equation id="id2260400">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mfrac>
+              <m:mn>1</m:mn>
+              <m:mi>n</m:mi>
+            </m:mfrac>
+            <m:munderover>
+              <m:mo>∑</m:mo>
+              <m:mrow>
+                <m:mi>i</m:mi>
+                <m:mo>=</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+              <m:mi>n</m:mi>
+            </m:munderover>
+            <m:mi>ℓ</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msub>
+                  <m:mi>X</m:mi>
+                  <m:mi>i</m:mi>
+                </m:msub>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>,</m:mo>
+              <m:msub>
+                <m:mi>Y</m:mi>
+                <m:mi>i</m:mi>
+              </m:msub>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      Empirical risk minimization is the process of choosing a learning rule which minimizes the empirical risk; <emphasis>i.e.,</emphasis>
+      <equation id="id2260500">
+        <m:math mode="display">
+          <m:mrow>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>f</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mo>=</m:mo>
+            <m:mo form="prefix">arg</m:mo>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+</meaning>
+</definition> 
+<example id="ex1">
+<title>Pattern Classification</title>     
+<para id="id2260574"> 
+
+Let the set of possible classifiers be</para>
+      <equation id="id2260583">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi mathvariant="script">F</m:mi>
+            <m:mo>=</m:mo>
+            <m:mfenced separators="" open="{" close="}">
+              <m:mi>x</m:mi>
+              <m:mo>↦</m:mo>
+              <m:mtext>sign</m:mtext>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msup>
+                  <m:mi>w</m:mi>
+                  <m:mo>'</m:mo>
+                </m:msup>
+                <m:mi>x</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mo>:</m:mo>
+              <m:mi>w</m:mi>
+              <m:mo>∈</m:mo>
+              <m:msup>
+                <m:mrow>
+                  <m:mi mathvariant="bold">R</m:mi>
+                </m:mrow>
+                <m:mi>d</m:mi>
+              </m:msup>
+            </m:mfenced>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2260648">and let the feature space, <m:math><m:mi mathvariant="script">X</m:mi></m:math>, be <m:math><m:msup><m:mrow><m:mo>[</m:mo><m:mn>0</m:mn><m:mo>,</m:mo><m:mn>1</m:mn><m:mo>]</m:mo></m:mrow><m:mi>d</m:mi></m:msup></m:math> or <m:math><m:msup><m:mrow><m:mi mathvariant="bold">R</m:mi></m:mrow><m:mi>d</m:mi></m:msup></m:math>. If we use the notation
+<m:math><m:mrow><m:msub><m:mi>f</m:mi><m:mi>w</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow><m:mo>≡</m:mo><m:mtext>sign</m:mtext><m:mrow><m:mo>(</m:mo><m:msup><m:mi>w</m:mi><m:mo>'</m:mo></m:msup><m:mi>x</m:mi><m:mo>)</m:mo></m:mrow></m:mrow></m:math>, then the set of classifiers can be alternatively represented as</para>
+      <equation id="id2260751">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi mathvariant="script">F</m:mi>
+            <m:mo>=</m:mo>
+            <m:mfenced separators="" open="{" close="}">
+              <m:msub>
+                <m:mi>f</m:mi>
+                <m:mi>w</m:mi>
+              </m:msub>
+              <m:mo>:</m:mo>
+              <m:mi>w</m:mi>
+              <m:mo>∈</m:mo>
+              <m:msup>
+                <m:mrow>
+                  <m:mi mathvariant="bold">R</m:mi>
+                </m:mrow>
+                <m:mi>d</m:mi>
+              </m:msup>
+            </m:mfenced>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2260802">In this case, the classifier which minimizes the empirical risk is</para>
+      <equation id="id2260809">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">arg</m:mo>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">min</m:mo>
+                    <m:mrow>
+                      <m:mi>f</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:mi mathvariant="script">F</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>R</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>f</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">arg</m:mo>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">min</m:mo>
+                    <m:mrow>
+                      <m:mi>w</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:msup>
+                        <m:mrow>
+                          <m:mi mathvariant="bold">R</m:mi>
+                        </m:mrow>
+                        <m:mi>d</m:mi>
+                      </m:msup>
+                    </m:mrow>
+                  </m:munder>
+                  <m:mfrac>
+                    <m:mn>1</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mfrac>
+                  <m:munderover>
+                    <m:mo>∑</m:mo>
+                    <m:mrow>
+                      <m:mi>i</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:munderover>
+                  <m:msub>
+                    <m:mn mathvariant="bold">1</m:mn>
+                    <m:mrow>
+                      <m:mo>{</m:mo>
+                      <m:mtext>sign</m:mtext>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:msup>
+                          <m:mi>w</m:mi>
+                          <m:mo>'</m:mo>
+                        </m:msup>
+                        <m:msub>
+                          <m:mi>X</m:mi>
+                          <m:mi>i</m:mi>
+                        </m:msub>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>≠</m:mo>
+                      <m:msub>
+                        <m:mi>Y</m:mi>
+                        <m:mi>i</m:mi>
+                      </m:msub>
+                      <m:mo>}</m:mo>
+                    </m:mrow>
+                  </m:msub>
+                  <m:mo>.</m:mo>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <figure id="uid10" orient="horizontal">
+        <media id="id15292393" alt=""><image src="../../media/LinearClassifier.png" mime-type="image/png" width="256"/><image for="pdf" src="../../media/LinearClassifier.eps" mime-type="application/postscript" print-width="6cm"/></media>
+        <caption>Example linear classifier for two-class
+problem.</caption>
+      </figure>
+</example>
+<example id="ex2">
+<title>Regression</title>
+      <para id="id2261017"> 
+
+Let the feature space be</para>
+      <equation id="id2261026">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi mathvariant="script">X</m:mi>
+            <m:mo>=</m:mo>
+            <m:mo>[</m:mo>
+            <m:mn>0</m:mn>
+            <m:mo>,</m:mo>
+            <m:mn>1</m:mn>
+            <m:mo>]</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2261054">and let the set of possible estimators be</para>
+      <equation id="id2261059">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi mathvariant="script">F</m:mi>
+            <m:mo>=</m:mo>
+            <m:mfenced separators="" open="{" close="}">
+              <m:mtext>degree</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mi>d</m:mi>
+              <m:mspace width="4.pt"/>
+              <m:mtext>polynomials</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mtext>on</m:mtext>
+              <m:mspace width="4.pt"/>
+              <m:mrow>
+                <m:mo>[</m:mo>
+                <m:mn>0</m:mn>
+                <m:mo>,</m:mo>
+                <m:mn>1</m:mn>
+                <m:mo>]</m:mo>
+              </m:mrow>
+            </m:mfenced>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2261120">In this case, the classifier which minimizes the empirical risk is</para>
+      <equation id="id2261127">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:msub>
+                  <m:mover accent="true">
+                    <m:mi>f</m:mi>
+                    <m:mo>^</m:mo>
+                  </m:mover>
+                  <m:mi>n</m:mi>
+                </m:msub>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">arg</m:mo>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">min</m:mo>
+                    <m:mrow>
+                      <m:mi>f</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:mi mathvariant="script">F</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:msub>
+                    <m:mover accent="true">
+                      <m:mi>R</m:mi>
+                      <m:mo>^</m:mo>
+                    </m:mover>
+                    <m:mi>n</m:mi>
+                  </m:msub>
+                  <m:mrow>
+                    <m:mo>(</m:mo>
+                    <m:mi>f</m:mi>
+                    <m:mo>)</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">arg</m:mo>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">min</m:mo>
+                    <m:mrow>
+                      <m:mi>f</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:mi mathvariant="script">F</m:mi>
+                    </m:mrow>
+                  </m:munder>
+                  <m:mfrac>
+                    <m:mn>1</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mfrac>
+                  <m:munderover>
+                    <m:mo>∑</m:mo>
+                    <m:mrow>
+                      <m:mi>i</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:munderover>
+                  <m:msup>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:mi>f</m:mi>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+                        <m:msub>
+                          <m:mi>X</m:mi>
+                          <m:mi>i</m:mi>
+                        </m:msub>
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+                      <m:mo>-</m:mo>
+                      <m:msub>
+                        <m:mi>Y</m:mi>
+                        <m:mi>i</m:mi>
+                      </m:msub>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mn>2</m:mn>
+                  </m:msup>
+                  <m:mo>.</m:mo>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <para id="id2261305">Alternatively, this can be expressed as</para>
+      <equation id="id2261311">
+        <m:math mode="display">
+          <m:mtable displaystyle="true">
+            <m:mtr>
+              <m:mtd columnalign="right">
+                <m:mover accent="true">
+                  <m:mi>w</m:mi>
+                  <m:mo>^</m:mo>
+                </m:mover>
+              </m:mtd>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">arg</m:mo>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">min</m:mo>
+                    <m:mrow>
+                      <m:mi>w</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:msup>
+                        <m:mrow>
+                          <m:mi mathvariant="bold">R</m:mi>
+                        </m:mrow>
+                        <m:mrow>
+                          <m:mi>d</m:mi>
+                          <m:mo>+</m:mo>
+                          <m:mn>1</m:mn>
+                        </m:mrow>
+                      </m:msup>
+                    </m:mrow>
+                  </m:munder>
+                  <m:mfrac>
+                    <m:mn>1</m:mn>
+                    <m:mi>n</m:mi>
+                  </m:mfrac>
+                  <m:munderover>
+                    <m:mo>∑</m:mo>
+                    <m:mrow>
+                      <m:mi>i</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:munderover>
+                  <m:msup>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+                      <m:msub>
+                        <m:mi>w</m:mi>
+                        <m:mn>0</m:mn>
+                      </m:msub>
+                      <m:mo>+</m:mo>
+                      <m:msub>
+                        <m:mi>w</m:mi>
+                        <m:mn>1</m:mn>
+                      </m:msub>
+                      <m:msub>
+                        <m:mi>X</m:mi>
+                        <m:mi>i</m:mi>
+                      </m:msub>
+                      <m:mo>+</m:mo>
+                      <m:mo>...</m:mo>
+                      <m:mo>+</m:mo>
+                      <m:msub>
+                        <m:mi>w</m:mi>
+                        <m:mi>d</m:mi>
+                      </m:msub>
+                      <m:msubsup>
+                        <m:mi>X</m:mi>
+                        <m:mrow>
+                          <m:mi>i</m:mi>
+                        </m:mrow>
+                        <m:mi>d</m:mi>
+                      </m:msubsup>
+                      <m:mo>-</m:mo>
+                      <m:msub>
+                        <m:mi>Y</m:mi>
+                        <m:mi>i</m:mi>
+                      </m:msub>
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+                    <m:mn>2</m:mn>
+                  </m:msup>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+            <m:mtr>
+              <m:mtd/>
+              <m:mtd>
+                <m:mo>=</m:mo>
+              </m:mtd>
+              <m:mtd columnalign="left">
+                <m:mrow>
+                  <m:mo form="prefix">arg</m:mo>
+                  <m:munder>
+                    <m:mo movablelimits="true" form="prefix">min</m:mo>
+                    <m:mrow>
+                      <m:mi>w</m:mi>
+                      <m:mo>∈</m:mo>
+                      <m:msup>
+                        <m:mrow>
+                          <m:mi mathvariant="bold">R</m:mi>
+                        </m:mrow>
+                        <m:mrow>
+                          <m:mi>d</m:mi>
+                          <m:mo>+</m:mo>
+                          <m:mn>1</m:mn>
+                        </m:mrow>
+                      </m:msup>
+                    </m:mrow>
+                  </m:munder>
+                  <m:msup>
+                    <m:mrow>
+                      <m:mo>∥</m:mo>
+                      <m:mi>V</m:mi>
+                      <m:mi>w</m:mi>
+                      <m:mo>-</m:mo>
+                      <m:mi>Y</m:mi>
+                      <m:mo>∥</m:mo>
+                    </m:mrow>
+                    <m:mn>2</m:mn>
+                  </m:msup>
+                </m:mrow>
+              </m:mtd>
+            </m:mtr>
+          </m:mtable>
+        </m:math>
+      </equation>
+      <para id="id2261539">where <m:math><m:mi>V</m:mi></m:math> is the Vandermonde matrix</para>
+      <equation id="id2261555">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mi>V</m:mi>
+            <m:mo>=</m:mo>
+            <m:mfenced separators="" open="[" close="]">
+              <m:mtable>
+                <m:mtr>
+                  <m:mtd>
+                    <m:mn>1</m:mn>
+                  </m:mtd>
+                  <m:mtd>
+                    <m:msub>
+                      <m:mi>X</m:mi>
+                      <m:mn>1</m:mn>
+                    </m:msub>
+                  </m:mtd>
+                  <m:mtd>
+                    <m:mo>...</m:mo>
+                  </m:mtd>
+                  <m:mtd>
+                    <m:msubsup>
+                      <m:mi>X</m:mi>
+                      <m:mrow>
+                        <m:mn>1</m:mn>
+                      </m:mrow>
+                      <m:mi>d</m:mi>
+                    </m:msubsup>
+                  </m:mtd>
+                </m:mtr>
+                <m:mtr>
+                  <m:mtd>
+                    <m:mn>1</m:mn>
+                  </m:mtd>
+                  <m:mtd>
+                    <m:msub>
+                      <m:mi>X</m:mi>
+                      <m:mn>2</m:mn>
+                    </m:msub>
+                  </m:mtd>
+                  <m:mtd>
+                    <m:mo>...</m:mo>
+                  </m:mtd>
+                  <m:mtd>
+                    <m:msubsup>
+                      <m:mi>X</m:mi>
+                      <m:mrow>
+                        <m:mn>2</m:mn>
+                      </m:mrow>
+                      <m:mi>d</m:mi>
+                    </m:msubsup>
+                  </m:mtd>
+                </m:mtr>
+                <m:mtr>
+                  <m:mtd>
+                    <m:mo>⋮</m:mo>
+                  </m:mtd>
+                  <m:mtd>
+                    <m:mo>⋮</m:mo>
+                  </m:mtd>
+                  <m:mtd>
+                    <m:mo>⋱</m:mo>
+                  </m:mtd>
+                  <m:mtd>
+                    <m:mo>⋮</m:mo>
+                  </m:mtd>
+                </m:mtr>
+                <m:mtr>
+                  <m:mtd>
+                    <m:mn>1</m:mn>
+                  </m:mtd>
+                  <m:mtd>
+                    <m:msub>
+                      <m:mi>X</m:mi>
+                      <m:mi>n</m:mi>
+                    </m:msub>
+                  </m:mtd>
+                  <m:mtd>
+                    <m:mo>...</m:mo>
+                  </m:mtd>
+                  <m:mtd>
+                    <m:msubsup>
+                      <m:mi>X</m:mi>
+                      <m:mrow>
+                        <m:mi>n</m:mi>
+                      </m:mrow>
+                      <m:mi>d</m:mi>
+                    </m:msubsup>
+                  </m:mtd>
+                </m:mtr>
+              </m:mtable>
+            </m:mfenced>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2261680">The pseudoinverse can be used to solve for <m:math><m:mrow><m:mover accent="true"><m:mi>w</m:mi><m:mo>^</m:mo></m:mover><m:mo>:</m:mo></m:mrow></m:math></para>
+      <equation id="id2261704">
+        <m:math mode="display">
+          <m:mrow>
+            <m:mover accent="true">
+              <m:mi>w</m:mi>
+              <m:mo>^</m:mo>
+            </m:mover>
+            <m:mo>=</m:mo>
+            <m:msup>
+              <m:mrow>
+                <m:mo>(</m:mo>
+                <m:msup>
+                  <m:mi>V</m:mi>
+                  <m:mo>'</m:mo>
+                </m:msup>
+                <m:mi>V</m:mi>
+                <m:mo>)</m:mo>
+              </m:mrow>
+              <m:mrow>
+                <m:mo>-</m:mo>
+                <m:mn>1</m:mn>
+              </m:mrow>
+            </m:msup>
+            <m:msup>
+              <m:mi>V</m:mi>
+              <m:mo>'</m:mo>
+            </m:msup>
+            <m:mi>Y</m:mi>
+            <m:mo>.</m:mo>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2261761">A polynomial estimate is displayed in <link target-id="uid12" class="cnxn"/>.</para>
+      <figure id="uid12" orient="horizontal">
+        <media id="id15293643" alt=""><image src="../../media/polyFitting3.png" mime-type="image/png" width="466"/><image for="pdf" src="../../media/polyFitting3.eps" mime-type="application/postscript" print-width="6cm"/></media>
+        <caption>Example polynomial estimator. Blue curve denotes <m:math><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup></m:math>,
+magenta curve is the polynomial fit to the data (denoted by dots).</caption>
+      </figure>
+    </example></section>
+    <section id="uid13"><title>Overfitting</title>
+      
+      <para id="id2261806">Suppose <m:math><m:mi mathvariant="script">F</m:mi></m:math>, our collection of candidate functions, is very large. We can always make</para>
+      <equation id="id2261822">
+        <m:math mode="display">
+          <m:mrow>
+            <m:munder>
+              <m:mo movablelimits="true" form="prefix">min</m:mo>
+              <m:mrow>
+                <m:mi>f</m:mi>
+                <m:mo>∈</m:mo>
+                <m:mi mathvariant="script">F</m:mi>
+              </m:mrow>
+            </m:munder>
+            <m:msub>
+              <m:mover accent="true">
+                <m:mi>R</m:mi>
+                <m:mo>^</m:mo>
+              </m:mover>
+              <m:mi>n</m:mi>
+            </m:msub>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>f</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2261873">smaller by increasing the cardinality of <m:math><m:mi mathvariant="script">F</m:mi></m:math>, thereby providing more possibilities to fit to the data.</para>
+      <para id="id2261892">Consider this extreme example: Let <m:math><m:mi mathvariant="script">F</m:mi></m:math> be all measurable functions. Then every function <m:math><m:mi>f</m:mi></m:math> for which</para>
+      <equation id="id2261917"><m:math mode="display">
+          <m:mrow>
+            <m:mi>f</m:mi>
+            <m:mrow>
+              <m:mo>(</m:mo>
+              <m:mi>x</m:mi>
+              <m:mo>)</m:mo>
+            </m:mrow>
+            <m:mo>=</m:mo>
+            <m:mfenced separators="" open="{" close="">
+              <m:mtable>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>Y</m:mi>
+                        <m:mi>i</m:mi>
+                      </m:msub>
+                      <m:mo>,</m:mo>
+                      <m:mspace width="0.277778em"/>
+                      <m:mspace width="0.277778em"/>
+                    </m:mrow>
+                  </m:mtd>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mi>x</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:msub>
+                        <m:mi>X</m:mi>
+                        <m:mi>i</m:mi>
+                      </m:msub>
+                      <m:mspace width="4.pt"/>
+                      <m:mtext>for</m:mtext>
+                      <m:mspace width="4.pt"/>
+                      <m:mi>i</m:mi>
+                      <m:mo>=</m:mo>
+                      <m:mn>1</m:mn>
+                      <m:mo>,</m:mo>
+                      <m:mo>...</m:mo>
+                      <m:mo>,</m:mo>
+                      <m:mi>n</m:mi>
+                    </m:mrow>
+                  </m:mtd>
+                </m:mtr>
+                <m:mtr>
+                  <m:mtd columnalign="left">
+                    <m:mrow>
+                      <m:mtext>any</m:mtext>
+                      <m:mspace width="4.pt"/>
+                      <m:mtext>value</m:mtext>
+                      <m:mo>,</m:mo>
+                      <m:mspace width="0.277778em"/>
+                      <m:mspace width="0.277778em"/>
+                    </m:mrow>
+                  </m:mtd>
+                  <m:mtd columnalign="left">
+                    <m:mtext>otherwise</m:mtext>
+                  </m:mtd>
+                </m:mtr>
+              </m:mtable>
+            </m:mfenced>
+          
+          </m:mrow>
+        </m:math>
+      </equation>
+      <para id="id2262039">has zero empirical risk (<m:math><m:mrow><m:msub><m:mover accent="true"><m:mi>R</m:mi><m:mo>^</m:mo></m:mover><m:mi>n</m:mi></m:msub><m:mrow><m:mo>(</m:mo><m:mi>f</m:mi><m:mo>)</m:mo></m:mrow><m:mo>=</m:mo><m:mn>0</m:mn></m:mrow></m:math>). However, clearly this
+could be a very poor predictor of <m:math><m:mi>Y</m:mi></m:math> for a new input <m:math><m:mi>X</m:mi></m:math>
+.</para>
+<example id="ex3">
+<title>Classification Overfitting</title>      
+<para id="id2262098"> 
+
+Consider the classifier in <link target-id="uid15" class="cnxn"/>; this demonstrates overfitting in classification. If the data were in fact generated from two Gaussian distributions centered in the upper left and lower right quadrants of the feature space domain, then the optimal estimator would be the linear estimator in <link target-id="uid10" class="cnxn"/>; the overfitting would result in a higher probability of error for predicting classes of future observations.</para>
+      <figure id="uid15" orient="horizontal">
+        <media id="id15294184" alt=""><image src="../../media/OverfitClassifier.png" mime-type="image/png" width="256"/><image for="pdf" src="../../media/OverfitClassifier.eps" mime-type="application/postscript" print-width="6cm"/></media>
+        <caption>Example of overfitting classifier. The classifier's decision boundary wiggles around in order to correctly label the training data, but the optimal Bayes classifier is a straight line.</caption>
+      </figure>
+</example>
+<example id="ex4">
+<title>Regression Overfitting</title> 
+     <para id="id2262136"> 
+
+Below is an m-file that simulates the polynomial fitting. Feel free to play around with it to get an idea of the overfitting problem.</para>
+      <code id="id15294271" display="block">% poly fitting
+% rob nowak  1/24/04
+clear
+close all
+ 
+% generate and plot "true" function
+t = (0:.001:1)';
+f = exp(-5*(t-.3).^2)+.5*exp(-100*(t-.5).^2)+.5*exp(-100*(t-.75).^2);
+figure(1)
+plot(t,f)
+ 
+% generate n training data &amp; plot
+n = 10;
+sig = 0.1; % std of noise
+x = .97*rand(n,1)+.01;
+y = exp(-5*(x-.3).^2)+.5*exp(-100*(x-.5).^2)+.5*exp(-100*(x-.75).^2)+sig*randn(size(x));
+figure(1)
+clf
+plot(t,f)
+hold on
+plot(x,y,'.')
+ 
+% fit with polynomial of order k  (poly degree up to k-1)
+k=3;
+for i=1:k
+    V(:,i) = x.^(i-1);
+end
+p = inv(V'*V)*V'*y;
+ 
+for i=1:k
+    Vt(:,i) = t.^(i-1);
+end
+yh = Vt*p;
+figure(1)
+clf
+plot(t,f)
+hold on
+plot(x,y,'.')
+plot(t,yh,'m')
+ 
+</code>
+      <figure id="uid17" orient="vertical">
+        <subfigure id="id2262680">
+          <media id="id15294321" alt=""><image src="../../media/polyFitting1.png" mime-type="image/png" width="463"/><image for="pdf" src="../../media/polyFitting1.eps" mime-type="application/postscript" print-width="6cm"/></media>
+        </subfigure>
+        <subfigure id="id2262692">
+          <media id="id15294374" alt=""><image src="../../media/polyFitting3.png" mime-type="image/png" width="466"/><image for="pdf" src="../../media/polyFitting3.eps" mime-type="application/postscript" print-width="6cm"/></media>
+        </subfigure>
+        <subfigure id="id2262718">
+          <media id="id15294427" alt=""><image src="../../media/polyFitting5.png" mime-type="image/png" width="463"/><image for="pdf" src="../../media/polyFitting5.eps" mime-type="application/postscript" print-width="6cm"/></media>
+        </subfigure>
+        <subfigure id="id2262730">
+          <media id="id15294479" alt=""><image src="../../media/polyFitting7.png" mime-type="image/png" width="464"/><image for="pdf" src="../../media/polyFitting7.eps" mime-type="application/postscript" print-width="6cm"/></media>
+        </subfigure>
+        <caption>Example polynomial fitting problem. Blue curve is <m:math><m:msup><m:mi>f</m:mi><m:mo>*</m:mo></m:msup></m:math>,
+magenta curve is the polynomial fit to the data (dots). (a) Fitting
+a polynomial of degree <m:math><m:mrow><m:mi>d</m:mi><m:mo>=</m:mo><m:mn>0</m:mn></m:mrow></m:math>: This is an example of underfitting
+(b)<m:math><m:mrow><m:mi>d</m:mi><m:mo>=</m:mo><m:mn>2</m:mn></m:mrow></m:math> (c) <m:math><m:mrow><m:mi>d</m:mi><m:mo>=</m:mo><m:mn>4</m:mn></m:mrow></m:math> (d) <m:math><m:mrow><m:mi>d</m:mi><m:mo>=</m:mo><m:mn>6</m:mn></m:mrow></m:math>: This is an example of
+overfitting. The empirical loss is zero, but clearly the estimator
+would not do a good job of predicting <m:math><m:mi>y</m:mi></m:math> when <m:math><m:mi>x</m:mi></m:math> is close to one.</caption>
+      </figure>
+ </example></section>
+  </content>
+</document>
